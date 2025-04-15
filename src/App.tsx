@@ -1,9 +1,12 @@
 function App() {
-  return (
-    <>
-    <h1 style={{ textAlign: 'center' }}>Hello World!</h1>
-    </>
-  )
+	return (
+		<div className="App">
+			<header className="header">
+				<h1 className="header__title">Movie poster</h1>
+				<h2 className="header__subtitle"> development start point</h2>
+			</header>
+		</div>
+	);
 }
 
-export default App
+export default App;
