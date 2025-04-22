@@ -1,10 +1,17 @@
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme/theme';
+/* import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card'; */
+
 function App() {
 	return (
 		<div className="App">
-			<header className="header">
-				<h1 className="header__title">Movie poster</h1>
-				<h2 className="header__subtitle"> development start point</h2>
-			</header>
+			<ThemeProvider theme={theme}>
+     			
+    		</ThemeProvider>
 		</div>
 	);
 }
