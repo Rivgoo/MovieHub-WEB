@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 
-const Orange = '#FF9A3D'; // Оранжевий
-const DarkOrange = '#FF6715'; // Темніший оранжевий
-const Withe = '#FFFFFF'; // Білий
-const LightGray = '#F5F5F5'; // Світло-сірий
-const DarkGray = '#333333'; // Темно-сірий
+const Orange = '#FF9A3D'; // Orange
+const DarkOrange = '#FF6715'; // DarkOrange
+const Withe = '#FFFFFF'; // Withe
+const LightGray = '#F5F5F5'; // LightGray
+const DarkGray = '#333333'; // DarkGray
 
 const theme = createTheme({
   palette: {
