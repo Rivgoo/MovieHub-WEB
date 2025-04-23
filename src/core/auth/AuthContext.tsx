@@ -3,7 +3,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
-  useCallback,
+  useCallback
 } from "react";
 import { jwtDecode } from "jwt-decode";
 import { User, DecodedToken } from "./types";
@@ -38,7 +38,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (storedToken) {
         const decodedToken = jwtDecode<DecodedToken>(storedToken);
-
         const currentTime = Date.now() / 1000;
 
         if (decodedToken.exp > currentTime) {
@@ -48,25 +47,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const userRole = decodedToken.role;
 
           if (userId && userRole) {
-            const newUser: User = {
-              id: userId,
-              role: userRole,
-            };
-
-            setUser(newUser);
+            setUser({ id: userId, role: userRole });
+          } else {
+            console.warn(
+              "AuthProvider: Token valid but missing user ID or role."
+            );
+            localStorage.removeItem("accessToken");
           }
         } else {
-          console.log("AuthProvider: Token found but expired. Clearing...");
           localStorage.removeItem("accessToken");
         }
-      } else {
-        console.log("AuthProvider: No token/user data found in local storage.");
       }
     } catch (error) {
-      console.error(
-        "AuthProvider: Error loading auth data from storage",
-        error
-      );
+      console.error("AuthProvider: Error processing token from storage", error);
       localStorage.removeItem("accessToken");
     } finally {
       setIsLoading(false);
@@ -75,7 +68,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = useCallback((accessToken: string) => {
     localStorage.setItem("accessToken", accessToken);
-
     setToken(accessToken);
 
     try {
@@ -85,25 +77,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const userRole = decoded.role;
 
       if (userId && userRole) {
-        const newUser: User = {
-          id: userId,
-          role: userRole,
-        };
+        setUser({ id: userId, role: userRole });
+      } else {
+        console.error("Login: Decoded token missing user ID or role.");
 
-        setUser(newUser);
+        localStorage.removeItem("accessToken");
+        setToken(null);
+        setUser(null);
       }
     } catch (e) {
-      console.error("Error decoding token on login:", e);
+      console.error("Login: Error decoding token:", e);
+
+      localStorage.removeItem("accessToken");
+      setToken(null);
+      setUser(null);
     }
   }, []);
 
   const logout = useCallback(() => {
     localStorage.removeItem("accessToken");
-
     setToken(null);
+    setUser(null);
   }, []);
 
   const value = { token, user, isLoading, login, logout };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!isLoading ? children : null}
+    </AuthContext.Provider>
+  );
 };

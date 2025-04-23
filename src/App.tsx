@@ -7,22 +7,19 @@ import theme from "./theme/theme";
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <ThemeProvider theme={theme}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
-			
-            <Route
-              path="/"
-              element={<HomePage />}
-            />
+
+            <Route path="/" element={<HomePage />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ThemeProvider>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
