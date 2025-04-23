@@ -1,19 +1,29 @@
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme/theme';
-/* import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card'; */
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./core/auth/AuthContext";
+import { LoginPage } from "./features/Login";
+import { HomePage } from "./features/Home";
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./theme/theme";
 
 function App() {
-	return (
-		<div className="App">
-			<ThemeProvider theme={theme}>
-     			
-    		</ThemeProvider>
-		</div>
-	);
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+			
+            <Route
+              path="/"
+              element={<HomePage />}
+            />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </ThemeProvider>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
 export default App;

@@ -1,25 +1,25 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
-const Orange = '#FF9A3D'; // Orange
-const DarkOrange = '#FF6715'; // DarkOrange
-const Withe = '#FFFFFF'; // Withe
-const LightGray = '#F5F5F5'; // LightGray
-const DarkGray = '#333333'; // DarkGray
+const Orange = "#FF9A3D"; // Orange
+const DarkOrange = "#FF6715"; // DarkOrange
+const White = "#FFFFFF"; // White
+const LightGray = "#F5F5F5"; // LightGray
+const DarkGray = "#333333"; // DarkGray
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: Orange, 
-      dark: DarkOrange, 
-      contrastText: Withe, 
+      main: Orange,
+      dark: DarkOrange,
+      contrastText: White,
     },
     secondary: {
       main: LightGray,
-      contrastText: Withe, 
+      contrastText: White,
     },
     background: {
-      default: LightGray, 
-      paper: Withe, 
+      default: LightGray,
+      paper: White,
     },
     text: {
       primary: LightGray,
@@ -29,11 +29,11 @@ const theme = createTheme({
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
-      fontSize: '2.5rem',
+      fontSize: "2.5rem",
       fontWeight: 700,
     },
     h2: {
-      fontSize: '2rem',
+      fontSize: "2rem",
       fontWeight: 600,
     },
     button: {
@@ -44,14 +44,14 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: '8px',
-          padding: '8px 16px',
-          fontSize: '1rem',
+          borderRadius: "8px",
+          padding: "8px 16px",
+          fontSize: "1rem",
         },
         contained: {
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
           },
         },
       },
@@ -60,17 +60,17 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: DarkGray,
-          borderRadius: '12px',
-          padding: '16px',
+          borderRadius: "12px",
+          padding: "16px",
         },
       },
     },
     MuiLink: {
       styleOverrides: {
         root: {
-          textDecoration: 'none',
-          '&:hover': {
-            textDecoration: 'none',
+          textDecoration: "none",
+          "&:hover": {
+            textDecoration: "none",
           },
         },
       },
@@ -78,8 +78,8 @@ const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: '12px',
-          boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+          borderRadius: "12px",
+          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
         },
       },
     },
