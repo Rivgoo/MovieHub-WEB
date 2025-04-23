@@ -1,5 +1,5 @@
 export interface ApiErrorResponse {
-    code: string;
-    description: string;
-    errorType: string;
-  }
+  code: string;
+  description: string;
+  errorType: string;
+}

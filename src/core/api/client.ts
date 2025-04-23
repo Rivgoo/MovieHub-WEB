@@ -1,19 +1,19 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { ApiErrorResponse } from './types';
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import { ApiErrorResponse } from "./types";
 
 const apiClient = axios.create({
-  baseURL: 'https://movieposter.runasp.net/api/v1',
+  baseURL: "https://movieposter.runasp.net/api/v1",
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'text/plain; x-api-version=1'
+    "Content-Type": "application/json",
+    Accept: "text/plain; x-api-version=1",
   },
 });
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (token && config.headers && !config.headers.Authorization) {
-         config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -27,12 +27,14 @@ apiClient.interceptors.response.use(
   (error: AxiosError<ApiErrorResponse>) => {
     const originalRequestUrl = error.config?.url;
 
-    if (error.response?.status === 401 && originalRequestUrl !== '/auth') {
-      console.error('API Client: Unauthorized access (401) on protected route. Clearing session.');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('userData');
+    if (error.response?.status === 401 && originalRequestUrl !== "/auth") {
+      console.error(
+        "API Client: Unauthorized access (401) on protected route. Clearing session."
+      );
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userData");
 
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
