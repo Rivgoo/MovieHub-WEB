@@ -6,7 +6,6 @@ import Footer from "../../shared/components/Footer";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import { PrimaryButton } from "../../shared/components/Buttons";
