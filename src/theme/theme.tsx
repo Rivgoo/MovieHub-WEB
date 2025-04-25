@@ -4,7 +4,7 @@ const Orange = '#FF9A3D'; // Orange
 const DarkOrange = '#FF6715'; // DarkOrange
 const Withe = '#FFFFFF'; // Withe
 const LightGray = '#F5F5F5'; // LightGray
-const DarkGray = '#333333'; // DarkGray
+const DarkGray = '#1e1e1e'; // DarkGray
 
 const theme = createTheme({
   palette: {
