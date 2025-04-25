@@ -2,7 +2,7 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../core/auth/useAuth";
 import Footer from "../../shared/components/Footer";
-import Header from "../../components/Header/Header";
+import Header from "../../shared/components/Header/Header";
 import {PrimaryButton} from "../../shared/components/Buttons";
 
 import Box from "@mui/material/Box";
