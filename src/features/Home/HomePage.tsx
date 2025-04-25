@@ -1,15 +1,14 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../core/auth/useAuth";
-import Footer from "../../shared/components/Footer";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../core/auth/useAuth";
 import Header from "../../components/Header/Header";
-import {PrimaryButton} from "../../shared/components/Buttons";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
+import { PrimaryButton } from "../../shared/components/Buttons";
 
 const HomePage: React.FC = () => {
 	const {user, logout} = useAuth();
@@ -111,6 +110,7 @@ const HomePage: React.FC = () => {
 			<Footer />
 		</>
 	);
+
 };
 
 export default HomePage;

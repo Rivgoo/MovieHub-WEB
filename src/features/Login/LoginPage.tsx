@@ -108,7 +108,6 @@ const LoginPage: React.FC = () => {
 							disabled={isSubmitting}
 							error={!!error}
 						/>
-
 						<TextField
 							margin="normal"
 							required
