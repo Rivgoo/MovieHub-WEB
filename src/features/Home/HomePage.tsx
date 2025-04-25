@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../core/auth/useAuth";
-import Footer from "../../chared/components/Footer";
+import Footer from "../../shared/components/Footer";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
+import { PrimaryButton } from "../../shared/components/Buttons";
 
 const HomePage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -86,28 +86,26 @@ const HomePage: React.FC = () => {
             >
               Role: {user.role}
             </Typography>
-            <Button
+            <PrimaryButton
               variant="outlined"
               color="primary"
               onClick={handleLogout}
               sx={{ width: "50%" }}
             >
               Logout
-            </Button>
+            </PrimaryButton>
           </Box>
         ) : (
           <Box sx={{ textAlign: "center", width: "100%" }}>
             <Typography color="text.secondary" variant="body1" sx={{ mb: 2 }}>
               Please login to continue.
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
+            <PrimaryButton
               onClick={handleLogin}
               sx={{ width: "50%" }}
             >
               Login
-            </Button>
+            </PrimaryButton>
           </Box>
         )}
       </Paper>

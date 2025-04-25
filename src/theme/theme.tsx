@@ -1,29 +1,30 @@
 import { createTheme } from '@mui/material/styles';
 
-const Orange = '#FF9A3D'; // Orange
-const DarkOrange = '#FF6715'; // DarkOrange
-const Withe = '#FFFFFF'; // Withe
+const Orange = '#f78c30'; // Orange
+const DarkOrange = '#f6770a'; // DarkOrange
+const White = '#F8FCF8'; // White
 const LightGray = '#F5F5F5'; // LightGray
-const DarkGray = '#333333'; // DarkGray
+const DarkGray = '#1e1e1e'; // DarkGray
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: Orange, 
+      main: Orange,
       dark: DarkOrange, 
-      contrastText: Withe, 
+      light: White,
+      contrastText: White, 
     },
     secondary: {
       main: DarkGray,
-      contrastText: Withe, 
+      contrastText: White, 
     },
     background: {
       default: DarkGray, 
-      paper: Withe, 
+      paper: White, 
     },
     text: {
       primary: LightGray,
-      secondary: DarkGray,
+      secondary: DarkGray
     },
   },
   typography: {
