@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../core/auth/useAuth";
-import Footer from "../../chared/components/Footer";
+import Footer from "../../shared/components/Footer";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
