@@ -4,13 +4,9 @@ import {
 	Toolbar,
 	Typography,
 	InputBase,
-	Avatar,
 	Menu,
 	MenuItem,
-	Select,
-	FormControl,
-	IconButton,
-	Button,
+	IconButton
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -20,6 +16,7 @@ import {useTheme} from "@mui/material/styles";
 import getStyles from "./HeaderStyles";
 import Logo from "../../../assets/svg/Logo";
 import {useAuth} from "../../../core/auth/useAuth";
+import {BorderButton, PrimaryButton } from "../../../shared/components/Buttons";
 
 type Props = {};
 
@@ -70,26 +67,6 @@ export default function Header({}: Props) {
 				</Box>
 
 				<Box sx={styles.rightBox}>
-					<FormControl size="small" sx={styles.citySelectForm}>
-						{/* TODO: змінити дефолтне значення*/}
-						<Select
-							defaultValue="kyiv"
-							sx={styles.citySelect}
-							MenuProps={{
-								PaperProps: {
-									sx: styles.cityMenuPaper,
-								},
-							}}
-						>
-							{/* TODO: зробити варіанти вибору через .map */}
-							<MenuItem value="kyiv">Київ</MenuItem>
-							<MenuItem value="lviv">Львів</MenuItem>
-							<MenuItem value="lutsk">Луцьк</MenuItem>
-							<MenuItem value="odesa">Одеса</MenuItem>
-							<MenuItem value="dnipro">Дніпро</MenuItem>
-						</Select>
-					</FormControl>
-
 					{user ? (
 						<Box sx={styles.userBox}>
 							{/* TODO: розкоментувати та встановити значення якщо буде реалізоване фото профіля */}
@@ -122,20 +99,18 @@ export default function Header({}: Props) {
 						</Box>
 					) : (
 						<Box sx={styles.authBox}>
-							<Button
-								variant="outlined"
+							<BorderButton
 								sx={styles.loginButton}
 								onClick={handleToLoginPage}
 							>
 								Увійти
-							</Button>
-							<Button
-								variant="contained"
+							</BorderButton>
+							<PrimaryButton
 								sx={styles.registerButton}
 								onClick={handleToRegisterPage}
 							>
 								Зареєструватися
-							</Button>
+							</PrimaryButton>
 						</Box>
 					)}
 				</Box>
