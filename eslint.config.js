@@ -10,6 +10,7 @@ export default tseslint.config(
   { ignores: ['dist'] },
   {
     extends: [
+      'plugin:prettier/recommended',
       js.configs.recommended,
       ...tseslint.configs.recommendedTypeChecked,
       ...tseslint.configs.stylisticTypeChecked
