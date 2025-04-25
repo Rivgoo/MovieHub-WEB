@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Alert from "@mui/material/Alert";
 import Paper from "@mui/material/Paper";
+import Footer from "../../chared/components/Footer";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -60,6 +61,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
+    <>
     <Box
       sx={{
         display: "flex",
@@ -143,6 +145,9 @@ const LoginPage: React.FC = () => {
         </Box>
       </Container>
     </Box>
+
+    <Footer />
+    </>
   );
 };
 
