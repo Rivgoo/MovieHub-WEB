@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../core/auth/useAuth";
+import Footer from "../../chared/components/Footer";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -23,14 +24,17 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <Container
+  <>
+    <Container 
+      
       maxWidth="sm"
       sx={{
         mt: 4,
         mb: 4,
         display: "flex",
         justifyContent: "center",
-      }}
+        background: "background.default",
+        }}
     >
       <Paper
         elevation={3}
@@ -108,6 +112,8 @@ const HomePage: React.FC = () => {
         )}
       </Paper>
     </Container>
+    <Footer />
+  </>
   );
 };
 
