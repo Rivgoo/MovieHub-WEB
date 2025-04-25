@@ -1,8 +1,8 @@
-import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
-import {AuthProvider} from "./core/auth/AuthContext";
-import {LoginPage} from "./features/Login";
-import {HomePage} from "./features/Home";
-import {ThemeProvider} from "@mui/material/styles";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./core/auth/AuthContext";
+import LoginPage from "./features/Login/LoginPage";
+import HomePage from "./features/Home/HomePage";
+import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme/theme";
 
 function App() {
