@@ -18,8 +18,8 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useTheme} from "@mui/material/styles";
 import getStyles from "./HeaderStyles";
-import Logo from "../../assets/svg/Logo";
-import {useAuth} from "../../core/auth/useAuth";
+import Logo from "../../../assets/svg/Logo";
+import {useAuth} from "../../../core/auth/useAuth";
 
 type Props = {};
 
