@@ -2,9 +2,12 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const PrimaryButton = styled(Button)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.secondary.contrastText,
     transition: 'all 0.3s ease',
     '&:hover': {
-      boxShadow: theme.shadows[4],
+      boxShadow: theme.shadows[3],
+      backgroundColor: theme.palette.primary.dark,
     },
   }));
 

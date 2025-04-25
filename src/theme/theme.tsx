@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 
-const Orange = '#FF9A3D'; // Orange
-const DarkOrange = '#FF6715'; // DarkOrange
+const Orange = '#f78c30'; // Orange
+const DarkOrange = '#f6770a'; // DarkOrange
 const Withe = '#FFFFFF'; // Withe
 const LightGray = '#F5F5F5'; // LightGray
 const DarkGray = '#1e1e1e'; // DarkGray
