@@ -3,77 +3,71 @@ import ProtectedRoute from './core/auth/ProtectedRoute';
 import { AuthProvider } from './core/auth/AuthContext';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme/theme';
-import LoginPage from './features/Login/LoginPage';
-import HomePage from './features/Home/HomePage';
-import AboutPage from './features/About/AboutPage';
-import ErrorPage from './features/Error/ErrorPage';
-import PrivacyPage from './features/Privacy/PrivacyPage';
-import FilmPage from './features/Film/FilmPage';
-import FilmSearchPage from './features/Film/FilmSearchPage';
-import SessionPage from './features/Session/SessionPage';
-import SessionSearchPage from './features/Session/SessionSearchPage';
-import CustomerAccountPage from './features/Customer/AccountPage';
-import AdminDashboardPage from './features/Admin/DashboardPage';
-import FavoritePage from './features/Customer/FavoritePage';
-import BookingPage from './features/Customer/BookingPage';
-import RegistrationPage from './features/Registration/RegistrationPage';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import { Suspense } from 'react';
+import React from 'react';
+
+const LoginPage = React.lazy(() => import('./features/Login/LoginPage'));
+const HomePage = React.lazy(() => import('./features/Home/HomePage'));
+const AboutPage = React.lazy(() => import('./features/About/AboutPage'));
+const ErrorPage = React.lazy(() => import('./features/Error/ErrorPage'));
+const PrivacyPage = React.lazy(() => import('./features/Privacy/PrivacyPage'));
+const FilmPage = React.lazy(() => import('./features/Film/FilmPage'));
+const FilmSearchPage = React.lazy(() => import('./features/Film/FilmSearchPage'));
+const SessionPage = React.lazy(() => import('./features/Session/SessionPage'));
+const SessionSearchPage = React.lazy(() => import('./features/Session/SessionSearchPage'));
+const CustomerAccountPage = React.lazy(() => import('./features/Customer/AccountPage'));
+const AdminDashboardPage = React.lazy(() => import('./features/Admin/DashboardPage'));
+const FavoritePage = React.lazy(() => import('./features/Customer/FavoritePage'));
+const BookingPage = React.lazy(() => import('./features/Customer/BookingPage'));
+const RegistrationPage = React.lazy(() => import('./features/Registration/RegistrationPage'));
+
+const LoadingFallback = () => (
+  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <CircularProgress />
+  </Box>
+);
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <ThemeProvider theme={theme}>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/error" element={<ErrorPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/film/:id" element={<FilmPage />} />
-            <Route path="/film-search" element={<FilmSearchPage />} />
-            <Route path="/session/:id" element={<SessionPage />} />
-            <Route path="/session-search" element={<SessionSearchPage />} />
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/registration" element={<RegistrationPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/error" element={<ErrorPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/film/:id" element={<FilmPage />} />
+              <Route path="/film-search" element={<FilmSearchPage />} />
+              <Route path="/session/:id" element={<SessionPage />} />
+              <Route path="/session-search" element={<SessionSearchPage />} />
 
-            <Route
-              path="/account"
-              element={
-                <ProtectedRoute>
-                  <CustomerAccountPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/account"
+                element={<ProtectedRoute><CustomerAccountPage /></ProtectedRoute>}
+              />
+              <Route
+                path="/account/favorite"
+                element={<ProtectedRoute><FavoritePage /></ProtectedRoute>}
+              />
+              <Route
+                path="/account/booking"
+                element={<ProtectedRoute><BookingPage /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin/dashboard"
+                element={<ProtectedRoute><AdminDashboardPage /></ProtectedRoute>}
+              />
 
-            <Route
-              path="/account/favorite"
-              element={
-                <ProtectedRoute>
-                  <FavoritePage />
-                </ProtectedRoute>
-              }
-            />
+              <Route path="/" element={<HomePage />} />
 
-            <Route
-              path="/account/booking"
-              element={
-                <ProtectedRoute>
-                  <BookingPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboardPage />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route path="/" element={<HomePage />} />
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+              <Route path="*" element={<Navigate to="/error" replace />} />
+            </Routes>
+          </Suspense>
         </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
