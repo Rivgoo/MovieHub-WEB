@@ -1,8 +1,13 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { ApiErrorResponse } from "./types";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+if (!baseURL) {
+  throw new Error('VITE_API_BASE_URL is not defined in .env file');
+}
+
 const apiClient = axios.create({
-  baseURL: "https://movieposter.runasp.net/api/v1",
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
     Accept: "text/plain; x-api-version=1",
