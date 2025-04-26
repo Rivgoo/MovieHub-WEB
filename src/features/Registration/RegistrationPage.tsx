@@ -2,10 +2,12 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Footer from '../../shared/components/Footer';
+import Header from '../../shared/components/Header/Header';
 
 const RegistrationPage = () => {
   return (
     <>
+      <Header />
       <Container
         maxWidth="sm"
         sx={{

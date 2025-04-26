@@ -2,10 +2,23 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Footer from '../../shared/components/Footer';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../core/auth/useAuth';
+import { PrimaryButton } from '../../shared/components/Buttons';
+import Header from '../../shared/components/Header/Header';
 
 const CustomerAccountPage = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/', { replace: true });
+  };
+
   return (
     <>
+      <Header />
       <Container
         maxWidth="sm"
         sx={{
@@ -36,6 +49,9 @@ const CustomerAccountPage = () => {
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
             This page is under construction. Please check back later.
           </Typography>
+          <PrimaryButton onClick={handleLogout} sx={{ width: '50%' }}>
+            Вийти
+          </PrimaryButton>
         </Paper>
       </Container>
       <Footer />
