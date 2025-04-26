@@ -6,7 +6,7 @@ export default (theme: Theme) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    flexGrow: 1,
+    height: '100%',
     bgcolor: theme.palette.background.default,
     p: 2,
   },

@@ -14,6 +14,7 @@ import Logo from '../../../assets/svg/Logo';
 import { useAuth } from '../../../core/auth/useAuth';
 import { PrimaryButton } from '../Buttons';
 import getStyles from './HeaderStyles';
+import { UserRole } from '../../../core/auth/types';
 
 const navItems = [
   { label: 'Головна', path: '/' },
@@ -64,9 +65,10 @@ function UserBlockOrAuth() {
   const { user } = useAuth();
 
   const handleToAccountPage = () =>
-    navigate(user?.role === 'Customer' ? '/account' : '/admin/dashboard', {
-      replace: true,
-    });
+    navigate(
+      user?.role === UserRole.Customer ? '/account' : '/admin/dashboard',
+      { replace: true }
+    );
   const handleToLoginPage = () => navigate('/login', { replace: true });
   const handleToRegisterPage = () =>
     navigate('/registration', { replace: true });
