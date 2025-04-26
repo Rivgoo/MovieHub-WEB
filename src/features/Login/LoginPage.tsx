@@ -16,21 +16,11 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
-import Footer from '../../shared/components/Footer';
-import Header from '../../shared/components/Header/Header';
 import { useTheme } from '@mui/material';
 
-const LoginPage: React.FC = () => {
-  return (
-    <>
-      <Header />
-      <LoginForm />
-      <Footer />
-    </>
-  );
-};
+import Layout from '../../shared/components/Layout';
 
-const LoginForm: React.FC = () => {
+const LoginPage: React.FC = () => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
@@ -76,72 +66,74 @@ const LoginForm: React.FC = () => {
       setIsSubmitting(false);
     }
   };
-
   return (
-    <Box sx={styles.wrapper}>
-      <Container component={Paper} maxWidth="xs" sx={styles.container}>
-        <Typography component="h1" variant="h5" sx={styles.title}>
-          Login
-        </Typography>
+    <Layout>
+      <Box sx={styles.wrapper}>
+        <Container component={Paper} maxWidth="xs" sx={styles.container}>
+          <Typography component="h1" variant="h5" sx={styles.title}>
+            Login
+          </Typography>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-          sx={styles.form}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={isSubmitting}
-            error={!!error}
-            sx={styles.textField}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={isSubmitting}
-            error={!!error}
-            sx={styles.textField}
-          />
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={styles.form}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubmitting}
+              error={!!error}
+              sx={styles.textField}
+            />
 
-          {error && (
-            <Alert severity="error" sx={styles.errorBox}>
-              {error}
-            </Alert>
-          )}
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isSubmitting}
+              error={!!error}
+              sx={styles.textField}
+            />
 
-          <PrimaryButton
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
-            sx={styles.button}>
-            {isSubmitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              'Login'
+            {error && (
+              <Alert severity="error" sx={styles.errorBox}>
+                {error}
+              </Alert>
             )}
-          </PrimaryButton>
-        </Box>
-      </Container>
-    </Box>
+
+            <PrimaryButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={isSubmitting}
+              sx={styles.button}>
+              {isSubmitting ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                'Login'
+              )}
+            </PrimaryButton>
+          </Box>
+        </Container>
+      </Box>
+    </Layout>
   );
 };
 
