@@ -5,7 +5,7 @@ import Footer from '../../shared/components/Footer';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../core/auth/useAuth';
 import { PrimaryButton } from '../../shared/components/Buttons';
-import Header from '../../shared/components/Header/Header';
+import Layout from '../../shared/components/Layout';
 
 const CustomerAccountPage = () => {
   const navigate = useNavigate();
@@ -17,8 +17,7 @@ const CustomerAccountPage = () => {
   };
 
   return (
-    <>
-      <Header />
+    <Layout>
       <Container
         maxWidth="sm"
         sx={{
@@ -54,8 +53,7 @@ const CustomerAccountPage = () => {
           </PrimaryButton>
         </Paper>
       </Container>
-      <Footer />
-    </>
+    </Layout>
   );
 };
 

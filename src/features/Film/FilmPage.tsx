@@ -3,15 +3,13 @@ import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Footer from '../../shared/components/Footer';
-import Header from '../../shared/components/Header/Header';
+import Layout from '../../shared/components/Layout';
 
 const FilmPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <>
-      <Header />
+    <Layout>
       <Container
         maxWidth="sm"
         sx={{
@@ -45,8 +43,7 @@ const FilmPage: React.FC = () => {
           </Typography>
         </Paper>
       </Container>
-      <Footer />
-    </>
+    </Layout>
   );
 };
 

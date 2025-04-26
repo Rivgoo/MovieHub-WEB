@@ -1,11 +1,10 @@
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Footer from '../../shared/components/Footer';
 import { useAuth } from '../../core/auth/useAuth';
 import { PrimaryButton } from '../../shared/components/Buttons';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../shared/components/Header/Header';
+import Layout from '../../shared/components/Layout';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -17,8 +16,7 @@ const DashboardPage = () => {
   };
 
   return (
-    <>
-      <Header />
+    <Layout>
       <Container
         maxWidth="sm"
         sx={{
@@ -54,8 +52,7 @@ const DashboardPage = () => {
           </PrimaryButton>
         </Paper>
       </Container>
-      <Footer />
-    </>
+    </Layout>
   );
 };
 

@@ -14,8 +14,7 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
-import Footer from '../../shared/components/Footer';
-import Header from '../../shared/components/Header/Header';
+import Layout from '../../shared/components/Layout';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -62,8 +61,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <>
-      <Header />
+    <Layout>
       <Box
         sx={{
           display: 'flex',
@@ -144,9 +142,7 @@ const LoginPage: React.FC = () => {
           </Box>
         </Container>
       </Box>
-
-      <Footer />
-    </>
+    </Layout>
   );
 };
 
