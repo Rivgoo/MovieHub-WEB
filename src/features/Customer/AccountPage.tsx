@@ -1,7 +1,6 @@
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Footer from '../../shared/components/Footer';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../core/auth/useAuth';
 import { PrimaryButton } from '../../shared/components/Buttons';
