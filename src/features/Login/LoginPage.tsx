@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAuth } from '../../core/auth/useAuth';
+import getStyles from './LoginPage.styles.ts';
 import { loginUser } from './api';
 import { ApiErrorResponse } from '../../core/api/types';
 import axios from 'axios';
@@ -9,15 +10,30 @@ import axios from 'axios';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { PrimaryButton } from '../../shared/components/Buttons.tsx';
+
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Paper from '@mui/material/Paper';
 import Footer from '../../shared/components/Footer';
 import Header from '../../shared/components/Header/Header';
+import { useTheme } from '@mui/material';
 
 const LoginPage: React.FC = () => {
+  return (
+    <>
+      <Header />
+      <LoginForm />
+      <Footer />
+    </>
+  );
+};
+
+const LoginForm: React.FC = () => {
+  const theme = useTheme();
+  const styles = getStyles(theme);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -62,91 +78,70 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <>
-      <Header />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '80vh',
-          bgcolor: 'background.default',
-          p: 2,
-        }}>
-        <Container
-          component={Paper}
-          maxWidth="xs"
-          sx={{
-            p: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            borderRadius: '12px',
-          }}>
-          <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-            Login
-          </Typography>
+    <Box sx={styles.wrapper}>
+      <Container component={Paper} maxWidth="xs" sx={styles.container}>
+        <Typography component="h1" variant="h5" sx={styles.title}>
+          Login
+        </Typography>
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ width: '100%' }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              disabled={isSubmitting}
-              error={!!error}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isSubmitting}
-              error={!!error}
-            />
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          noValidate
+          sx={styles.form}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={isSubmitting}
+            error={!!error}
+            sx={styles.textField}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={isSubmitting}
+            error={!!error}
+            sx={styles.textField}
+          />
 
-            {error && (
-              <Alert severity="error" sx={{ mt: 2, width: '100%' }}>
-                {error}
-              </Alert>
+          {error && (
+            <Alert severity="error" sx={styles.errorBox}>
+              {error}
+            </Alert>
+          )}
+
+          <PrimaryButton
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}
+            sx={styles.button}>
+            {isSubmitting ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Login'
             )}
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              disabled={isSubmitting}
-              sx={{ mt: 3, mb: 2 }}>
-              {isSubmitting ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                'Login'
-              )}
-            </Button>
-          </Box>
-        </Container>
-      </Box>
-
-      <Footer />
-    </>
+          </PrimaryButton>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
