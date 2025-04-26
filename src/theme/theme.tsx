@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-const Orange = '#f78c30'; // Orange
+const Orange = '#da621c'; // Orange
 const DarkOrange = '#f6770a'; // DarkOrange
 const White = '#F8FCF8'; // White
 const LightGray = '#F5F5F5'; // LightGray
@@ -10,21 +10,21 @@ const theme = createTheme({
   palette: {
     primary: {
       main: Orange,
-      dark: DarkOrange, 
+      dark: DarkOrange,
       light: White,
-      contrastText: White, 
+      contrastText: White,
     },
     secondary: {
       main: DarkGray,
-      contrastText: White, 
+      contrastText: White,
     },
     background: {
-      default: DarkGray, 
-      paper: White, 
+      default: DarkGray,
+      paper: White,
     },
     text: {
       primary: LightGray,
-      secondary: DarkGray
+      secondary: DarkGray,
     },
   },
   typography: {
@@ -50,6 +50,8 @@ const theme = createTheme({
           fontSize: '1rem',
         },
         contained: {
+          width: "100%",
+          maxWidth: "lg",
           boxShadow: 'none',
           '&:hover': {
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
