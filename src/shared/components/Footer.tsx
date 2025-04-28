@@ -1,7 +1,10 @@
 import React from "react";
 import {Box, Typography, Link} from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 const Footer: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <Box
       component="footer"
@@ -74,6 +77,10 @@ const Footer: React.FC = () => {
           >
             <Link
               href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/privacy'); 
+              }}
               color="inherit"
               underline="hover"
               display="block"
@@ -83,6 +90,10 @@ const Footer: React.FC = () => {
             </Link>
             <Link
               href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/terms'); 
+              }}
               color="inherit"
               underline="hover"
               display="block"
@@ -92,6 +103,10 @@ const Footer: React.FC = () => {
             </Link>
             <Link
               href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/about'); 
+              }}
               color="inherit"
               underline="hover"
               display="block"

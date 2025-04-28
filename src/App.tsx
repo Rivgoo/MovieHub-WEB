@@ -14,6 +14,7 @@ const HomePage = React.lazy(() => import('./features/Home/HomePage'));
 const AboutPage = React.lazy(() => import('./features/About/AboutPage'));
 const ErrorPage = React.lazy(() => import('./features/Error/ErrorPage'));
 const PrivacyPage = React.lazy(() => import('./features/Privacy/PrivacyPage'));
+const TermsPage = React.lazy(() => import('./features/Terms/TermsPage'));
 const FilmPage = React.lazy(() => import('./features/Film/FilmPage'));
 const FilmSearchPage = React.lazy(
   () => import('./features/Film/FilmSearchPage')
@@ -60,6 +61,7 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/error" element={<ErrorPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
               <Route path="/film/:id" element={<FilmPage />} />
               <Route path="/film-search" element={<FilmSearchPage />} />
               <Route path="/session/:id" element={<SessionPage />} />
