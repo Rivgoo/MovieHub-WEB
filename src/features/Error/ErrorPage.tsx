@@ -1,41 +1,70 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import { PrimaryButton } from '../../shared/components/Buttons';
 import Layout from '../../shared/components/Layout';
 
-const ErrorPage = () => {
+const ErrorPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleGoHome = () => {
+    navigate('/');
+  };
+
   return (
     <Layout>
       <Container
         maxWidth="sm"
         sx={{
-          mt: 4,
-          mb: 4,
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
-          background: 'background.default',
+          alignItems: 'center',
+          flexGrow: 1,
+          pt: 6,
+          pb: 9
         }}>
         <Paper
-          elevation={3}
+          elevation={5}
           sx={{
-            p: 4,
+            p: { xs: 3, sm: 4 },
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            textAlign: 'center',
+            borderRadius: '16px',
           }}>
+
           <Typography
-            variant="h4"
+            variant="h3"
             component="h1"
             gutterBottom
             color="text.secondary"
-            sx={{ fontWeight: 600 }}>
-            404 - Page Not Found
+            sx={{ fontWeight: 700 }}>
+            404
+          </Typography>
+          <Typography
+            variant="h5"
+            component="p"
+            color="text.secondary"
+            sx={{ mb: 2 }}>
+            Сторінку не знайдено
           </Typography>
 
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            Sorry, the page you are looking for does not exist.
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+            На жаль, сторінка, яку ви шукаєте, не існує. Можливо, її було
+            переміщено або видалено.
           </Typography>
+
+          <PrimaryButton
+            onClick={handleGoHome}
+            sx={{ px: 4, py: 1, width: '80%' }}
+          >
+            Назад на сайт
+          </PrimaryButton>
         </Paper>
       </Container>
     </Layout>

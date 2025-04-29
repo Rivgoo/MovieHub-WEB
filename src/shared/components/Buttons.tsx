@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 export const PrimaryButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   borderRadius: '0.85rem',
-  transformDecoration: 'none',
+  textTransform: 'none',
   color: theme.palette.secondary.contrastText,
   transition: 'all 0.3s ease',
   '&:hover': {
@@ -17,7 +17,7 @@ export const PulseButton = styled(Button)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   borderRadius: '0.85rem',
-  transformDecoration: 'none',
+  textTransform: 'none',
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.secondary.contrastText,
   '&:after': {
@@ -52,7 +52,7 @@ export const PulseButton = styled(Button)(({ theme }) => ({
 export const RotateIconButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.main,
   color: theme.palette.secondary.contrastText,
-  transformDecoration: 'none',
+  textTransform: 'none',
   transition: 'all 0.3s ease',
   '& .MuiButton-startIcon': {
     transition: 'transform 0.3s ease',
@@ -70,7 +70,7 @@ export const LiftShadowButton = styled(Button)(({ theme }) => ({
   transition: 'all 0.3s ease',
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.secondary.contrastText,
-  transformDecoration: 'none',
+  textTransform: 'none',
   borderRadius: '0.85rem',
   boxShadow: theme.shadows[2],
   '&:hover': {
@@ -83,7 +83,7 @@ export const FillBorderButton = styled(Button)(({ theme }) => ({
   position: 'relative',
   border: `2px solid ${theme.palette.primary.main}`,
   color: theme.palette.primary.light,
-  transformDecoration: 'none',
+  textTransform: 'none',
   borderRadius: '0.85rem',
   background: 'transparent',
   transition: 'all 0.3s ease',
@@ -109,7 +109,7 @@ export const FillBorderButton = styled(Button)(({ theme }) => ({
 export const BorderButton = styled(Button)(({ theme }) => ({
   border: `2px solid ${theme.palette.primary.light}`,
   color: theme.palette.secondary.contrastText,
-  transformDecoration: 'none',
+  textTransform: 'none',
   borderRadius: '0.85rem',
   background: 'transparent',
   transition: 'all 0.3s ease',
@@ -123,7 +123,7 @@ export const NeonButton = styled(Button)(({ theme }) => ({
   border: `2px solid ${theme.palette.primary.main}`,
   borderRadius: '0.85rem',
   color: theme.palette.primary.main,
-  transformDecoration: 'none',
+  textTransform: 'none',
   background: 'transparent',
   transition: 'all 0.3s ease',
   boxShadow: `0 0 10px ${theme.palette.primary.main}`,
@@ -137,7 +137,7 @@ export const NeonButton = styled(Button)(({ theme }) => ({
 export const GlowButton = styled(Button)(({ theme }) => ({
   background: theme.palette.secondary.main,
   color: theme.palette.secondary.contrastText,
-  transformDecoration: 'none',
+  textTransform: 'none',
   borderRadius: '0.85rem',
   transition: 'all 0.3s ease',
   '&:hover': {
