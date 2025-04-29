@@ -12,12 +12,13 @@ const Footer: React.FC = () => {
         backgroundColor: "secondary.main",
         color: "secondary.contrastText",
         py: {xs: 4, md: 6},
-        mt: "auto",
+        m: "auto",
         width: "100%",
+        maxWidth: { lg: 'lg', md: 'md', sm: 'sm' },
       }}
     >
       {/* Background */}
-      <Box sx={{maxWidth: "70%", mx: "auto", px: {xs: 2, md: 4}}}>
+      <Box sx={{ mx: "auto"}}>
         <Box
           sx={{
             display: "flex",

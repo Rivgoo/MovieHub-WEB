@@ -1,17 +1,24 @@
 import { Theme } from '@mui/material';
 
+export const drawerWidth = 240;
+
 export default (theme: Theme) => ({
   appBar: {
     paddingTop: '0.5rem',
     bgcolor: theme.palette.background.default,
     boxShadow: 'none',
+    position: 'sticky',
+    top: 0,
+    zIndex: theme.zIndex.drawer + 1,
   },
   toolbar: {
     width: '100%',
     maxWidth: { lg: 'lg', md: 'md', sm: 'sm' },
     margin: 'auto',
     justifyContent: 'space-between',
+    alignItems: 'center',
     position: 'relative',
+    minHeight: '64px',
   },
   logoBox: {
     display: 'flex',
@@ -19,38 +26,24 @@ export default (theme: Theme) => ({
     cursor: 'pointer',
     gap: theme.spacing(1.5),
   },
-  searchBox: {
-    position: 'relative',
+
+  desktopNavContainer: {
+    width: '100%',
+    pl: '1.5rem',
+    justifyContent: 'space-between',
+    display: { xs: 'none', md: 'flex' },
+    alignItems: 'center'
+  },
+  navLinksStack: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    height: '40px',
-    width: '40px',
-    border: '2px solid',
-    borderColor: theme.palette.primary.main,
-    borderRadius: '999px',
-    backgroundColor: 'transparent',
-    transition: 'all 0.3s ease',
-    overflow: 'hidden',
-
-    '&:hover, &:focus-within': {
-      width: '220px',
-      [`& .MuiInputBase-root`]: {
-        opacity: 1,
-        paddingLeft: '16px',
-      },
-    },
+    gap: theme.spacing(1),
   },
-
-  searchIconWrapper: {
-    position: 'absolute',
-    right: '8px',
-    top: '8px',
-    pointerEvents: 'none',
-    color: theme.palette.common.white,
-    zIndex: 1,
+  authContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
   },
-
   inputBase: {
     flexGrow: 1,
     width: '100%',
@@ -62,12 +55,6 @@ export default (theme: Theme) => ({
     '& input': {
       padding: 0,
     },
-  },
-
-  navBar: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(2),
   },
   authBox: {
     display: 'flex',
@@ -88,7 +75,7 @@ export default (theme: Theme) => ({
     borderRadius: '1.5rem',
     padding: '0.5rem 1.25rem',
     '&:hover': {
-      bgcolor: theme.palette.primary.dark
+      bgcolor: theme.palette.primary.dark,
     },
   },
   accountButton: {
@@ -97,19 +84,31 @@ export default (theme: Theme) => ({
     borderRadius: '1.5rem',
     padding: '0.5rem 1.25rem',
     '&:hover': {
-      bgcolor: theme.palette.primary.dark
+      bgcolor: theme.palette.primary.dark,
     },
   },
-  userAvatar: {
-    width: 30,
-    height: 30,
-    borderRadius: '50%',
-    cursor: 'pointer',
+
+  menuButton: {
+    padding: 0,
+    width: '55px',
+    height: '20px',
+    color: theme.palette.primary.light,
+    display: { xs: 'flex', md: 'none' },
   },
-  userAvaterBox: {
+  drawer: {
+    display: { xs: 'block', md: 'none' },
+    '& .MuiDrawer-paper': {
+      boxSizing: 'border-box',
+      width: drawerWidth,
+      backgroundColor: theme.palette.background.default,
+      color: theme.palette.primary.light,
+    },
+  },
+  drawerHeader: {
+    ...theme.mixins.toolbar,
     display: 'flex',
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+  }
 });
