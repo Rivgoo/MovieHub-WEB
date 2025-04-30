@@ -42,21 +42,6 @@ const FilmPage: React.FC = () => {
       try {
         const response = await apiClient.get(`/contents/${id}`);
         setFilm(response.data);
-        // console.log(response.data);
-        // setFilm({
-        //   id: 0,
-        //   title: 'Hello',
-        //   description: 'Це тестовий опис фільму',
-        //   rating: 100,
-        //   releaseYear: 2000,
-        //   trailerUrl: '',
-        //   posterUrl: '',
-        //   durationMinutes: 120,
-        //   genreIds: [1, 2],
-        //   actorIds: [5, 9],
-        //   createdAt: new Date().toISOString(),
-        //   updatedAt: new Date().toISOString(),
-        // });
       } catch (err) {
         let errorMessage = 'Не вдалося завантажити інформацію про фільм.';
 
