@@ -1,9 +1,9 @@
 :root {
-    --admin-dark: #1B2230;
-    --primary-dark: #FF6715;
-    --primary-light: #c35013;
-    --admin-navy: #273142;
-  }
+  --admin-dark: #1e1e1e;
+  --primary-dark: #FF6715;
+  --primary-light: #c35013;
+  --admin-navy: #242424;
+}
   
   body {
     overflow-x: hidden;
@@ -14,7 +14,10 @@
     flex-direction: column;
     height: 100%;
   }
-  
+  .sidebarContainer{
+    max-width: 185px;
+    padding: 0.75rem !important;
+  }
   .sidebarContent {
     display: flex;
     flex-direction: column;
@@ -49,12 +52,12 @@
   .siteMenu {
     display: flex;
     flex-direction: column;
-    align-items: end;
+    align-items: center;
   }
   
   .listMenu li,
   .siteMenu li {
-    width: 85%;
+    width: 100%;
   }
   
   .listItemText,
@@ -75,13 +78,14 @@
   }
   
   .logoutBox {
-    margin-top: 15px;
+    margin-top: 0.1rem;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
   }
   
   .logoutButton {
-    width: 75%;
     background-color: var(--primary-dark);
     color: #fff;
     font-weight: bold;
@@ -93,20 +97,20 @@
   
   .adminMenuItem,
   .siteMenuItem {
-    padding: 10px 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     color: #fff;
+    border-radius: 0.75rem;
+    margin-top: 0.25rem;
   }
   
   .adminMenuItem:hover,
   .siteMenuItem:hover {
-    background-color: #333;
+    background-color: var(--primary-dark);
   }
   
-  .active {
+  .adminMenuItemActive {
     background-color: var(--primary-dark);
-    border-left: 5px solid var(--primary-dark);
   }
   
   .burgerLines {
@@ -123,7 +127,7 @@
     width: 100%;
     background-color: white;
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: all 0.15s ease;
   }
   
   .burgerLines.open span:first-child {
@@ -141,7 +145,6 @@
     .siteMenuActive {
       display: flex;
       justify-content: center;
-      width: 75%;
     }
   
     .burgerActive.sidebarContent {
@@ -159,9 +162,13 @@
   }
   
   @media (max-width: 900px) {
+    .listMenu li {
+      width: 75%;
+    }
+
     .burgerButton {
       display: block;
-      top: 25px;
+      top: 15px;
     }
   
     .logoutButton {
@@ -171,7 +178,12 @@
   
   @media (max-width: 901px) {
     .sidebar {
-      display: none;
+      display: none !important;
+    }
+
+    .sidebarContainer {
+      width: 0px !important;
+      padding: 0 !important;
     }
   }
   

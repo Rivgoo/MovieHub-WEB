@@ -1,7 +1,9 @@
 :root {
-    --admin-dark: #1B2230;
-    --admin-navy: #273142;
-} 
+  --admin-dark: #1e1e1e;
+  --primary-dark: #FF6715;
+  --primary-light: #c35013;
+  --admin-navy: #242424;
+}
 
 .dashboardPage {
     display: flex;

@@ -1,47 +1,27 @@
 :root {
-    --admin-dark: #1B2230;
+    --admin-dark: #1e1e1e;
     --primary-dark: #FF6715;
     --primary-light: #c35013;
-    --admin-navy: #273142;
-} 
+    --admin-navy: #242424;
+  }
 
 .topbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 16px 32px;
+    justify-content: end;
+    padding: 10px 0px;
     background-color: var(--admin-navy);
     border-bottom: 1px solid var(--admin-dark);
 }
-  
-.searchBox {
-    display: flex;
-    align-items: center;
-    background-color: var(--admin-dark);
-    border-radius: 12px;
-    padding-left: 5px;
-}
-  
-.searchIcon {
-    color: #8d99ae;
-    margin-right: 8px;
-}
-  
-.searchInput {
-    color: white;
-    width: 300px;
-}
+
   
 .profileBox {
     display: flex;
     align-items: center;
-    width: 210px;
-}
-  
-.profileAvatar {
-    width: 40px;
-    height: 40px;
-    margin-right: 16px;
+    justify-content: end;
+    padding-right: 1.25rem;
+    width: fit-content;
+    text-align: right;
 }
   
 .profileName {
@@ -55,63 +35,10 @@
     font-size: 0.95em;
 }
   
-.MuiIconButton-root {
-    padding: 0;
-}
-  
 /* Media Queries */
 @media (max-width: 750px) {
-    .profileBox .profileName,
-    .profileBox .profileRole {
-      display: none;
-}
-  
     .topbar {
       padding-left: 0;
       padding-right: 0;
-    }
-  
-    .profileBox {
-      width: 140px;
-    }
-}
-  
-@media (max-width: 930px) {
-    .searchInput {
-      width: 280px;
-    }
-}
-  
-@media (max-width: 600px) {
-    .searchInput {
-      width: 200px;
-    }
-  
-    .profileBox {
-      width: 110px;
-    }
-}
-  
-  @media (max-width: 500px) {
-    .searchInput {
-      width: 130px;
-    }
-  
-    .profileBox {
-      width: 100px;
-    }
-  }
-  
-@media (max-width: 400px) {
-    .searchInput {
-        width: 120px;
-    }
-
-    .profileAvatar {
-        margin-right: 0;
-    }
-
-    .profileBox {
-        width: 85px;
     }
 }
