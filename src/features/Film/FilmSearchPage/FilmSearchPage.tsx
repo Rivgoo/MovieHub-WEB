@@ -11,12 +11,13 @@ import {
   CircularProgress,
   useMediaQuery,
 } from '@mui/material';
-import Layout from '../../shared/components/Layout';
+import Layout from '../../../shared/components/Layout.tsx';
 import getStyles from './FilmSearchPage.styles.ts';
 import { SearchSharp } from '@mui/icons-material';
 import axios, { AxiosError } from 'axios';
+import apiClient from '../../../core/api/client.ts';
 import { useNavigate } from 'react-router-dom';
-import { ApiErrorResponse } from '../../core/api/types';
+import { ApiErrorResponse } from '../../../core/api/types.ts';
 
 const FilmSearchPage: React.FC = () => {
   const theme = useTheme();
@@ -34,30 +35,31 @@ const FilmSearchPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const searchResponse = await axios.get(
-        `/api/v1/contents/filter?SearchTerms=${encodeURIComponent(movieQuery)}`
+      const searchResponse = await apiClient.get(
+        `/contents/filter?SearchTerms=${encodeURIComponent(movieQuery)}`
       );
+
       const results = searchResponse.data.items;
 
       // Testing response
       // const results = [
       //   {
-      //     id: 0,
-      //     title: 'Hello',
-      //     description: 'string',
-      //     rating: 100,
-      //     releaseYear: 2000,
-      //     trailerUrl: 'string',
-      //     posterUrl: 'string',
-      //     durationMinutes: 0,
-      //     genreIds: [0],
-      //     actorIds: [0],
-      //     createdAt: '2025-04-30T15:00:34.159Z',
-      //     updatedAt: '2025-04-30T15:00:34.159Z',
+      //   id: 0,
+      //   title: 'Hello',
+      //   description: 'Це тестовий опис фільму',
+      //   rating: 100,
+      //   releaseYear: 2000,
+      //   trailerUrl: '',
+      //   posterUrl: '',
+      //   durationMinutes: 120,
+      //   genreIds: [1, 2],
+      //   actorIds: [5, 9],
+      //   createdAt: new Date().toISOString(),
+      //   updatedAt: new Date().toISOString(),
       //   },
       // ];
 
-      // console.log('Отримано результати пошуку:', results);
+      console.log('Отримано результати пошуку:', results);
 
       if (!results || results.length === 0) {
         setError('Фільм не знайдено');
@@ -127,7 +129,7 @@ const FilmSearchPage: React.FC = () => {
                     onClick={handleSubmit}
                     disabled={isSubmitting}
                     edge="end"
-                    sx={{ color: theme.palette.primary.light }}>
+                    sx={styles.submitButton}>
                     <SearchSharp />
                   </IconButton>
                 </InputAdornment>
