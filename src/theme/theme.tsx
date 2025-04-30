@@ -5,6 +5,7 @@ const DarkOrange = '#f6770a'; // DarkOrange
 const White = '#F8FCF8'; // White
 const LightGray = '#F5F5F5'; // LightGray
 const DarkGray = '#1e1e1e'; // DarkGray
+const AdminNavBackground = '#242424';
 
 const theme = createTheme({
   palette: {
@@ -26,6 +27,11 @@ const theme = createTheme({
       primary: LightGray,
       secondary: DarkGray,
     },
+    admin: {
+      main: AdminNavBackground,
+      navBackground: AdminNavBackground, 
+      contrastText: White,
+    }
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
