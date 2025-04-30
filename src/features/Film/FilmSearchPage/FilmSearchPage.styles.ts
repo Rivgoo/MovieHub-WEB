@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material';
-
 export default (theme: Theme) => ({
   wrapper: {
     mt: 4,
