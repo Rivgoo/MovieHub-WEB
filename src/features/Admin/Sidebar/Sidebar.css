@@ -1,0 +1,177 @@
+:root {
+    --admin-dark: #1B2230;
+    --primary-dark: #FF6715;
+    --primary-light: #c35013;
+    --admin-navy: #273142;
+  }
+  
+  body {
+    overflow-x: hidden;
+  }
+  
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .sidebarContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .burgerButton {
+    padding: 8px;
+    border-radius: 8px;
+    position: absolute;
+    left: 16px;
+    z-index: 1300;
+    display: none;
+  }
+  
+  .logoBox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .logoImage {
+    width: 45px;
+    margin-right: 8px;
+  }
+  
+  .logoText {
+    color: white;
+  }
+  
+  .listMenu,
+  .siteMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+  }
+  
+  .listMenu li,
+  .siteMenu li {
+    width: 85%;
+  }
+  
+  .listItemText,
+  .listItemTextBold {
+    color: white;
+    font-size: 0.875em;
+  }
+  
+  .listItemTextBold {
+    font-weight: bold;
+  }
+  
+  .sectionTitle {
+    color: #8D99AE;
+    margin-bottom: 8px;
+    padding-left: 16px;
+    text-transform: uppercase;
+  }
+  
+  .logoutBox {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .logoutButton {
+    width: 75%;
+    background-color: var(--primary-dark);
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  .logoutButton:hover {
+    background-color: var(--primary-light);
+  }
+  
+  .adminMenuItem,
+  .siteMenuItem {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #fff;
+  }
+  
+  .adminMenuItem:hover,
+  .siteMenuItem:hover {
+    background-color: #333;
+  }
+  
+  .active {
+    background-color: var(--primary-dark);
+    border-left: 5px solid var(--primary-dark);
+  }
+  
+  .burgerLines {
+    width: 25px;
+    height: 17px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .burgerLines span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background-color: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  
+  .burgerLines.open span:first-child {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  
+  .burgerLines.open span:last-child {
+    transform: rotate(-45deg) translate(5px, -5px);
+  }
+  
+  /* === MEDIA QUERIES === */
+  
+  @media (min-width: 500px) {
+    .burgerActive .listMenu,
+    .siteMenuActive {
+      display: flex;
+      justify-content: center;
+      width: 75%;
+    }
+  
+    .burgerActive.sidebarContent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+  }
+  
+  @media (min-width: 500px) and (max-width: 750px) {
+    .burgerButton {
+      top: 27px;
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .burgerButton {
+      display: block;
+      top: 25px;
+    }
+  
+    .logoutButton {
+      width: 180px;
+    }
+  }
+  
+  @media (max-width: 901px) {
+    .sidebar {
+      display: none;
+    }
+  }
+  
