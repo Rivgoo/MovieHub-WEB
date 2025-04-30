@@ -27,9 +27,15 @@ export default (theme: Theme) => ({
   inputArea: {
     //maxWidth: '300px', //Як на макеті
     '& .MuiOutlinedInput-root': {
+      borderRadius: '20px',
       '& fieldset': {
         borderColor: theme.palette.primary.light,
-        borderRadius: '20px',
+      },
+      '&:hover fieldset': {
+        borderColor: theme.palette.primary.light,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: theme.palette.primary.dark,
       },
     },
     '& input': {
@@ -37,6 +43,23 @@ export default (theme: Theme) => ({
     },
     '& .MuiInputAdornment-root': {
       color: theme.palette.primary.light,
+    },
+  },
+  errorBox: {
+    mt: 2,
+    padding: '3px 6px',
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#D32F2F',
+    '& .MuiAlert-icon': {
+      mr: 1,
+      color: theme.palette.text.primary,
+    },
+    '& .MuiAlert-message': {
+      display: 'flex',
+      alignItems: 'center',
+      color: theme.palette.text.primary,
+      width: '100%',
     },
   },
 });
