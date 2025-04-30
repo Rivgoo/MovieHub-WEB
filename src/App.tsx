@@ -15,9 +15,9 @@ const AboutPage = React.lazy(() => import('./features/About/AboutPage'));
 const ErrorPage = React.lazy(() => import('./features/Error/ErrorPage'));
 const PrivacyPage = React.lazy(() => import('./features/Privacy/PrivacyPage'));
 const TermsPage = React.lazy(() => import('./features/Terms/TermsPage'));
-const FilmPage = React.lazy(() => import('./features/Film/FilmPage'));
+const FilmPage = React.lazy(() => import('./features/Film/FilmPage/FilmPage'));
 const FilmSearchPage = React.lazy(
-  () => import('./features/Film/FilmSearchPage')
+  () => import('./features/Film/FilmSearchPage/FilmSearchPage')
 );
 const SessionPage = React.lazy(() => import('./features/Session/SessionPage'));
 const SessionSearchPage = React.lazy(
