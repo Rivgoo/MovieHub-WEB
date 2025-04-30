@@ -26,6 +26,7 @@ export default (theme: Theme) => ({
   },
   inputArea: {
     position: 'relative',
+    width: '40dvw',
     '& .MuiOutlinedInput-root': {
       borderRadius: '20px',
       paddingRight: 0,
@@ -46,6 +47,30 @@ export default (theme: Theme) => ({
     '& input': {
       color: theme.palette.primary.light,
     },
+  },
+  autoComplete: {
+    '& .MuiInputBase-root': {
+      backgroundColor: theme.palette.secondary.main,
+    },
+    '& .MuiAutocomplete-clearIndicator': { display: 'none' },
+    '& .MuiAutocomplete-listbox': {
+      border: '1px solid',
+      borderColor: 'divider',
+      backgroundColor: theme.palette.secondary.main,
+    },
+    '& .MuiAutocomplete-option': {
+      backgroundColor: 'transparent',
+      padding: '8px 16px',
+      borderBottom: `1px solid ${theme.palette.text.primary}`,
+    },
+  },
+  optionText: {
+    color: theme.palette.text.primary,
+    opacity: 0.6,
+    textAlign: 'center',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   },
   submitButton: {
     display: 'flex',

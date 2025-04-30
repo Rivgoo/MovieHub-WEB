@@ -1,23 +1,32 @@
-import React, { FormEvent, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Container,
   Typography,
   Box,
-  TextField,
-  InputAdornment,
   useTheme,
-  IconButton,
   Alert,
   CircularProgress,
   useMediaQuery,
+  Autocomplete,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
+
 import Layout from '../../../shared/components/Layout.tsx';
 import getStyles from './FilmSearchPage.styles.ts';
-import { SearchSharp } from '@mui/icons-material';
-import axios, { AxiosError } from 'axios';
-import apiClient from '../../../core/api/client.ts';
-import { useNavigate } from 'react-router-dom';
-import { ApiErrorResponse } from '../../../core/api/types.ts';
+import { searchContent } from '../../../core/api/searchContent.ts';
+import { ApiErrorResponse, ApiFilmResponse } from '../../../core/api/types.ts';
+import SearchBar from './SearchBar.tsx';
+import SuggestionItem from './SuggestionItem.tsx';
+
+// debounce-функція
+function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return ((...args: Parameters<F>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), ms);
+  }) as F;
+}
 
 const FilmSearchPage: React.FC = () => {
   const theme = useTheme();
@@ -26,63 +35,62 @@ const FilmSearchPage: React.FC = () => {
   const isSmallScreen = useMediaQuery('(max-width:900px)');
 
   const [movieQuery, setMovieQuery] = useState('');
+  const [options, setOptions] = useState<ApiFilmResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e?: FormEvent | React.MouseEvent) => {
-    e?.preventDefault?.();
+  // Фетч варіантів для Autocomplete
+  const fetchOptions = async (q: string) => {
+    try {
+      const items = await searchContent(q);
+      setOptions(items);
+    } catch {
+      setOptions([]);
+    }
+  };
+
+  // Debounce для запитів
+  const debouncedFetch = useMemo(() => debounce(fetchOptions, 500), []);
+
+  // Обробка вводу
+  const handleInputChange = (_: React.SyntheticEvent, value: string) => {
+    setMovieQuery(value);
+    if (value.trim()) debouncedFetch(value);
+    else setOptions([]);
+  };
+
+  // Обробка вибору варіанта
+  const handleOptionSelect = (
+    _: React.SyntheticEvent,
+    value: string | ApiFilmResponse
+  ) => {
+    if (typeof value !== 'string') {
+      navigate(`/film/${value.id}`);
+    }
+  };
+
+  // Пошук при сабміті
+  const handleSubmit = async () => {
     setError(null);
     setIsSubmitting(true);
 
     try {
-      const searchResponse = await apiClient.get(
-        `/contents/filter?SearchTerms=${encodeURIComponent(movieQuery)}`
+      const results = await searchContent(movieQuery);
+      const match = results.find(
+        (f) => f.title.toLowerCase() === movieQuery.trim().toLowerCase()
       );
-
-      const results = searchResponse.data.items;
-
-      // Testing response
-      // const results = [
-      //   {
-      //   id: 0,
-      //   title: 'Hello',
-      //   description: 'Це тестовий опис фільму',
-      //   rating: 100,
-      //   releaseYear: 2000,
-      //   trailerUrl: '',
-      //   posterUrl: '',
-      //   durationMinutes: 120,
-      //   genreIds: [1, 2],
-      //   actorIds: [5, 9],
-      //   createdAt: new Date().toISOString(),
-      //   updatedAt: new Date().toISOString(),
-      //   },
-      // ];
-
-      console.log('Отримано результати пошуку:', results);
-
-      if (!results || results.length === 0) {
+      if (!match) {
         setError('Фільм не знайдено');
-        return;
+      } else {
+        navigate(`/film/${match.id}`);
       }
-
-      const film = results[0];
-      // console.log('Переходимо до фільму:', film);
-      navigate(`/film/${film.id}`);
     } catch (err) {
-      console.error('FilmSearchPage: search failed', err);
-      let errorMessage = 'Сталася помилка при пошуку. Спробуйте ще раз.';
-
+      let msg = 'Сталася помилка при пошуку. Спробуйте ще раз.';
       if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<ApiErrorResponse>;
-        if (axiosError.response?.data?.description) {
-          errorMessage = axiosError.response.data.description;
-        } else if (axiosError.message) {
-          errorMessage = axiosError.message;
-        }
+        const ax = err as AxiosError<ApiErrorResponse>;
+        msg = ax.response?.data?.description || ax.message || msg;
       }
-
-      setError(errorMessage);
+      setError(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -91,7 +99,13 @@ const FilmSearchPage: React.FC = () => {
   return (
     <Layout>
       <Container maxWidth="sm" sx={styles.wrapper}>
-        <Box component="form" onSubmit={handleSubmit} sx={styles.form}>
+        <Box
+          component="form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+          sx={styles.form}>
           <Typography
             variant="h4"
             component="h1"
@@ -100,7 +114,6 @@ const FilmSearchPage: React.FC = () => {
             sx={styles.title}>
             Пошук фільму
           </Typography>
-
           <Typography
             variant="body1"
             color="text.secondary"
@@ -110,31 +123,30 @@ const FilmSearchPage: React.FC = () => {
               : 'Ми просимо вибачення, але ваші пошукові терміни не дали результатів. Будь ласка, спробуйте ще раз, використовуючи нові пошукові терміни.'}
           </Typography>
 
-          <TextField
-            margin="normal"
-            placeholder="Введіть назву фільму..."
-            required
-            fullWidth
-            name="search"
-            type="text"
-            id="search"
-            value={movieQuery}
-            onChange={(e) => setMovieQuery(e.target.value)}
-            sx={styles.inputArea}
-            disabled={isSubmitting}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    edge="end"
-                    sx={styles.submitButton}>
-                    <SearchSharp />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
+          <Autocomplete
+            freeSolo
+            disableClearable
+            clearIcon={null}
+            options={options.slice(0, 3)}
+            getOptionLabel={(opt) =>
+              typeof opt === 'string' ? opt : opt.title
+            }
+            inputValue={movieQuery}
+            onInputChange={handleInputChange}
+            onChange={handleOptionSelect}
+            noOptionsText="Фільм не знайдено"
+            sx={styles.autoComplete}
+            renderOption={(props, option) => (
+              <SuggestionItem props={props} option={option} styles={styles} />
+            )}
+            renderInput={(params) => (
+              <SearchBar
+                params={params}
+                isSubmitting={isSubmitting}
+                onSubmit={handleSubmit}
+                styles={styles}
+              />
+            )}
           />
 
           {error && (
