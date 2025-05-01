@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
-import { ApiFilmResponse } from '../../../core/api/types';
+import { ApiFilmResponse } from '../../../../../core/api/types';
 import { Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
 type StyleKeys = keyof ReturnType<
-  typeof import('./FilmSearchPage.styles').default
+  typeof import('./SearchForm.styles.ts').default
 >;
 type StylesType = Partial<Record<StyleKeys, SxProps<Theme>>>;
 

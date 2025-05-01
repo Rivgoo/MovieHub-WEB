@@ -6,7 +6,7 @@ import {
   TextField,
 } from '@mui/material';
 import { SearchSharp } from '@mui/icons-material';
-import getStyles from './FilmSearchPage.styles.ts';
+import getStyles from './SearchForm.styles.ts';
 
 interface SearchBarProps {
   params: AutocompleteRenderInputParams;

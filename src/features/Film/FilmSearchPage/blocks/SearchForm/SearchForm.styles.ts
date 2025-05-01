@@ -3,12 +3,11 @@ import { alpha } from '@mui/material/styles';
 
 export default (theme: Theme) => ({
   wrapper: {
-    mt: 4,
+    mt: 20,
     mb: 4,
     display: 'flex',
     justifyContent: 'center',
     background: theme.palette.background.default,
-    height: '100%',
   },
   form: {
     width: '100%',
