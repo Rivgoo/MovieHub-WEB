@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { styled, alpha } from '@mui/material/styles'; // Додано alpha для прозорості
 // Імпортуємо тип опції з файлу констант
-import { FilterOption } from '../constants/filterOptions';
+import { FilterOption } from '../constants/FilterOptions';
 
 // --- ОНОВЛЕННЯ СТИЛІВ МЕНЮ ---
 const StyledMenu = styled(Menu)(({ theme }) => {

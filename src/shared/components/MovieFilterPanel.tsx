@@ -17,7 +17,7 @@ import {
     SORT_FILTER_OPTIONS,
     FilterOption, // Імпортуємо тип опції для зручності
     // DURATION_FILTER_OPTIONS // Якщо потрібна тривалість
-} from '../constants/filterOptions';
+} from '../constants/FilterOptions';
 
 // Тип для об'єкта, що представляє поточні значення фільтрів
 export interface FiltersState {
@@ -96,19 +96,19 @@ const MovieFilterPanel: React.FC<MovieFilterPanelProps> = ({
             elevation={1}
             sx={{
                 p: '8px 16px',
-                bgcolor: '#2d3748',
+                bgcolor: '#303030',
                 color: '#e2e8f0',
                 borderRadius: 2,
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
                 gap: { xs: 1, sm: 1.5 },
-                border: '1px solid #4a5568',
+                border: '1px solid #505050',
                 ...sx, // Застосовуємо додаткові стилі з пропсів
             }}
         >
-            <FilterListIcon sx={{ color: '#a0aec0', mr: 1, display: { xs: 'none', sm: 'block' } }} />
-            <Typography variant="body2" sx={{ mr: 1, color: '#a0aec0', display: { xs: 'none', md: 'block' } }}>
+            <FilterListIcon sx={{ color: '#FFFFFF', mr: 1, display: { xs: 'none', sm: 'block' } }} />
+            <Typography variant="body2" sx={{ mr: 1, color: '#FFFFFF', display: { xs: 'none', md: 'block' } }}>
                 Фільтрувати за:
             </Typography>
             <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(255, 255, 255, 0.12)', mr: 1, display: { xs: 'none', md: 'block' } }} />
