@@ -7,12 +7,14 @@ import {
 } from '@mui/material';
 import { SearchSharp } from '@mui/icons-material';
 import getStyles from './FilmSearchPage.styles.ts';
+
 interface SearchBarProps {
   params: AutocompleteRenderInputParams;
   isSubmitting: boolean;
   onSubmit: () => void;
   styles: ReturnType<typeof getStyles>;
 }
+
 const SearchBar: React.FC<SearchBarProps> = memo(
   ({ params, isSubmitting, onSubmit, styles }) => {
     return (
@@ -27,16 +29,19 @@ const SearchBar: React.FC<SearchBarProps> = memo(
           ...params.InputProps,
           endAdornment: (
             <>
-              <InputAdornment position="end">
+              {params.InputProps.endAdornment}
+              <InputAdornment
+                position="end"
+                sx={{ height: '100%', mr: '-1px' }}>
                 <IconButton
                   onClick={onSubmit}
                   disabled={isSubmitting}
                   edge="end"
-                  sx={styles.submitButton}>
+                  sx={styles.submitButton}
+                  aria-label="Search movie">
                   <SearchSharp />
                 </IconButton>
               </InputAdornment>
-              {params.InputProps.endAdornment}
             </>
           ),
         }}
@@ -44,5 +49,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
     );
   }
 );
+
 SearchBar.displayName = 'SearchBar';
+
 export default SearchBar;

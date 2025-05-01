@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -15,11 +15,11 @@ import axios, { AxiosError } from 'axios';
 import Layout from '../../../shared/components/Layout.tsx';
 import getStyles from './FilmSearchPage.styles.ts';
 import { searchContent } from '../../../core/api/searchContent.ts';
+import apiClient from '../../../core/api/client.ts';
 import { ApiErrorResponse, ApiFilmResponse } from '../../../core/api/types.ts';
 import SearchBar from './SearchBar.tsx';
 import SuggestionItem from './SuggestionItem.tsx';
 
-// debounce-функція
 function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
   let timeoutId: ReturnType<typeof setTimeout>;
   return ((...args: Parameters<F>) => {
@@ -35,115 +35,83 @@ const FilmSearchPage: React.FC = () => {
   const isSmallScreen = useMediaQuery('(max-width:900px)');
 
   const [movieQuery, setMovieQuery] = useState('');
-  const [options, setOptions] = useState<ApiFilmResponse[]>([]);
+  const [options, setOptions] = useState<readonly ApiFilmResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
 
-  const test: ApiFilmResponse[] = [
-    {
-      id: 1,
-      title: 'string',
-      description: 'string',
-      rating: 1,
-      releaseYear: 1,
-      trailerUrl: 'string',
-      posterUrl: 'string',
-      durationMinutes: 1,
-      genreIds: [1, 2],
-      actorIds: [1, 2],
-      createdAt: 'string',
-      updatedAt: 'string',
-    },
-    {
-      id: 2,
-      title: 'string',
-      description: 'string',
-      rating: 1,
-      releaseYear: 1,
-      trailerUrl: 'string',
-      posterUrl: 'string',
-      durationMinutes: 1,
-      genreIds: [1, 2],
-      actorIds: [1, 2],
-      createdAt: 'string',
-      updatedAt: 'string',
-    },
-    {
-      id: 3,
-      title: 'string',
-      description: 'string',
-      rating: 1,
-      releaseYear: 1,
-      trailerUrl: 'string',
-      posterUrl: 'string',
-      durationMinutes: 1,
-      genreIds: [1, 2],
-      actorIds: [1, 2],
-      createdAt: 'string',
-      updatedAt: 'string',
-    },
-    {
-      id: 4,
-      title: 'string',
-      description: 'string',
-      rating: 1,
-      releaseYear: 1,
-      trailerUrl: 'string',
-      posterUrl: 'string',
-      durationMinutes: 1,
-      genreIds: [1, 2],
-      actorIds: [1, 2],
-      createdAt: 'string',
-      updatedAt: 'string',
-    },
-  ];
-
-  // Фетч варіантів для Autocomplete
-  const fetchOptions = async (q: string) => {
+  const fetchOptions = useCallback(async (query: string) => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+      setOptions([]);
+      return;
+    }
+    setIsLoadingOptions(true);
+    setError(null);
+    const params: { SearchTerms: string; MatchType?: string } = {
+      SearchTerms: trimmedQuery,
+    };
+    if (trimmedQuery.length < 3) {
+      params.MatchType = 'prefix';
+    }
     try {
-      const items = await searchContent(q);
-      console.log(items);
-      // setOptions(items);
-      setOptions(test);
-    } catch {
+      const response = await apiClient.get<{ items: ApiFilmResponse[] }>(
+        '/contents/filter',
+        { params }
+      );
+      const items = response.data?.items ?? [];
+      setOptions(items);
+    } catch (err) {
+      setOptions([]);
+    } finally {
+      setIsLoadingOptions(false);
+    }
+  }, []);
+
+  const debouncedFetch = useMemo(
+    () => debounce(fetchOptions, 500),
+    [fetchOptions]
+  );
+
+  const handleInputChange = (_: React.SyntheticEvent, value: string) => {
+    setMovieQuery(value);
+    if (value.trim()) {
+      debouncedFetch(value);
+    } else {
       setOptions([]);
     }
   };
 
-  // Debounce для запитів
-  const debouncedFetch = useMemo(() => debounce(fetchOptions, 500), []);
-
-  // Обробка вводу
-  const handleInputChange = (_: React.SyntheticEvent, value: string) => {
-    setMovieQuery(value);
-    if (value.trim()) debouncedFetch(value);
-    else setOptions([]);
-  };
-
-  // Обробка вибору варіанта
   const handleOptionSelect = (
     _: React.SyntheticEvent,
-    value: string | ApiFilmResponse
+    value: string | ApiFilmResponse | null
   ) => {
-    if (typeof value !== 'string') {
+    if (value && typeof value !== 'string' && value.id) {
       navigate(`/film/${value.id}`);
     }
   };
 
-  // Пошук при сабміті
   const handleSubmit = async () => {
+    const trimmedQuery = movieQuery.trim();
+    if (!trimmedQuery) {
+      setError('Будь ласка, введіть назву фільму.');
+      return;
+    }
+
     setError(null);
     setIsSubmitting(true);
 
     try {
-      const results = await searchContent(movieQuery);
-      const match = results.find(
-        (f) => f.title.toLowerCase() === movieQuery.trim().toLowerCase()
+      const results = await searchContent(trimmedQuery);
+
+      const exactMatch = results.find(
+        (f) => f.title.toLowerCase() === trimmedQuery.toLowerCase()
       );
-      if (!match) {
-        setError('Фільм не знайдено');
+
+      if (exactMatch) {
+        navigate(`/film/${exactMatch.id}`);
       } else {
-        navigate(`/film/${match.id}`);
+        setError('Фільм не знайдено');
       }
     } catch (err) {
       let msg = 'Сталася помилка при пошуку. Спробуйте ще раз.';
@@ -171,45 +139,32 @@ const FilmSearchPage: React.FC = () => {
             variant="h4"
             component="h1"
             gutterBottom
-            color="text.secondary"
             sx={styles.title}>
             Пошук фільму
           </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={styles.subText}>
+          <Typography variant="body1" sx={styles.subText}>
             {isSmallScreen
-              ? 'Будь ласка, спробуйте ще раз'
+              ? 'Введіть назву для пошуку.'
               : 'Ми просимо вибачення, але ваші пошукові терміни не дали результатів. Будь ласка, спробуйте ще раз, використовуючи нові пошукові терміни.'}
           </Typography>
 
           <Autocomplete
             freeSolo
             disableClearable
-            clearIcon={null}
             options={options.slice(0, 3)}
-            // getOptionLabel={(opt) =>
-            //   typeof opt === 'string' ? opt : opt.title
-            // }
-            getOptionLabel={(option) => {
-              // Handle string case for freeSolo input
-              if (typeof option === 'string') {
-                return option;
-              }
-              // Check if option exists and has a title, provide fallback
-              if (option && typeof option.title === 'string') {
-                return option.title;
-              }
-              // Return empty string or placeholder if title is missing
-              console.warn('Option missing title:', option); // Log problematic options
-              return '';
-            }}
+            getOptionLabel={(option) =>
+              typeof option === 'string' ? option : (option?.title ?? '')
+            }
             inputValue={movieQuery}
             onInputChange={handleInputChange}
             onChange={handleOptionSelect}
+            loading={isLoadingOptions}
+            loadingText="Завантаження..."
             noOptionsText="Фільм не знайдено"
             sx={styles.autoComplete}
+            slotProps={{
+              paper: { sx: styles.dropdownPaperStyles },
+            }}
             renderOption={(props, option) => (
               <SuggestionItem
                 key={option.id}
@@ -221,14 +176,11 @@ const FilmSearchPage: React.FC = () => {
             renderInput={(params) => (
               <SearchBar
                 params={params}
-                isSubmitting={isSubmitting}
+                isSubmitting={isSubmitting || isLoadingOptions}
                 onSubmit={handleSubmit}
                 styles={styles}
               />
             )}
-            slotProps={{
-              paper: styles.slotProps,
-            }}
           />
 
           {error && (
@@ -237,7 +189,7 @@ const FilmSearchPage: React.FC = () => {
             </Alert>
           )}
 
-          {isSubmitting && (
+          {isSubmitting && !isLoadingOptions && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
               <CircularProgress size={24} color="primary" />
             </Box>
