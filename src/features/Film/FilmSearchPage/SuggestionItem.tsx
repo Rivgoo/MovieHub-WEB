@@ -16,9 +16,10 @@ const SuggestionItem: React.FC<SuggestionItemProps> = memo(
       style={{
         backgroundColor: 'transparent',
         borderBottom: `1px solid`,
-      }}>
+      }}
+      key={option.id}>
       <Typography variant="body1" sx={styles.optionText}>
-        {option.title}
+        {option?.title ?? 'Invalid Title'}
       </Typography>
     </li>
   )

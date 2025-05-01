@@ -39,11 +39,72 @@ const FilmSearchPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const test: ApiFilmResponse[] = [
+    {
+      id: 1,
+      title: 'string',
+      description: 'string',
+      rating: 1,
+      releaseYear: 1,
+      trailerUrl: 'string',
+      posterUrl: 'string',
+      durationMinutes: 1,
+      genreIds: [1, 2],
+      actorIds: [1, 2],
+      createdAt: 'string',
+      updatedAt: 'string',
+    },
+    {
+      id: 2,
+      title: 'string',
+      description: 'string',
+      rating: 1,
+      releaseYear: 1,
+      trailerUrl: 'string',
+      posterUrl: 'string',
+      durationMinutes: 1,
+      genreIds: [1, 2],
+      actorIds: [1, 2],
+      createdAt: 'string',
+      updatedAt: 'string',
+    },
+    {
+      id: 3,
+      title: 'string',
+      description: 'string',
+      rating: 1,
+      releaseYear: 1,
+      trailerUrl: 'string',
+      posterUrl: 'string',
+      durationMinutes: 1,
+      genreIds: [1, 2],
+      actorIds: [1, 2],
+      createdAt: 'string',
+      updatedAt: 'string',
+    },
+    {
+      id: 4,
+      title: 'string',
+      description: 'string',
+      rating: 1,
+      releaseYear: 1,
+      trailerUrl: 'string',
+      posterUrl: 'string',
+      durationMinutes: 1,
+      genreIds: [1, 2],
+      actorIds: [1, 2],
+      createdAt: 'string',
+      updatedAt: 'string',
+    },
+  ];
+
   // Фетч варіантів для Autocomplete
   const fetchOptions = async (q: string) => {
     try {
       const items = await searchContent(q);
-      setOptions(items);
+      console.log(items);
+      // setOptions(items);
+      setOptions(test);
     } catch {
       setOptions([]);
     }
@@ -128,16 +189,34 @@ const FilmSearchPage: React.FC = () => {
             disableClearable
             clearIcon={null}
             options={options.slice(0, 3)}
-            getOptionLabel={(opt) =>
-              typeof opt === 'string' ? opt : opt.title
-            }
+            // getOptionLabel={(opt) =>
+            //   typeof opt === 'string' ? opt : opt.title
+            // }
+            getOptionLabel={(option) => {
+              // Handle string case for freeSolo input
+              if (typeof option === 'string') {
+                return option;
+              }
+              // Check if option exists and has a title, provide fallback
+              if (option && typeof option.title === 'string') {
+                return option.title;
+              }
+              // Return empty string or placeholder if title is missing
+              console.warn('Option missing title:', option); // Log problematic options
+              return '';
+            }}
             inputValue={movieQuery}
             onInputChange={handleInputChange}
             onChange={handleOptionSelect}
             noOptionsText="Фільм не знайдено"
             sx={styles.autoComplete}
             renderOption={(props, option) => (
-              <SuggestionItem props={props} option={option} styles={styles} />
+              <SuggestionItem
+                key={option.id}
+                props={props}
+                option={option}
+                styles={styles}
+              />
             )}
             renderInput={(params) => (
               <SearchBar
@@ -147,6 +226,9 @@ const FilmSearchPage: React.FC = () => {
                 styles={styles}
               />
             )}
+            slotProps={{
+              paper: styles.slotProps,
+            }}
           />
 
           {error && (

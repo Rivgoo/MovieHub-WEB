@@ -104,4 +104,26 @@ export default (theme: Theme) => ({
       width: '100%',
     },
   },
+  slotProps: {
+    sx: {
+      bgcolor: theme.palette.background.default,
+      '& .MuiAutocomplete-option': {
+        '&:last-child': {
+          borderBottom: 'none',
+        },
+        '&:hover': {
+          bgcolor: 'grey.800',
+        },
+        '&[aria-selected="true"]': {
+          bgcolor: 'grey.700',
+        },
+      },
+      '& .MuiAutocomplete-noOptions': {
+        color: 'grey.500',
+      },
+      '& .MuiAutocomplete-loading': {
+        color: 'grey.500',
+      },
+    },
+  },
 });
