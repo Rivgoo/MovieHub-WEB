@@ -1,4 +1,6 @@
 import { Theme } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+
 export default (theme: Theme) => ({
   wrapper: {
     mt: 4,
@@ -9,29 +11,36 @@ export default (theme: Theme) => ({
     height: '100%',
   },
   form: {
-    // p: 4,
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
   },
-  title: { fontWeight: 600, mb: 2, color: theme.palette.primary.light },
-  subText: {
+  title: {
+    fontWeight: 600,
     mb: 2,
+    color: theme.palette.primary.light,
+  },
+  subText: {
+    mb: 1,
     color: theme.palette.text.primary,
-    opacity: 0.6,
+    opacity: 0.7,
     textAlign: 'center',
   },
+
   inputArea: {
     position: 'relative',
-    width: '40dvw',
+    width: '100%',
     '& .MuiOutlinedInput-root': {
       borderRadius: '20px',
       paddingRight: 0,
       overflow: 'hidden',
+      backgroundColor: theme.palette.secondary.main,
       '& fieldset': {
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.main,
+        borderWidth: '1px',
       },
       '&:hover fieldset': {
         borderColor: theme.palette.primary.light,
@@ -43,87 +52,100 @@ export default (theme: Theme) => ({
         height: '100%',
       },
     },
+    // Input Text Color
     '& input': {
       color: theme.palette.primary.light,
+      paddingLeft: theme.spacing(2),
     },
   },
+
   autoComplete: {
-    '& .MuiInputBase-root': {
-      backgroundColor: theme.palette.secondary.main,
+    width: '100%',
+    '& .MuiAutocomplete-clearIndicator': {
+      color: theme.palette.action.active,
     },
-    '& .MuiAutocomplete-clearIndicator': { display: 'none' },
-    '& .MuiAutocomplete-listbox': {
-      border: '1px solid',
-      borderColor: 'divider',
-      backgroundColor: theme.palette.secondary.main,
-    },
-    '& .MuiAutocomplete-option': {
-      backgroundColor: 'transparent',
-      padding: '8px 16px',
-      borderBottom: `1px solid ${theme.palette.text.primary}`,
+    '& .MuiAutocomplete-popupIndicator': {
+      color: theme.palette.action.active,
     },
   },
-  optionText: {
+  dropdownPaperStyles: {
+    bgcolor: theme.palette.background.default,
     color: theme.palette.text.primary,
-    opacity: 0.6,
-    textAlign: 'center',
+    marginTop: theme.spacing(0.5),
+    borderRadius: '16px',
+    overflow: 'hidden',
+    '& .MuiAutocomplete-option': {
+      padding: theme.spacing(1, 2),
+      color: theme.palette.text.primary,
+      backgroundColor: theme.palette.background.default,
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      '&:last-child': {
+        borderBottom: 'none',
+      },
+      '&[data-focus="true"]': {
+        backgroundColor: theme.palette.grey[800],
+      },
+      '&[aria-selected="true"]': {
+        backgroundColor: theme.palette.grey[700],
+        '&[data-focus="true"]': {
+          backgroundColor: theme.palette.grey[600],
+        },
+      },
+    },
+    '& .MuiAutocomplete-noOptions, & .MuiAutocomplete-loading': {
+      color: theme.palette.grey[500],
+      padding: theme.spacing(1, 2),
+    },
+  },
+
+  optionText: {
+    color: 'inherit',
+    opacity: 1,
+    textAlign: 'left',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   },
+
   submitButton: {
     display: 'flex',
     justifyContent: 'center',
-    borderRadius: 0,
+    alignItems: 'center',
+    borderRadius: '0 20px 20px 0',
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.text.primary,
     m: 0,
     py: 3,
-    px: 2,
-    width: '4dvw',
-    fontWeight: 500,
-    fontSize: '1rem',
+    px: 2.5,
+    minWidth: 'auto',
     '&:hover': {
       backgroundColor: theme.palette.primary.dark,
     },
+    '&.Mui-disabled': {
+      backgroundColor: alpha(theme.palette.primary.main, 0.5),
+      color: alpha(theme.palette.text.primary, 0.7),
+    },
   },
+
   errorBox: {
     mt: 2,
-    padding: '3px 6px',
+    padding: theme.spacing(0.5, 1.5),
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
     backgroundColor: '#D32F2F',
+    color: theme.palette.text.primary,
+    borderRadius: 20,
     '& .MuiAlert-icon': {
       mr: 1,
-      color: theme.palette.text.primary,
+      color: 'inherit',
     },
     '& .MuiAlert-message': {
+      padding: 0,
       display: 'flex',
       alignItems: 'center',
-      color: theme.palette.text.primary,
       width: '100%',
-    },
-  },
-  slotProps: {
-    sx: {
-      bgcolor: theme.palette.background.default,
-      '& .MuiAutocomplete-option': {
-        '&:last-child': {
-          borderBottom: 'none',
-        },
-        '&:hover': {
-          bgcolor: 'grey.800',
-        },
-        '&[aria-selected="true"]': {
-          bgcolor: 'grey.700',
-        },
-      },
-      '& .MuiAutocomplete-noOptions': {
-        color: 'grey.500',
-      },
-      '& .MuiAutocomplete-loading': {
-        color: 'grey.500',
-      },
+      fontSize: '0.875rem',
     },
   },
 });
