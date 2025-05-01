@@ -52,7 +52,6 @@ export default (theme: Theme) => ({
         height: '100%',
       },
     },
-    // Input Text Color
     '& input': {
       color: theme.palette.primary.light,
       paddingLeft: theme.spacing(2),

@@ -46,14 +46,15 @@ const FilmSearchPage: React.FC = () => {
       setOptions([]);
       return;
     }
+
     setIsLoadingOptions(true);
     setError(null);
-    const params: { SearchTerms: string; MatchType?: string } = {
+
+    const params: { SearchTerms: string; pageSize?: number } = {
       SearchTerms: trimmedQuery,
+      pageSize: 10,
     };
-    if (trimmedQuery.length < 3) {
-      params.MatchType = 'prefix';
-    }
+
     try {
       const response = await apiClient.get<{ items: ApiFilmResponse[] }>(
         '/contents/filter',
