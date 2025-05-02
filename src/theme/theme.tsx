@@ -5,7 +5,9 @@ const DarkOrange = '#f6770a'; // DarkOrange
 const White = '#F8FCF8'; // White
 const LightGray = '#F5F5F5'; // LightGray
 const DarkGray = '#1e1e1e'; // DarkGray
+const PaperBackground = '#242424';
 const AdminNavBackground = '#242424';
+const ErrorBackground = '#6b1f1a';
 
 const theme = createTheme({
   palette: {
@@ -13,15 +15,15 @@ const theme = createTheme({
       main: Orange,
       dark: DarkOrange,
       light: White,
-      contrastText: White,
+      contrastText: LightGray,
     },
     secondary: {
       main: DarkGray,
-      contrastText: White,
+      contrastText: LightGray,
     },
     background: {
       default: DarkGray,
-      paper: White,
+      paper: PaperBackground,
     },
     text: {
       primary: LightGray,
@@ -29,9 +31,14 @@ const theme = createTheme({
     },
     admin: {
       main: AdminNavBackground,
-      navBackground: AdminNavBackground, 
-      contrastText: White,
-    }
+      navBackground: AdminNavBackground,
+      contrastText: LightGray,
+    },
+    error: {
+      main: ErrorBackground,
+      light: '#e84e3d',
+      contrastText: LightGray,
+    },
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -56,8 +63,8 @@ const theme = createTheme({
           fontSize: '1rem',
         },
         contained: {
-          width: "100%",
-          maxWidth: "lg",
+          width: '100%',
+          maxWidth: 'lg',
           boxShadow: 'none',
           '&:hover': {
             boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',

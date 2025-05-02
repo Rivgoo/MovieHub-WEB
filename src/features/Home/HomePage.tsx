@@ -46,7 +46,7 @@ const HomePageContent: React.FC = () => {
           variant="h4"
           component="h1"
           gutterBottom
-          color="text.secondary"
+          color="text.primary"
           sx={{ fontWeight: 600 }}>
           MovieHub
         </Typography>
@@ -54,7 +54,7 @@ const HomePageContent: React.FC = () => {
         <Typography
           variant="h6"
           component="p"
-          color="text.secondary"
+          color="text.primary"
           sx={{ mb: 3 }}>
           Welcome!
         </Typography>
@@ -63,17 +63,17 @@ const HomePageContent: React.FC = () => {
 
         {user ? (
           <Box sx={{ textAlign: 'center', width: '100%' }}>
-            <Typography color="text.secondary" variant="body1" sx={{ mb: 1 }}>
+            <Typography color="text.primary" variant="body1" sx={{ mb: 1 }}>
               Logged in as:
             </Typography>
             <Typography
-              color="text.secondary"
+              color="text.primary"
               variant="body1"
               sx={{ fontWeight: 'bold', mb: 1 }}>
               ID: {user.id}
             </Typography>
             <Typography
-              color="text.secondary"
+              color="text.primary"
               variant="body1"
               sx={{ fontStyle: 'italic', mb: 3 }}>
               Role: {user.role}
@@ -88,7 +88,7 @@ const HomePageContent: React.FC = () => {
           </Box>
         ) : (
           <Box sx={{ textAlign: 'center', width: '100%' }}>
-            <Typography color="text.secondary" variant="body1" sx={{ mb: 2 }}>
+            <Typography color="text.primary" variant="body1" sx={{ mb: 2 }}>
               Please login to continue.
             </Typography>
             <PrimaryButton onClick={handleLogin} sx={{ width: '50%' }}>
