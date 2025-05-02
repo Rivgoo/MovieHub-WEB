@@ -13,7 +13,6 @@ const Footer: React.FC = () => {
         backgroundColor: "secondary.main",
         color: "secondary.contrastText",
         py: {xs: 4, md: 6},
-        py: { xs: 4, md: 6 },
         width: "100%",
       }}
     >
