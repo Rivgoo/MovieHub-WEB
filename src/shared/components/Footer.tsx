@@ -53,12 +53,12 @@ const Footer: React.FC = () => {
 
           {/* Logo */}
           <Typography
-            variant="h6"
+            variant="h5"
             component="div"
             sx={{
               fontWeight: 700,
               textAlign: "center",
-              color: "primary.main",
+              color: "primary.light",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
