@@ -1,11 +1,11 @@
-import apiClient from "../../core/api/client";
-import { LoginRequest, LoginSuccessResponse } from "./types";
+import apiClient from "../client";
+import { LoginRequest, LoginResponse } from "../types/types.auth";
 
 export const loginUser = async (
   credentials: LoginRequest
-): Promise<LoginSuccessResponse> => {
+): Promise<LoginResponse> => {
   try {
-    const response = await apiClient.post<LoginSuccessResponse>(
+    const response = await apiClient.post<LoginResponse>(
       "/auth",
       credentials
     );

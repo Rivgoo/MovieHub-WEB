@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { useAuth } from '../../core/auth/useAuth';
 import getStyles from './LoginPage.styles.ts';
-import { loginUser } from './api';
 import { ApiErrorResponse } from '../../core/api/types';
 import axios from 'axios';
 
@@ -30,6 +29,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 // --- End MUI Imports ---
 
 import Layout from '../../shared/components/Layout';
+import { loginUser } from '../../core/api/login/loginApi.ts';
 
 const LoginPage: React.FC = () => {
   const theme = useTheme();
