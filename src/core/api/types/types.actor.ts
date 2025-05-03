@@ -11,7 +11,7 @@ export interface ActorDto {
   updatedAt: string;
 }
 
-// 📘 GET /api/v1/actors/filter
+// GET /api/v1/actors/filter
 export interface ActorFilterResponse {
   items: ActorDto[];
   pageIndex: number;
@@ -23,21 +23,21 @@ export interface ActorFilterResponse {
 }
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/actors
+// GET /api/v1/actors
 export type GetAllActorsResponse = ActorDto[];
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/actors/{id}
+// GET /api/v1/actors/{id}
 export type GetActorByIdResponse = ActorDto;
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/actors/{id}/exists
+// GET /api/v1/actors/{id}/exists
 export interface ActorExistenceResponse {
   exists: boolean;
 }
 //-----------------------------------------------------------
 
-// 📘 POST /api/v1/actors
+// POST /api/v1/actors
 export interface CreateActorRequest {
   firstName: string;
   lastName: string;
@@ -48,7 +48,7 @@ export interface CreateActorResponse {
 }
 //-----------------------------------------------------------
 
-// 📘 POST /api/v1/actors/{id}/photo
+// POST /api/v1/actors/{id}/photo
 export interface UploadActorPhotoRequest {
   base64Image: string;
 }
@@ -58,7 +58,7 @@ export interface UploadActorPhotoResponse {
 }
 //-----------------------------------------------------------
 
-// 📘 PUT /api/v1/actors/{id}
+// PUT /api/v1/actors/{id}
 export interface UpdateActorRequest {
   firstName: string;
   lastName: string;

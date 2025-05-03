@@ -17,7 +17,7 @@ export interface ContentDto {
   updatedAt: string;
 }
 
-interface BaseContentPayload {
+export interface BaseContentPayload {
   title: string;
   description: string;
   rating: number;
@@ -35,6 +35,9 @@ export interface ContentFilterResponse {
   totalCount: number;
   pageIndex: number;
   pageSize: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 }
 //-----------------------------------------------------------
 
