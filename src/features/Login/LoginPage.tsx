@@ -29,7 +29,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 // --- End MUI Imports ---
 
 import Layout from '../../shared/components/Layout';
-import { loginUser } from '../../core/api/login/loginApi.ts';
+import { loginUser } from '../../core/api/loginApi.ts';
 
 const LoginPage: React.FC = () => {
   const theme = useTheme();

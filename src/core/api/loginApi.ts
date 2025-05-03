@@ -1,5 +1,5 @@
-import apiClient from "../client";
-import { LoginRequest, LoginResponse } from "../types/types.auth";
+import apiClient from "./client";
+import { LoginRequest, LoginResponse } from "./types/types.auth";
 
 export const loginUser = async (
   credentials: LoginRequest

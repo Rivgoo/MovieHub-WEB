@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../core/auth/useAuth';
 import getStyles from './RegistrationPage.styles';
 import { registerUser, getRegistrationErrorMessage } from '../../core/api/registrationApi';
-import { loginUser } from '../../core/api/login/loginApi.ts';
+import { loginUser } from '../../core/api/loginApi.ts';
 import { RegisterUserRequest } from '../../core/api/types/types.user';
 import { ApiErrorResponse } from '../../core/api/types';
 import { AxiosError } from 'axios';
