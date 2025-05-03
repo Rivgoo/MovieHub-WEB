@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import {
   Container,
   Typography,
+  Box,
   Paper,
   CircularProgress,
   Alert,
@@ -13,24 +14,11 @@ import getStyles from './FilmPage.styles';
 import { useTheme } from '@mui/material';
 
 import apiClient from '../../../core/api/client';
+import { GetContentByIdResponse } from '../../../core/api/types/types.content';
 
-interface Film {
-  id: number;
-  title: string;
-  description: string;
-  rating: number;
-  releaseYear: number;
-  trailerUrl: string;
-  posterUrl: string;
-  durationMinutes: number;
-  genreIds: number[];
-  actorIds: number[];
-  createdAt: string;
-  updatedAt: string;
-}
 const FilmPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [film, setFilm] = useState<Film | null>(null);
+  const [film, setFilm] = useState<GetContentByIdResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +30,21 @@ const FilmPage: React.FC = () => {
       try {
         const response = await apiClient.get(`/contents/${id}`);
         setFilm(response.data);
+        console.log(response.data);
+        // setFilm({
+        //   id: 0,
+        //   title: 'Hello',
+        //   description: 'string',
+        //   rating: 100,
+        //   releaseYear: 2000,
+        //   trailerUrl: 'string',
+        //   posterUrl: 'string',
+        //   durationMinutes: 0,
+        //   genreIds: [0],
+        //   actorIds: [0],
+        //   createdAt: '2025-04-30T15:00:34.159Z',
+        //   updatedAt: '2025-04-30T15:00:34.159Z',
+        // });
       } catch (err) {
         let errorMessage = 'Не вдалося завантажити інформацію про фільм.';
 

@@ -17,7 +17,7 @@ export interface ContentDto {
   updatedAt: string;
 }
 
-interface BaseContentPayload {
+export interface BaseContentPayload {
   title: string;
   description: string;
   rating: number;
