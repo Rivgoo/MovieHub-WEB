@@ -1,6 +1,5 @@
-import apiClient from './client.ts';
+import apiClient from '../client.ts';
 import {
-  ContentDto,
   ContentFilterResponse,
   CreateContentRequest,
   CreateContentResponse,
@@ -10,14 +9,17 @@ import {
   AddActorToContentRequest,
   AddGenreToContentResponse,
   UpdateContentRequest,
-} from './types/types.content.ts';
+  GetAllContentsResponse,
+} from '../types/types.content.ts';
 
 // GET api/v1/contents/filter
-export const searchContent = async (query: string): Promise<ContentDto[]> => {
+export const searchContent = async (
+  query: string
+): Promise<ContentFilterResponse> => {
   const { data } = await apiClient.get<ContentFilterResponse>(
-    `/contents/filter?query=${encodeURIComponent(query)}`
+    `/contents/filter${query.startsWith('?') ? query : `?${query}`}`
   );
-  return data.items;
+  return data;
 };
 
 // GET api/v1/contents/{id}/exists
@@ -29,8 +31,8 @@ export const checkContentExists = async (id: number): Promise<boolean> => {
 };
 
 // GET /api/v1/contents
-export const getAllContents = async (): Promise<ContentDto[]> => {
-  const { data } = await apiClient.get<ContentDto[]>('/contents');
+export const getAllContents = async (): Promise<GetAllContentsResponse> => {
+  const { data } = await apiClient.get<GetAllContentsResponse>('/contents');
   return data;
 };
 
@@ -97,4 +99,30 @@ export const updateContent = async (
   payload: UpdateContentRequest
 ): Promise<void> => {
   await apiClient.put<void>(`/contents/${id}`, payload);
+};
+
+// DELETE /api/v1/contents/{id}
+export const deleteContent = async (id: number): Promise<void> => {
+  await apiClient.delete<void>(`/contents/${id}`);
+};
+
+// DELETE /api/v1/contents/{id}/poster
+export const deleteContentPoster = async (id: number): Promise<void> => {
+  await apiClient.delete<void>(`/contents/${id}/poster`);
+};
+
+// DELETE /api/v1/contents/{id}/genres/{genreId}
+export const deleteContentGenre = async (
+  id: number,
+  genreIds: number
+): Promise<void> => {
+  await apiClient.delete<void>(`/contents/${id}/genres/${genreIds}`);
+};
+
+// DELETE /api/v1/contents/{id}/actors/{actorId}
+export const deleteContentActor = async (
+  id: number,
+  actorIds: number
+): Promise<void> => {
+  await apiClient.delete<void>(`/contents/${id}/genres/${actorIds}`);
 };

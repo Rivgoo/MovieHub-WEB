@@ -1,22 +1,20 @@
 import React, { memo } from 'react';
-import { ApiFilmResponse } from '../../../../../core/api/types';
+import { ContentDto } from '../../../../../core/api/types/types.content';
 import { Typography } from '@mui/material';
 import { SxProps, Theme } from '@mui/material/styles';
 
-type StyleKeys = keyof ReturnType<
-  typeof import('./SearchForm.styles.ts').default
->;
+type StyleKeys = keyof ReturnType<typeof import('./SearchForm.styles').default>;
 type StylesType = Partial<Record<StyleKeys, SxProps<Theme>>>;
 
 interface SuggestionItemProps {
   props: React.HTMLAttributes<HTMLLIElement>;
-  option: ApiFilmResponse;
+  option: ContentDto;
   styles: StylesType;
 }
 
 const SuggestionItem: React.FC<SuggestionItemProps> = memo(
   ({ props, option, styles }) => (
-    <li {...props} key={option.id}>
+    <li {...props}>
       <Typography variant="body1" sx={styles.optionText}>
         {option?.title ?? 'Invalid Title'}
       </Typography>

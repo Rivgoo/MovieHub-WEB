@@ -9,19 +9,19 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-
-import Grid from '@mui/material/Grid';
 import { useNavigate } from 'react-router-dom';
-
+import { searchContent } from '../../../../../core/api/requests/request.content';
 import getStyles from './FilmGrid.styles';
-import { ContentDto } from '../../../../../core/api/types/types.content';
 import {
-  getAllContents,
-  searchContent,
-} from '../../../../../core/api/requests.content';
+  ContentDto,
+  ContentFilterResponse,
+} from '../../../../../core/api/types/types.content';
+import { GlowButton } from '../../../../../shared/components/Buttons';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface Props {
-  films?: ContentDto[];
+  films?: ContentFilterResponse;
   filters?: number[];
 }
 
@@ -30,129 +30,179 @@ const FilmGrid: React.FC<Props> = ({ films, filters }) => {
   const styles = getStyles(theme);
   const navigate = useNavigate();
 
-  const [localFilms, setLocalFilms] = useState<ContentDto[]>(films ?? []);
+  const defaultState: ContentFilterResponse = {
+    items: [],
+    pageIndex: 1,
+    pageSize: 20,
+    totalPages: 1,
+    totalCount: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  };
+
+  const [localFilms, setLocalFilms] = useState<ContentFilterResponse>(
+    films ?? defaultState
+  );
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleFilmChosing = (id: number) => {
     navigate(`/film/${id}`);
   };
 
+  const handleNextPage = () => {
+    if (localFilms.hasNextPage) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (localFilms.hasPreviousPage) {
+      setCurrentPage((prev) => Math.max(1, prev - 1));
+    }
+  };
+
+  const handleNumPage = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const getPageButtons = (
+    total: number,
+    current: number
+  ): (number | string)[] => {
+    const pages: (number | string)[] = [];
+
+    if (total <= 5) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    pages.push(1);
+
+    if (current > 3) pages.push('...');
+
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (current < total - 2) pages.push('...');
+
+    pages.push(total);
+
+    return pages;
+  };
+
   useEffect(() => {
     const fetchFilms = async () => {
-      if (!films || films.length === 0) {
-        try {
-          if (!filters || filters.length === 0) {
-            const result = await getAllContents();
-            setLocalFilms(result);
-          } else {
-            const query = filters.map((id) => `GenreIds=${id}`).join('&');
-            const result = await searchContent(`?${query}`);
-            setLocalFilms(result);
-          }
-        } catch (error) {
-          setLocalFilms([]);
+      try {
+        const baseQuery = `pageSize=20&pageIndex=${currentPage}`;
+        let result;
+
+        if (!filters || filters.length === 0) {
+          result = await searchContent(`?${baseQuery}`);
+        } else {
+          const filterQuery = filters.map((id) => `GenreIds=${id}`).join('&');
+          result = await searchContent(`?${filterQuery}&${baseQuery}`);
         }
-      } else {
-        setLocalFilms(films);
+
+        setLocalFilms(result);
+      } catch (error) {
+        setLocalFilms(defaultState);
       }
     };
 
     fetchFilms();
-  }, [films, filters]);
+  }, [filters, currentPage]);
 
   return (
     <Container sx={styles.wrapper}>
-      {/* <Grid
-        container
-        sx={styles.grid}
-        spacing={{ xs: 2, md: 1 }}
-        columns={{ xs: 12, sm: 12, md: 16 }}>
-        {localFilms.map((el) => (
-          <Card
-            key={el.id}
-            sx={styles.gridItem}
-            onClick={() => handleFilmChosing(el.id)}>
-            <CardActionArea>
-              {el.posterUrl ? (
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={el.posterUrl}
-                  alt={`${el.title ?? 'Film'} poster`}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    height: 200,
-                    backgroundColor: '#555',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Typography sx={{ color: 'white', fontSize: '0.8rem' }}>
-                    No Poster
-                  </Typography>
-                </Box>
-              )}
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="div">
-                  {el.title ?? 'No Title'}
-                </Typography>
-                {el.durationMinutes && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {el.durationMinutes} хв
-                  </Typography>
-                )}
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        ))}
-      </Grid> */}
       <Box sx={styles.cardContainer}>
-        {localFilms.map((el) => (
-          <Box key={el.id} sx={styles.cardItem}>
-            <Card
-              onClick={() => handleFilmChosing(el.id)}
-              sx={{ height: '100%' }}>
-              <CardActionArea sx={{ height: '100%' }}>
-                {el.posterUrl ? (
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={el.posterUrl}
-                    alt={`${el.title ?? 'Film'} poster`}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      height: 200,
-                      backgroundColor: '#555',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Typography sx={{ color: 'white', fontSize: '0.8rem' }}>
-                      No Poster
-                    </Typography>
-                  </Box>
-                )}
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    variant="h6"
-                    component="div"
-                    sx={styles.filmTitle}>
-                    {el.title ?? 'No Title'}
-                  </Typography>
-                  {el.durationMinutes && (
-                    <Typography variant="body2" sx={styles.filmDuration}>
-                      {el.durationMinutes} хв
-                    </Typography>
+        {Array.isArray(localFilms.items) &&
+          localFilms.items.length > 0 &&
+          localFilms.items.map((el: ContentDto) => (
+            <Box key={el.id} sx={styles.cardItem}>
+              <Card
+                onClick={() => handleFilmChosing(el.id)}
+                sx={{ height: '100%' }}>
+                <CardActionArea sx={{ height: '100%' }}>
+                  {el.posterUrl ? (
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={el.posterUrl}
+                      alt={`${el.title ?? 'Film'} poster`}
+                    />
+                  ) : (
+                    <Box sx={styles.posterAltBox}>
+                      <Typography sx={styles.posterAltText}>
+                        No Poster
+                      </Typography>
+                    </Box>
                   )}
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Box>
-        ))}
+                  <CardContent>
+                    <Typography
+                      gutterBottom
+                      variant="h6"
+                      component="div"
+                      sx={styles.filmTitle}>
+                      {el.title ?? 'No Title'}
+                    </Typography>
+                    {el.durationMinutes && (
+                      <Typography variant="body2" sx={styles.filmDuration}>
+                        {el.durationMinutes} хв
+                      </Typography>
+                    )}
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Box>
+          ))}
+      </Box>
+
+      <Box sx={styles.pagesList}>
+        <GlowButton
+          disabled={!localFilms.hasPreviousPage}
+          onClick={handlePrevPage}
+          sx={styles.pageNavigationButton}>
+          <ArrowBackIosIcon
+            sx={
+              localFilms.hasPreviousPage
+                ? styles.pageNavigationButtonActive
+                : styles.pageNavigationButtonDisable
+            }
+          />
+        </GlowButton>
+        {getPageButtons(localFilms.totalPages, currentPage).map((page, idx) =>
+          typeof page === 'number' ? (
+            <GlowButton
+              key={idx}
+              onClick={() => handleNumPage(page)}
+              sx={{
+                ...styles.pageNavigationButton,
+                color:
+                  page === localFilms.pageIndex
+                    ? theme.palette.primary.main
+                    : '#fff',
+              }}>
+              <Typography>{page}</Typography>
+            </GlowButton>
+          ) : (
+            <Typography key={idx}>...</Typography>
+          )
+        )}
+        <GlowButton
+          disabled={!localFilms.hasNextPage}
+          sx={styles.pageNavigationButton}
+          onClick={handleNextPage}>
+          <ArrowForwardIosIcon
+            sx={
+              localFilms.hasNextPage
+                ? styles.pageNavigationButtonActive
+                : styles.pageNavigationButtonDisable
+            }
+          />
+        </GlowButton>
       </Box>
     </Container>
   );

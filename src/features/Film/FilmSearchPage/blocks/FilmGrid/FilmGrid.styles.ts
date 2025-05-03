@@ -5,6 +5,7 @@ export default (theme: Theme) => ({
     mt: 4,
     mb: 4,
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     width: '100%',
   },
@@ -37,12 +38,22 @@ export default (theme: Theme) => ({
       flexBasis: 'calc(20% - 20px)',
       maxWidth: 'calc(20% - 20px)',
     },
-    minWidth: '200px', // 🔥 Мінімальна ширина картки
+    minWidth: '200px',
   },
   filmPoster: {
     width: '100%',
     height: 'auto',
     borderRadius: 4,
+  },
+  posterAltBox: {
+    height: 200,
+    backgroundColor: '#555',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  posterAltText: {
+    color: theme.palette.text.secondary,
   },
   filmTitle: {
     color: theme.palette.text.secondary,
@@ -53,4 +64,21 @@ export default (theme: Theme) => ({
   filmDuration: {
     color: theme.palette.text.secondary,
   },
+  pagesList: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: 2,
+    mt: 4,
+    p: 1,
+  },
+  pageNavigationButton: {
+    // maxWidth: '30px',
+    height: 'auto',
+    p: 0,
+  },
+  pageNavigationButtonActive: { color: theme.palette.secondary.contrastText },
+  pageNavigationButtonDisable: { color: '#3C3C3C' },
+  pageNavavigationButtonText: { color: theme.palette.text.primary },
+
+  // pageNavavigationButtonText: { color: theme.palette.text.primary },
 });
