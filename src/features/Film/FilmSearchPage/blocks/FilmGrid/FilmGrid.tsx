@@ -25,25 +25,27 @@ interface Props {
   filters?: number[];
 }
 
-const FilmGrid: React.FC<Props> = ({ films, filters }) => {
+const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigate = useNavigate();
 
+  console.log(filmsFromProps);
+
   const defaultState: ContentFilterResponse = {
     items: [],
     pageIndex: 1,
-    pageSize: 20,
+    pageSize: 10,
     totalPages: 1,
     totalCount: 0,
     hasPreviousPage: false,
     hasNextPage: false,
   };
 
-  const [localFilms, setLocalFilms] = useState<ContentFilterResponse>(
-    films ?? defaultState
-  );
+  const [localFilms, setLocalFilms] =
+    useState<ContentFilterResponse>(defaultState);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFilmChosing = (id: number) => {
     navigate(`/film/${id}`);
@@ -94,26 +96,46 @@ const FilmGrid: React.FC<Props> = ({ films, filters }) => {
   };
 
   useEffect(() => {
-    const fetchFilms = async () => {
-      try {
-        const baseQuery = `pageSize=20&pageIndex=${currentPage}`;
-        let result;
+    // 1. Якщо дані прийшли з props (від SearchForm), використовуємо їх і скидаємо currentPage
+    if (filmsFromProps !== undefined) {
+      console.log('FilmGrid: Використання даних з props', filmsFromProps);
+      setLocalFilms(filmsFromProps);
+      // Встановлюємо поточну сторінку відповідно до даних з props, якщо вона там є
+      setCurrentPage(filmsFromProps.pageIndex ?? 1);
+      // Не робимо додатковий запит
+      return;
+    }
 
-        if (!filters || filters.length === 0) {
-          result = await searchContent(`?${baseQuery}`);
-        } else {
+    // 2. Якщо даних з props немає, робимо запит на основі фільтрів та поточної сторінки
+    const fetchFilmsLocally = async () => {
+      setIsLoading(true); // Починаємо завантаження
+      try {
+        // Формуємо базовий запит з пагінацією
+        const baseQuery = `pageSize=20&pageIndex=${currentPage}`;
+        let finalQuery = `?${baseQuery}`;
+
+        // Додаємо фільтри по жанрах, якщо вони є
+        if (filters && filters.length > 0) {
           const filterQuery = filters.map((id) => `GenreIds=${id}`).join('&');
-          result = await searchContent(`?${filterQuery}&${baseQuery}`);
+          finalQuery = `?${filterQuery}&${baseQuery}`;
+          console.log('FilmGrid: Запит з фільтрами', finalQuery);
+        } else {
+          console.log('FilmGrid: Запит без фільтрів', finalQuery);
         }
 
+        const result = await searchContent(finalQuery);
         setLocalFilms(result);
       } catch (error) {
-        setLocalFilms(defaultState);
+        console.error('FilmGrid: Помилка завантаження фільмів:', error);
+        setLocalFilms(defaultState); // Скидаємо до стану за замовчуванням при помилці
+      } finally {
+        setIsLoading(false); // Завершуємо завантаження
       }
     };
 
-    fetchFilms();
-  }, [filters, currentPage]);
+    fetchFilmsLocally();
+    // Залежності: filters (з props) та currentPage (локальний стан)
+  }, [filmsFromProps, filters, currentPage]);
 
   return (
     <Container sx={styles.wrapper}>

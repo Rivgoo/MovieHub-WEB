@@ -98,37 +98,6 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
     }
   };
 
-  // const handleSubmit = async () => {
-  //   const trimmedQuery = movieQuery.trim();
-  //   if (!trimmedQuery) {
-  //     setError('Будь ласка, введіть назву фільму.');
-  //     return;
-  //   }
-
-  //   setError(null);
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const query = `?Title=${encodeURIComponent(trimmedQuery)}&pageSize=20&pageIndex=1`;
-  //     const results = await searchContent(query);
-
-  //     if (results.items.length === 0) {
-  //       setError('Фільм не знайдено.');
-  //     }
-
-  //     onSearchResults(results);
-  //   } catch (err) {
-  //     let msg = 'Сталася помилка при пошуку. Спробуйте ще раз.';
-  //     if (axios.isAxiosError(err)) {
-  //       const ax = err as AxiosError<ApiError>;
-  //       msg = ax.response?.data?.description || ax.message || msg;
-  //     }
-  //     setError(msg);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
-
   const handleSubmit = async () => {
     const trimmedQuery = movieQuery.trim();
     if (!trimmedQuery) {
@@ -148,7 +117,7 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
     setIsSubmitting(true);
 
     try {
-      const apiQuery = `?Title=${encodeURIComponent(trimmedQuery)}&pageSize=20&pageIndex=1`;
+      const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&pageSize=20&pageIndex=1`;
       const results = await searchContent(apiQuery);
       onSearchResults(results);
     } catch (err) {
