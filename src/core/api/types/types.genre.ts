@@ -31,6 +31,8 @@ export interface CreateGenreRequest {
 
 export interface CreateGenreResponse {
   id: number;
+  createdAt: string;
+  updatedAt: string;
 }
 //-----------------------------------------------------------
 
