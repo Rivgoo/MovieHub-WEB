@@ -26,10 +26,12 @@ const Footer: React.FC = () => {
       }}>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            justifyContent: { xs: "center", sm: "space-between" },
-            alignItems: { xs: "center", sm: "center" },
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: '1fr auto 1fr', 
+            },
+            alignItems: 'center', 
             gap: { xs: 3, sm: 2 },
           }}
         >
