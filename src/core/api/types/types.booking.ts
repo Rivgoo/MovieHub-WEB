@@ -16,7 +16,7 @@ export interface BookingDto {
 }
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/bookings/filter
+// GET /api/v1/bookings/filter
 export interface BookingFilterResponse {
   items: BookingDto[];
   pageIndex: number;
@@ -28,27 +28,27 @@ export interface BookingFilterResponse {
 }
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/bookings
+// GET /api/v1/bookings
 export type GetAllBookingsResponse = BookingDto[];
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/bookings/{id}
+// GET /api/v1/bookings/{id}
 export type GetBookingByIdResponse = BookingDto;
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/bookings/{id}/exists
+// GET /api/v1/bookings/{id}/exists
 export interface BookingExistenceResponse {
   exists: boolean;
 }
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/bookings/sessions/{sessionId}/seats/{rowNumber}/{seatNumber}/is-booked
+// GET /api/v1/bookings/sessions/{sessionId}/seats/{rowNumber}/{seatNumber}/is-booked
 export interface SeatAvailabilityResponse {
   isBooked: boolean;
 }
 //-----------------------------------------------------------
 
-// 📘 POST /api/v1/bookings
+// POST /api/v1/bookings
 export interface CreateBookingRequest {
   sessionId: number;
   rowNumber: number;
@@ -60,5 +60,5 @@ export interface CreateBookingResponse {
 }
 //-----------------------------------------------------------
 
-// 📘 DELETE /api/v1/bookings/{id}
+// DELETE /api/v1/bookings/{id}
 export type DeleteBookingResponse = void;
