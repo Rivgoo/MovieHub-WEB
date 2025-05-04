@@ -96,25 +96,19 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   };
 
   useEffect(() => {
-    // 1. Якщо дані прийшли з props (від SearchForm), використовуємо їх і скидаємо currentPage
     if (filmsFromProps !== undefined) {
       console.log('FilmGrid: Використання даних з props', filmsFromProps);
       setLocalFilms(filmsFromProps);
-      // Встановлюємо поточну сторінку відповідно до даних з props, якщо вона там є
       setCurrentPage(filmsFromProps.pageIndex ?? 1);
-      // Не робимо додатковий запит
       return;
     }
 
-    // 2. Якщо даних з props немає, робимо запит на основі фільтрів та поточної сторінки
     const fetchFilmsLocally = async () => {
-      setIsLoading(true); // Починаємо завантаження
+      setIsLoading(true);
       try {
-        // Формуємо базовий запит з пагінацією
         const baseQuery = `pageSize=20&pageIndex=${currentPage}`;
         let finalQuery = `?${baseQuery}`;
 
-        // Додаємо фільтри по жанрах, якщо вони є
         if (filters && filters.length > 0) {
           const filterQuery = filters.map((id) => `GenreIds=${id}`).join('&');
           finalQuery = `?${filterQuery}&${baseQuery}`;
@@ -127,14 +121,13 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
         setLocalFilms(result);
       } catch (error) {
         console.error('FilmGrid: Помилка завантаження фільмів:', error);
-        setLocalFilms(defaultState); // Скидаємо до стану за замовчуванням при помилці
+        setLocalFilms(defaultState);
       } finally {
-        setIsLoading(false); // Завершуємо завантаження
+        setIsLoading(false);
       }
     };
 
     fetchFilmsLocally();
-    // Залежності: filters (з props) та currentPage (локальний стан)
   }, [filmsFromProps, filters, currentPage]);
 
   return (
