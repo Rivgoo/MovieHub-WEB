@@ -15,7 +15,7 @@ interface HeroSectionProps {
   // backdropUrl?: string;
  }
 
-const HeroSection: React.FC<HeroSectionProps> = (props) => {
+ const HeroSection: React.FC<HeroSectionProps> = () => {
 
     // const { backdropUrl } = props; 
   const [isFavorite, setIsFavorite] = useState(false);
