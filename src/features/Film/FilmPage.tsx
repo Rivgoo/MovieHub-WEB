@@ -1,48 +1,67 @@
+
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
+import { useParams, useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
 import Layout from '../../shared/components/Layout';
+import { useTheme } from '@mui/material/styles';
+import HeroSection from './sections/HeroSection/HeroSection';
+import ContentSection from './sections/ContentSection/ContentSection';
+import ActorsSection from './sections/ActorsSection/ActorsSection';
 
 const FilmPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const theme = useTheme();
+
+  const handleSelectSession = () => {
+    console.log('Обрати сеанс для фільму ID:', id);
+     if (id) navigate(`/session-search?filmId=${id}`);
+  };
 
   return (
     <Layout>
-      <Container
-        maxWidth="sm"
-        sx={{
-          mt: 4,
-          mb: 4,
-          display: 'flex',
-          justifyContent: 'center',
-          background: 'background.default',
-        }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}>
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            color="text.secondary"
-            sx={{ fontWeight: 600 }}>
-            Film {id}
-          </Typography>
+  
+      <HeroSection />
+      <ContentSection onSelectSession={handleSelectSession} />
+      <ActorsSection />
 
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            This is the Film page. Here you can find information about various
-            films, including their titles, descriptions, and release dates.
-          </Typography>
-        </Paper>
-      </Container>
+    
+      <Button
+          variant="contained"
+          onClick={handleSelectSession}
+          sx={{
+              position: 'fixed',
+              bottom: theme.spacing(4.5), 
+              right: theme.spacing(4.5), 
+              zIndex: theme.zIndex.fab,
+              width: 'auto',
+              bgcolor: 'primary.main',
+              color: 'primary.contrastText',
+              borderRadius: '50px', 
+              
+              py: 1.8,        
+              px: 4.5,        
+              fontSize: '1.15rem',
+              fontWeight: 600,
+              letterSpacing: '0.5px', 
+              
+              minWidth: 'auto',
+              boxShadow: '0px 8px 18px rgba(218, 98, 28, 0.35)', 
+              '&:hover': {
+                 bgcolor: 'primary.dark',
+                 boxShadow: '0px 10px 22px rgba(218, 98, 28, 0.45)', 
+              },
+          }}
+      >
+          
+          <ConfirmationNumberOutlinedIcon sx={{
+              fontSize: '1.6rem',
+              mr: 1.1,           
+              verticalAlign: 'middle'
+          }}/>
+          Обрати сеанс
+      </Button>
     </Layout>
   );
 };

@@ -1,0 +1,37 @@
+
+:root {
+  --primary-light: #F8FCF8; --text-light: #F8FCF8;
+  --bg-avatar-placeholder: #424242; --shadow-avatar: 0px 4px 10px rgba(0, 0, 0, 0.25);
+}
+.actorsWrapper { 
+  margin-bottom: 2rem;
+}
+.actorsContainer { 
+  text-align: center;
+}
+.actorsTitle { 
+  font-weight: 600 !important; color: var(--primary-light) !important;
+  margin-bottom: 2rem !important;
+}
+.actorCard { 
+  display: flex; flex-direction: column; align-items: center;
+}
+.actorAvatar {
+  background-color: var(--bg-avatar-placeholder) !important; width: 80px !important;
+  height: 80px !important; margin-bottom: 0.5rem !important;
+  box-shadow: var(--shadow-avatar) !important;
+}
+.actorName {
+  color: var(--primary-light) !important; font-weight: 500 !important;
+}
+
+@media (min-width: 600px) { 
+  .actorsTitle { margin-bottom: 2.5rem !important; }
+  .actorAvatar { width: 100px !important; height: 100px !important; margin-bottom: 0.75rem !important; }
+  .actorsWrapper { margin-bottom: 2.5rem; }
+}
+@media (min-width: 900px) { 
+  .actorsTitle { margin-bottom: 3rem !important; }
+  .actorAvatar { width: 120px !important; height: 120px !important; margin-bottom: 1rem !important; }
+  .actorsWrapper { margin-bottom: 3rem; }
+}
