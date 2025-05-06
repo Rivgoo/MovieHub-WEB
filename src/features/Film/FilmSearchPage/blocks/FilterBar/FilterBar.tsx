@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
   Box,
   Container,
-  FormControl,
   MenuItem,
   Select,
   SelectChangeEvent,

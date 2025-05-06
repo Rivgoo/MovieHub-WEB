@@ -8,6 +8,7 @@ import {
   Container,
   Typography,
   useTheme,
+  CircularProgress,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { searchContent } from '../../../../../core/api/requests/request.content';
@@ -45,7 +46,7 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   const [localFilms, setLocalFilms] =
     useState<ContentFilterResponse>(defaultState);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  //const [isLoading, setIsLoading] = useState(false);
 
   const handleFilmChosing = (id: number) => {
     navigate(`/film/${id}`);
@@ -100,11 +101,12 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
       console.log('FilmGrid: Використання даних з props', filmsFromProps);
       setLocalFilms(filmsFromProps);
       setCurrentPage(filmsFromProps.pageIndex ?? 1);
+      //setIsLoading(false);
       return;
     }
 
     const fetchFilmsLocally = async () => {
-      setIsLoading(true);
+      //setIsLoading(true);
       try {
         const baseQuery = `pageSize=10&pageIndex=${currentPage}`;
         let finalQuery = `?${baseQuery}`;
@@ -123,7 +125,7 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
         console.error('FilmGrid: Помилка завантаження фільмів:', error);
         setLocalFilms(defaultState);
       } finally {
-        setIsLoading(false);
+        //setIsLoading(false);
       }
     };
 

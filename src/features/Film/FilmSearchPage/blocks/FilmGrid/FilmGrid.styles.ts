@@ -52,16 +52,16 @@ const getFilmGridStyles = (theme: Theme) => ({
     justifyContent: 'center',
   },
   filmPosterAltText: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
   },
   filmTitle: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
   },
   filmDuration: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
   },
   filmPagesList: {
     display: 'flex',

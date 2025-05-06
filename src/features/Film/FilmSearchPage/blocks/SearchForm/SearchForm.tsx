@@ -8,14 +8,11 @@ import {
   CircularProgress,
   useMediaQuery,
   Autocomplete,
-  FormControl,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosError } from 'axios';
 
 import SearchBar from './SearchBar.tsx';
 import SuggestionItem from './SuggestionItem.tsx';
-import { ApiError } from '../../../../../core/api/types/types.error.ts';
 import {
   ContentDto,
   ContentFilterResponse,
