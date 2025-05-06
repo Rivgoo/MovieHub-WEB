@@ -7,8 +7,7 @@ import {
   CardMedia,
   Container,
   Typography,
-  useTheme,
-  CircularProgress,
+  useTheme
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { searchContent } from '../../../../../core/api/requests/request.content';

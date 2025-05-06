@@ -27,12 +27,12 @@ export type GetGenreByIdResponse = GenreDto;
 // POST /api/v1/genres
 export interface CreateGenreRequest {
   name: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface CreateGenreResponse {
   id: number;
+  createdAt: string;
+  updatedAt: string;
 }
 //-----------------------------------------------------------
 
