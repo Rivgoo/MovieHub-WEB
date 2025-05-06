@@ -55,7 +55,7 @@ export default (theme: Theme) => ({
       borderRadius: '0.75rem',
       color: theme.palette.text.primary,
       '& fieldset': {
-        borderColor: '#5b3926',
+        borderColor: theme.palette.primary.main,
       },
       '&:hover fieldset': {
         borderColor: theme.palette.primary.light,
@@ -86,15 +86,15 @@ export default (theme: Theme) => ({
     '& .MuiInputBase-input': {
       color: theme.palette.text.primary,
     },
-
     '&& .MuiFormHelperText-root': {
       fontSize: '0.75rem',
       marginLeft: 1.5,
       color: theme.palette.error.light,
     },
+
     '& .MuiInputAdornment-root': {
       '& .MuiIconButton-root': {
-        color: theme.palette.text.primary,
+        color: theme.palette.text.primary, 
         transition: 'color 0.2s ease-in-out',
         '&:hover': {
           color: theme.palette.primary.main,
@@ -112,8 +112,8 @@ export default (theme: Theme) => ({
     fontSize: '0.875rem',
     backgroundColor: theme.palette.error.main,
     '& .MuiAlert-icon': {
-      color: theme.palette.error.contrastText,
-      paddingTop: '7px',
+      color: theme.palette.error.contrastText, 
+      paddingTop: '7px', 
     },
     '& .MuiAlert-message': {
       color: theme.palette.error.contrastText,
@@ -122,14 +122,14 @@ export default (theme: Theme) => ({
   button: {
     mt: 2,
     mb: 1,
-    py: 1.5,
+    py: 1.5, 
   },
   link: {
     alignSelf: 'center',
     mt: 1,
     cursor: 'pointer',
     fontWeight: 700,
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main, 
     '&:hover': {
       textDecoration: 'underline',
     },
