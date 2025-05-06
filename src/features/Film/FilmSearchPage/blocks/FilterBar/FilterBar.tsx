@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Box,
   Container,
@@ -8,25 +9,35 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-
 import { GenreDto } from '../../../../../core/api/types/types.genre';
 import { getAllGenres } from '../../../../../core/api/requests/request.genre';
-import getStyles from './FilterBar.styles';
+import getFilterBarStyles from './FilterBar.styles';
 
-interface FiltersState {
-  genreId: string;
-  availableRate: string;
-  availableInCinema: string;
-  [key: string]: string;
+interface FilterBarProps {
+  filters: Record<string, string>;
+  setFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
-const FilterBar = () => {
+const FilterBar: React.FC<FilterBarProps> = ({ filters, setFilters }) => {
   const theme = useTheme();
-  const styles = getStyles(theme);
+  const styles = getFilterBarStyles(theme);
 
   const [genres, setGenres] = useState<GenreDto[]>([]);
-  const [filters, setFilters] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const data = await getAllGenres();
+        if (Array.isArray(data)) {
+          setGenres(data);
+        }
+      } catch {
+        setGenres([]);
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   const filterFields = [
     {
@@ -37,7 +48,7 @@ const FilterBar = () => {
     },
     {
       name: 'availableRate',
-      label: 'Рейтинг',
+      label: 'Рейтинг вище, за ...',
       options: [30, 40, 50, 60, 70, 80, 90, 100].map((rate) => ({
         value: rate.toString(),
         label: rate.toString(),
@@ -60,33 +71,18 @@ const FilterBar = () => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    const fetchGenres = async () => {
-      try {
-        const data = await getAllGenres();
-        if (Array.isArray(data)) {
-          setGenres(data);
-        }
-      } catch (error) {
-        setGenres([]);
-      }
-    };
-
-    fetchGenres();
-  }, []);
-
   return (
-    <Container sx={styles.wraper}>
-      <FormControl fullWidth sx={styles.form}>
+    <Container sx={styles.filterBarWrapper}>
+      <Box sx={styles.filterBarForm}>
         {filterFields.map((el) => (
-          <Box key={el.name}>
+          <Box key={el.name} sx={{ mb: 2 }}>
             <Typography>{el.label}</Typography>
             <Select
               value={filters[el.name] ?? ''}
               onChange={handleChange}
               name={el.name}
               displayEmpty
-              sx={styles.selector}>
+              sx={styles.filterBarSelector}>
               <MenuItem value="">
                 <em>{el.defaultLabel}</em>
               </MenuItem>
@@ -98,7 +94,7 @@ const FilterBar = () => {
             </Select>
           </Box>
         ))}
-      </FormControl>
+      </Box>
     </Container>
   );
 };

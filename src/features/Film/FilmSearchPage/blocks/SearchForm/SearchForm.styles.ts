@@ -2,7 +2,7 @@ import { Theme } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 
 export default (theme: Theme) => ({
-  wrapper: {
+  searchFormWrapper: {
     mt: 20,
     mb: 4,
     display: 'flex',
@@ -10,7 +10,7 @@ export default (theme: Theme) => ({
     justifyContent: 'center',
     background: theme.palette.background.default,
   },
-  form: {
+  searchFormForm: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -18,19 +18,19 @@ export default (theme: Theme) => ({
     justifyContent: 'center',
     alignSelf: 'center',
   },
-  title: {
+  searchFormTitle: {
     fontWeight: 600,
     mb: 2,
     color: theme.palette.primary.light,
   },
-  subText: {
+  searchFormSubText: {
     mb: 1,
     color: theme.palette.text.primary,
     opacity: 0.7,
     textAlign: 'center',
   },
 
-  inputArea: {
+  searchFormInputArea: {
     position: 'relative',
     width: '100%',
     '& .MuiOutlinedInput-root': {
@@ -58,7 +58,7 @@ export default (theme: Theme) => ({
     },
   },
 
-  autoComplete: {
+  searchFormAutoComplete: {
     width: '100%',
     '& .MuiAutocomplete-clearIndicator': {
       color: theme.palette.action.active,
@@ -67,7 +67,7 @@ export default (theme: Theme) => ({
       color: theme.palette.action.active,
     },
   },
-  dropdownPaperStyles: {
+  searchFormDropdownPaper: {
     bgcolor: theme.palette.background.default,
     color: theme.palette.text.primary,
     marginTop: theme.spacing(0.5),
@@ -97,7 +97,7 @@ export default (theme: Theme) => ({
     },
   },
 
-  optionText: {
+  searchFormOptionText: {
     color: 'inherit',
     opacity: 1,
     textAlign: 'left',
@@ -106,7 +106,7 @@ export default (theme: Theme) => ({
     textOverflow: 'ellipsis',
   },
 
-  submitButton: {
+  searchFormSubmitButton: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -126,7 +126,7 @@ export default (theme: Theme) => ({
     },
   },
 
-  errorBox: {
+  searchFormErrorBox: {
     mt: 2,
     padding: theme.spacing(0.5, 1.5),
     display: 'flex',

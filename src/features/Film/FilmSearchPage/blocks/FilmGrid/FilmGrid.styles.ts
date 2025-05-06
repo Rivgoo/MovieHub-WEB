@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material';
 
-export default (theme: Theme) => ({
-  wrapper: {
+const getFilmGridStyles = (theme: Theme) => ({
+  filmGridWrapper: {
     mt: 4,
     mb: 4,
     display: 'flex',
@@ -9,16 +9,15 @@ export default (theme: Theme) => ({
     justifyContent: 'center',
     width: '100%',
   },
-  cardContainer: {
+  filmCardContainer: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: theme.spacing(3),
-    // padding: theme.spacing(1),
     width: '100%',
     maxWidth: '1920px',
   },
-  cardItem: {
+  filmCardItem: {
     flexGrow: 1,
     flexBasis: '100%',
     maxWidth: '100%',
@@ -45,14 +44,14 @@ export default (theme: Theme) => ({
     height: 'auto',
     borderRadius: 4,
   },
-  posterAltBox: {
+  filmPosterAltBox: {
     height: 200,
     backgroundColor: '#555',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  posterAltText: {
+  filmPosterAltText: {
     color: theme.palette.text.secondary,
   },
   filmTitle: {
@@ -64,21 +63,24 @@ export default (theme: Theme) => ({
   filmDuration: {
     color: theme.palette.text.secondary,
   },
-  pagesList: {
+  filmPagesList: {
     display: 'flex',
     justifyContent: 'center',
     gap: 2,
     mt: 4,
     p: 1,
   },
-  pageNavigationButton: {
-    // maxWidth: '30px',
+  filmPageNavigationButton: {
     height: 'auto',
     p: 0,
   },
-  pageNavigationButtonActive: { color: theme.palette.secondary.contrastText },
-  pageNavigationButtonDisable: { color: '#3C3C3C' },
-  pageNavavigationButtonText: { color: theme.palette.text.primary },
-
-  // pageNavavigationButtonText: { color: theme.palette.text.primary },
+  filmPageNavigationButtonActive: {
+    color: theme.palette.secondary.contrastText,
+  },
+  filmPageNavigationButtonDisable: {
+    color: theme.palette.primary.light,
+    opacity: '0.3',
+  },
 });
+
+export default getFilmGridStyles;

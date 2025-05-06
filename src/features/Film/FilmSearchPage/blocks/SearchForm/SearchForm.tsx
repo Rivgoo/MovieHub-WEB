@@ -8,6 +8,7 @@ import {
   CircularProgress,
   useMediaQuery,
   Autocomplete,
+  FormControl,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
@@ -47,6 +48,7 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+  const [filters, setFilters] = useState<Record<string, string>>({});
 
   const fetchOptions = useCallback(async (query: string) => {
     const trimmedQuery = query.trim();
@@ -101,64 +103,59 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
 
   const handleSubmit = async () => {
     const trimmedQuery = movieQuery.trim();
-    if (!trimmedQuery) {
-      onSearchResults({
-        items: [],
-        pageIndex: 1,
-        pageSize: 20,
-        totalPages: 0,
-        totalCount: 0,
-        hasPreviousPage: false,
-        hasNextPage: false,
-      });
-      return;
-    }
-
     setError(null);
     setIsSubmitting(true);
 
     try {
-      const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&pageSize=20&pageIndex=1`;
+      const filterQuery = Object.entries(filters)
+        .filter(([_, v]) => v !== '')
+        .map(([k, v]) => {
+          switch (k) {
+            case 'availableRate':
+              return `MinRating=${v}`;
+            case 'genreId':
+              return `GenreIds=${v}`;
+            case 'availableInCinema':
+              return `HasSessions=${v}`;
+            default:
+              return `${k}=${v}`;
+          }
+        })
+        .join('&');
+
+      const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&${filterQuery}&pageSize=20&pageIndex=1`;
       const results = await searchContent(apiQuery);
       onSearchResults(results);
     } catch (err) {
-      let msg = 'Сталася помилка при пошуку. Спробуйте ще раз.';
-      if (axios.isAxiosError(err)) {
-        const ax = err as AxiosError<ApiError>;
-        msg = (ax.response?.data as any)?.description || ax.message || msg;
-      }
-      setError(msg);
-      onSearchResults({
-        items: [],
-        pageIndex: 1,
-        pageSize: 0,
-        totalPages: 0,
-        totalCount: 0,
-        hasPreviousPage: false,
-        hasNextPage: false,
-      });
+      alert(err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Container maxWidth="sm" sx={styles.wrapper}>
+    <Container maxWidth="sm" sx={styles.searchFormWrapper}>
       <Box
         component="form"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
-        sx={styles.form}>
-        <Typography variant="h4" component="h1" gutterBottom sx={styles.title}>
+        sx={styles.searchFormForm}>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={styles.searchFormTitle}>
           Пошук фільму
         </Typography>
-        <Typography variant="body1" sx={styles.subText}>
+
+        <Typography variant="body1" sx={styles.searchFormSubText}>
           {isSmallScreen
             ? 'Введіть назву для пошуку.'
             : 'Введіть назву фільму. Це допоможе знайти відповідний результат.'}
         </Typography>
+
         <Autocomplete
           freeSolo
           disableClearable
@@ -172,9 +169,9 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
           loading={isLoadingOptions}
           loadingText="Завантаження..."
           noOptionsText="Фільм не знайдено"
-          sx={styles.autoComplete}
+          sx={styles.searchFormAutoComplete}
           slotProps={{
-            paper: { sx: styles.dropdownPaperStyles },
+            paper: { sx: styles.searchFormDropdownPaper },
           }}
           renderOption={(props, option) => (
             <SuggestionItem
@@ -193,17 +190,20 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
             />
           )}
         />
+
         {error && (
-          <Alert severity="error" sx={styles.errorBox}>
+          <Alert severity="error" sx={styles.searchFormErrorBox}>
             {error}
           </Alert>
         )}
+
         {isSubmitting && !isLoadingOptions && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <CircularProgress size={24} color="primary" />
           </Box>
         )}
-        <FilterBar />
+
+        <FilterBar filters={filters} setFilters={setFilters} />
       </Box>
     </Container>
   );

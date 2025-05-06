@@ -15,7 +15,7 @@ interface SuggestionItemProps {
 const SuggestionItem: React.FC<SuggestionItemProps> = memo(
   ({ props, option, styles }) => (
     <li {...props}>
-      <Typography variant="body1" sx={styles.optionText}>
+      <Typography variant="body1" sx={styles.searchFormOptionText}>
         {option?.title ?? 'Invalid Title'}
       </Typography>
     </li>

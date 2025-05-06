@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
         margin="normal"
         placeholder="Введіть назву фільму..."
         fullWidth
-        sx={styles.inputArea}
+        sx={styles.searchFormInputArea}
         disabled={isSubmitting}
         InputProps={{
           ...params.InputProps,
@@ -37,7 +37,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
                   onClick={onSubmit}
                   disabled={isSubmitting}
                   edge="end"
-                  sx={styles.submitButton}
+                  sx={styles.searchFormSubmitButton}
                   aria-label="Search movie">
                   <SearchSharp />
                 </IconButton>

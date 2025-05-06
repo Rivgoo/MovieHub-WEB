@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { searchContent } from '../../../../../core/api/requests/request.content';
-import getStyles from './FilmGrid.styles';
+import getFilmGridStyles from './FilmGrid.styles';
 import {
   ContentDto,
   ContentFilterResponse,
@@ -27,7 +27,7 @@ interface Props {
 
 const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   const theme = useTheme();
-  const styles = getStyles(theme);
+  const styles = getFilmGridStyles(theme);
   const navigate = useNavigate();
 
   console.log(filmsFromProps);
@@ -106,7 +106,7 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
     const fetchFilmsLocally = async () => {
       setIsLoading(true);
       try {
-        const baseQuery = `pageSize=20&pageIndex=${currentPage}`;
+        const baseQuery = `pageSize=10&pageIndex=${currentPage}`;
         let finalQuery = `?${baseQuery}`;
 
         if (filters && filters.length > 0) {
@@ -131,12 +131,12 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   }, [filmsFromProps, filters, currentPage]);
 
   return (
-    <Container sx={styles.wrapper}>
-      <Box sx={styles.cardContainer}>
+    <Container sx={styles.filmGridWrapper}>
+      <Box sx={styles.filmCardContainer}>
         {Array.isArray(localFilms.items) &&
           localFilms.items.length > 0 &&
           localFilms.items.map((el: ContentDto) => (
-            <Box key={el.id} sx={styles.cardItem}>
+            <Box key={el.id} sx={styles.filmCardItem}>
               <Card
                 onClick={() => handleFilmChosing(el.id)}
                 sx={{ height: '100%' }}>
@@ -147,10 +147,11 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
                       height="200"
                       image={el.posterUrl}
                       alt={`${el.title ?? 'Film'} poster`}
+                      // sx={styles.filmPoster}
                     />
                   ) : (
-                    <Box sx={styles.posterAltBox}>
-                      <Typography sx={styles.posterAltText}>
+                    <Box sx={styles.filmPosterAltBox}>
+                      <Typography sx={styles.filmPosterAltText}>
                         No Poster
                       </Typography>
                     </Box>
@@ -175,16 +176,16 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
           ))}
       </Box>
 
-      <Box sx={styles.pagesList}>
+      <Box sx={styles.filmPagesList}>
         <GlowButton
           disabled={!localFilms.hasPreviousPage}
           onClick={handlePrevPage}
-          sx={styles.pageNavigationButton}>
+          sx={styles.filmPageNavigationButton}>
           <ArrowBackIosIcon
             sx={
               localFilms.hasPreviousPage
-                ? styles.pageNavigationButtonActive
-                : styles.pageNavigationButtonDisable
+                ? styles.filmPageNavigationButtonActive
+                : styles.filmPageNavigationButtonDisable
             }
           />
         </GlowButton>
@@ -194,7 +195,7 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
               key={idx}
               onClick={() => handleNumPage(page)}
               sx={{
-                ...styles.pageNavigationButton,
+                ...styles.filmPageNavigationButton,
                 color:
                   page === localFilms.pageIndex
                     ? theme.palette.primary.main
@@ -208,13 +209,13 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
         )}
         <GlowButton
           disabled={!localFilms.hasNextPage}
-          sx={styles.pageNavigationButton}
+          sx={styles.filmPageNavigationButton}
           onClick={handleNextPage}>
           <ArrowForwardIosIcon
             sx={
               localFilms.hasNextPage
-                ? styles.pageNavigationButtonActive
-                : styles.pageNavigationButtonDisable
+                ? styles.filmPageNavigationButtonActive
+                : styles.filmPageNavigationButtonDisable
             }
           />
         </GlowButton>
@@ -224,104 +225,3 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
 };
 
 export default FilmGrid;
-
-//   const [response, setResponse] = useState({
-//     items: [
-//       {
-//         id: 1,
-//         title: 'string1',
-//         description: 'string',
-//         rating: 10,
-//         releaseYear: 2020,
-//         trailerUrl: 'string',
-//         posterUrl:
-//           'https://movieposter.runasp.net/content/posters/1_b89945f537fc4ad2a85c3bdd5935252d.jpg',
-//         durationMinutes: 120,
-//         genreIds: [1, 2],
-//         actorIds: [1, 2],
-//         createdAt: 'string',
-//         updatedAt: 'string',
-//       },
-//       {
-//         id: 2,
-//         title: 'Content 2',
-//         description: 'Description for Content 2',
-//         rating: 65,
-//         releaseYear: 2007,
-//         trailerUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-//         posterUrl:
-//           'https://movieposter.runasp.net/content/posters/2_db4866a650f842a693b2679a896a80b4.jpg',
-//         durationMinutes: 189,
-//         genreIds: [],
-//         actorIds: [],
-//         createdAt: '2025-04-24T18:16:13.620535',
-//         updatedAt: '2025-04-24T18:16:13.632179',
-//       },
-//       {
-//         id: 3,
-//         title: 'string3',
-//         description: 'string',
-//         rating: 10,
-//         releaseYear: 2020,
-//         trailerUrl: 'string',
-//         posterUrl:
-//           'https://movieposter.runasp.net/content/posters/1_b89945f537fc4ad2a85c3bdd5935252d.jpg',
-//         durationMinutes: 120,
-//         genreIds: [1, 2],
-//         actorIds: [1, 2],
-//         createdAt: 'string',
-//         updatedAt: 'string',
-//       },
-//       {
-//         id: 4,
-//         title: 'string4',
-//         description: 'string',
-//         rating: 10,
-//         releaseYear: 2020,
-//         trailerUrl: 'string',
-//         posterUrl:
-//           'https://movieposter.runasp.net/content/posters/1_b89945f537fc4ad2a85c3bdd5935252d.jpg',
-//         durationMinutes: 120,
-//         genreIds: [1, 2],
-//         actorIds: [1, 2],
-//         createdAt: 'string',
-//         updatedAt: 'string',
-//       },
-//       {
-//         id: 5,
-//         title: 'string5',
-//         description: 'string',
-//         rating: 10,
-//         releaseYear: 2020,
-//         trailerUrl: 'string',
-//         posterUrl:
-//           'https://movieposter.runasp.net/content/posters/1_b89945f537fc4ad2a85c3bdd5935252d.jpg',
-//         durationMinutes: 120,
-//         genreIds: [1, 2],
-//         actorIds: [1, 2],
-//         createdAt: 'string',
-//         updatedAt: 'string',
-//       },
-//       {
-//         id: 6,
-//         title: 'string6',
-//         description: 'string',
-//         rating: 10,
-//         releaseYear: 2020,
-//         trailerUrl: 'string',
-//         posterUrl:
-//           'https://movieposter.runasp.net/content/posters/1_b89945f537fc4ad2a85c3bdd5935252d.jpg',
-//         durationMinutes: 120,
-//         genreIds: [1, 2],
-//         actorIds: [1, 2],
-//         createdAt: 'string',
-//         updatedAt: 'string',
-//       },
-//     ],
-//     pageIndex: 0,
-//     pageSize: 0,
-//     totalCount: 0,
-//     totalPages: 0,
-//     hasPreviousPage: true,
-//     hasNextPage: true,
-//   });
