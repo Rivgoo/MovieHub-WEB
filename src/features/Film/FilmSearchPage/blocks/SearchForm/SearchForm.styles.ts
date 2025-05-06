@@ -6,6 +6,7 @@ export default (theme: Theme) => ({
     mt: 20,
     mb: 4,
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     background: theme.palette.background.default,
   },

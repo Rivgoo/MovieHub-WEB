@@ -22,6 +22,7 @@ import {
 import getStyles from './SearchForm.styles.ts';
 import apiClient from '../../../../../core/api/client.ts';
 import { searchContent } from '../../../../../core/api/requests/request.content.ts';
+import FilterBar from '../FilterBar/FilterBar.tsx';
 
 function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -158,7 +159,6 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
             ? 'Введіть назву для пошуку.'
             : 'Введіть назву фільму. Це допоможе знайти відповідний результат.'}
         </Typography>
-
         <Autocomplete
           freeSolo
           disableClearable
@@ -193,18 +193,17 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
             />
           )}
         />
-
         {error && (
           <Alert severity="error" sx={styles.errorBox}>
             {error}
           </Alert>
         )}
-
         {isSubmitting && !isLoadingOptions && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <CircularProgress size={24} color="primary" />
           </Box>
         )}
+        <FilterBar />
       </Box>
     </Container>
   );
