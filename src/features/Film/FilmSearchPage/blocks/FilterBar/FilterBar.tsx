@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   Box,
-  Container,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -32,6 +31,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, setFilters }) => {
         }
       } catch {
         setGenres([]);
+      } finally {
       }
     };
 
@@ -92,29 +92,33 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, setFilters }) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
+  const isLoading = genres.length === 0;
+
   return (
-    <Container sx={styles.filterBarWrapper}>
-      {filterFields.map((el) => (
-        <Box key={el.name}>
-          <Typography sx={styles.filterLabelText}>{el.label}</Typography>
-          <Select
-            value={filters[el.name] ?? ''}
-            onChange={handleChange}
-            name={el.name}
-            displayEmpty
-            sx={styles.filterBarSelector}>
-            <MenuItem value="">
-              <em>{el.defaultLabel}</em>
-            </MenuItem>
-            {el.options.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
+    <Box sx={{ overflowX: 'auto', width: '100%' }}>
+      <Box sx={styles.filterBarWrapper}>
+        {filterFields.map((el) => (
+          <Box key={el.name} sx={{ mb: 2 }}>
+            <Typography sx={styles.filterLabelText}>{el.label}</Typography>
+            <Select
+              value={isLoading ? '' : (filters[el.name] ?? '')}
+              onChange={handleChange}
+              name={el.name}
+              displayEmpty
+              sx={styles.filterBarSelector}>
+              <MenuItem value="">
+                <em>{el.defaultLabel}</em>
               </MenuItem>
-            ))}
-          </Select>
-        </Box>
-      ))}
-    </Container>
+              {el.options.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        ))}
+      </Box>
+    </Box>
   );
 };
 

@@ -4,20 +4,22 @@ const getFilterBarStyles = (theme: Theme) => ({
   filterBarWrapper: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'nowrap',
     gap: '12px',
-    justifyContent: {
-      md: 'space-between',
-    },
+    px: 2,
     overflowX: {
       xs: 'auto',
       md: 'visible',
     },
+    minWidth: 'max-content',
+    WebkitOverflowScrolling: 'touch',
     '&::-webkit-scrollbar': {
       display: 'none',
     },
   },
+
   filterLabelText: {
     whiteSpace: 'nowrap',
   },

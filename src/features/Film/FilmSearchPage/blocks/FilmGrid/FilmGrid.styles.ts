@@ -65,7 +65,11 @@ const getFilmGridStyles = (theme: Theme) => ({
   filmPagesList: {
     display: 'flex',
     justifyContent: 'center',
-    gap: 2,
+    gap: {
+      xs: 1,
+      sm: 1.5,
+      md: 2,
+    },
     mt: 4,
     p: 1,
     ml: 'auto',

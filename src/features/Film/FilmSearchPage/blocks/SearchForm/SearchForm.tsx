@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -17,6 +17,7 @@ import { ContentDto } from '../../../../../core/api/types/types.content.ts';
 import getStyles from './SearchForm.styles.ts';
 import apiClient from '../../../../../core/api/client.ts';
 import FilterBar from '../FilterBar/FilterBar.tsx';
+import { buildContentQuery } from './filterFetch.util.ts';
 
 function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
   let timeoutId: ReturnType<typeof setTimeout>;
@@ -28,20 +29,27 @@ function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
 
 interface Props {
   setSearchQuery: (query: string | undefined) => void;
+  initialFilters: Record<string, string>;
+  initialSearch: string;
 }
-
-const SearchForm: React.FC<Props> = ({ setSearchQuery }) => {
+const SearchForm: React.FC<Props> = ({
+  setSearchQuery,
+  initialFilters,
+  initialSearch,
+}) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:900px)');
 
-  const [movieQuery, setMovieQuery] = useState('');
+  const [movieQuery, setMovieQuery] = useState(initialSearch || '');
+  const [filters, setFilters] = useState<Record<string, string>>(
+    initialFilters || {}
+  );
   const [options, setOptions] = useState<readonly ContentDto[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
-  const [filters, setFilters] = useState<Record<string, string>>({});
 
   const fetchOptions = useCallback(async (query: string) => {
     const trimmedQuery = query.trim();
@@ -82,7 +90,6 @@ const SearchForm: React.FC<Props> = ({ setSearchQuery }) => {
     } else {
       setOptions([]);
       setSearchQuery(undefined);
-      setSearchQuery(undefined);
     }
   };
 
@@ -96,42 +103,36 @@ const SearchForm: React.FC<Props> = ({ setSearchQuery }) => {
   };
 
   const handleSubmit = async () => {
-    const trimmedQuery = movieQuery.trim();
     setError(null);
     setIsSubmitting(true);
 
     try {
-      const filterQuery = Object.entries(filters)
-        .filter(([_, v]) => v !== '')
-        .map(([k, v]) => {
-          switch (k) {
-            case 'availableRate':
-              return `MinRating=${v}`;
-            case 'genreId':
-              return `GenreIds=${v}`;
-            case 'availableInCinema':
-              return `HasSessions=${v}`;
-            case 'duration':
-              return `${v}=120`;
-            case 'releaseYear':
-              return `MinReleaseYear=${Number(v) - 1}`;
-            default:
-              return `${k}=${v}`;
-          }
-        })
-        .join('&');
-
-      const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&${filterQuery}&pageSize=10&pageIndex=1`;
-      setSearchQuery(apiQuery);
+      const query = buildContentQuery(filters, movieQuery, 10, 1);
+      setSearchQuery(query);
     } catch (err: any) {
-      setError(err);
+      setError(err.message || 'Помилка формування запиту');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  useEffect(() => {
+    const hasInitialData =
+      initialSearch.trim() !== '' || Object.keys(initialFilters).length > 0;
+
+    if (hasInitialData) {
+      setFilters(initialFilters);
+    }
+  }, [initialSearch, initialFilters]);
+
+  useEffect(() => {
+    if (Object.keys(filters).length > 0) {
+      handleSubmit();
+    }
+  }, [filters]);
+
   return (
-    <Container maxWidth="sm" sx={styles.searchFormWrapper}>
+    <Container maxWidth={false} sx={styles.searchFormWrapper}>
       <Box
         component="form"
         onSubmit={(e) => {
@@ -199,7 +200,9 @@ const SearchForm: React.FC<Props> = ({ setSearchQuery }) => {
             <CircularProgress size={24} color="primary" />
           </Box>
         )}
+      </Box>
 
+      <Box sx={{ mt: 3 }}>
         <FilterBar filters={filters} setFilters={setFilters} />
       </Box>
     </Container>

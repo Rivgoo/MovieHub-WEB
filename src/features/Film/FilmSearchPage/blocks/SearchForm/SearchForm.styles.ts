@@ -3,19 +3,22 @@ import { alpha } from '@mui/material/styles';
 
 export default (theme: Theme) => ({
   searchFormWrapper: {
-    mt: 20,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    mt: 20,
     background: theme.palette.background.default,
+    p: 0,
   },
   searchFormForm: {
     width: '100%',
+    maxWidth: '500px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    p: 2,
   },
   searchFormTitle: {
     fontWeight: 600,

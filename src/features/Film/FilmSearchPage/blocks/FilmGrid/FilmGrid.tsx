@@ -5,6 +5,7 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  CircularProgress,
   Container,
   Typography,
   useTheme,
@@ -42,6 +43,7 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
   const [localFilms, setLocalFilms] =
     useState<ContentFilterResponse>(defaultState);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleFilmChosing = (id: number) => {
     navigate(`/film/${id}`);
@@ -97,6 +99,7 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
 
   useEffect(() => {
     const fetchFilmsLocally = async () => {
+      setIsLoading(true);
       try {
         const params = new URLSearchParams(
           searchQuery ? searchQuery.replace(/^\?/, '') : ''
@@ -109,8 +112,11 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
 
         const result = await searchContent(finalQuery);
         setLocalFilms(result);
+        window.history.replaceState(null, '', `/film-search${finalQuery}`);
       } catch (error) {
         setLocalFilms(defaultState);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -119,48 +125,60 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
 
   return (
     <Container sx={styles.filmGridWrapper}>
-      <Box sx={styles.filmCardContainer}>
-        {Array.isArray(localFilms.items) &&
-          localFilms.items.length > 0 &&
-          localFilms.items.map((el: ContentDto) => (
-            <Box key={el.id} sx={styles.filmCardItem}>
-              <Card
-                onClick={() => handleFilmChosing(el.id)}
-                sx={{ height: '100%' }}>
-                <CardActionArea sx={{ height: '100%' }}>
-                  {el.posterUrl ? (
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={el.posterUrl}
-                      alt={`${el.title ?? 'Film'} poster`}
-                    />
-                  ) : (
-                    <Box sx={styles.filmPosterAltBox}>
-                      <Typography sx={styles.filmPosterAltText}>
-                        No Poster
-                      </Typography>
-                    </Box>
-                  )}
-                  <CardContent>
-                    <Typography
-                      gutterBottom
-                      variant="h6"
-                      component="div"
-                      sx={styles.filmTitle}>
-                      {el.title ?? 'No Title'}
-                    </Typography>
-                    {el.durationMinutes && (
-                      <Typography variant="body2" sx={styles.filmDuration}>
-                        {el.durationMinutes} хв
-                      </Typography>
+      {isLoading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '300px',
+          }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box sx={styles.filmCardContainer}>
+          {Array.isArray(localFilms.items) &&
+            localFilms.items.length > 0 &&
+            localFilms.items.map((el: ContentDto) => (
+              <Box key={el.id} sx={styles.filmCardItem}>
+                <Card
+                  onClick={() => handleFilmChosing(el.id)}
+                  sx={{ height: '100%' }}>
+                  <CardActionArea sx={{ height: '100%' }}>
+                    {el.posterUrl ? (
+                      <CardMedia
+                        component="img"
+                        height="200"
+                        image={el.posterUrl}
+                        alt={`${el.title ?? 'Film'} poster`}
+                      />
+                    ) : (
+                      <Box sx={styles.filmPosterAltBox}>
+                        <Typography sx={styles.filmPosterAltText}>
+                          No Poster
+                        </Typography>
+                      </Box>
                     )}
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Box>
-          ))}
-      </Box>
+                    <CardContent>
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        component="div"
+                        sx={styles.filmTitle}>
+                        {el.title ?? 'No Title'}
+                      </Typography>
+                      {el.durationMinutes && (
+                        <Typography variant="body2" sx={styles.filmDuration}>
+                          {el.durationMinutes} хв
+                        </Typography>
+                      )}
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Box>
+            ))}
+        </Box>
+      )}
 
       <Box sx={styles.filmPagesList}>
         <GlowButton
