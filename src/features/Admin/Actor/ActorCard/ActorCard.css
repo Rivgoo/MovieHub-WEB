@@ -1,0 +1,27 @@
+.actor-card {
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 5px 20px 5px;
+    gap: 15px;
+    background-color: var(--admin-list-item-color);
+}
+  
+.actor-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+  
+.actor-name {
+    font-size: 0.875em;
+    margin: 0 0 10px;
+}
+  
+
+  
