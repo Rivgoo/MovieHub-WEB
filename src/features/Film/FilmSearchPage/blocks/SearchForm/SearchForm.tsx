@@ -13,13 +13,9 @@ import { useNavigate } from 'react-router-dom';
 
 import SearchBar from './SearchBar.tsx';
 import SuggestionItem from './SuggestionItem.tsx';
-import {
-  ContentDto,
-  ContentFilterResponse,
-} from '../../../../../core/api/types/types.content.ts';
+import { ContentDto } from '../../../../../core/api/types/types.content.ts';
 import getStyles from './SearchForm.styles.ts';
 import apiClient from '../../../../../core/api/client.ts';
-import { searchContent } from '../../../../../core/api/requests/request.content.ts';
 import FilterBar from '../FilterBar/FilterBar.tsx';
 
 function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
@@ -31,10 +27,10 @@ function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
 }
 
 interface Props {
-  onSearchResults: (results: ContentFilterResponse | null) => void;
+  setSearchQuery: (query: string | undefined) => void;
 }
 
-const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
+const SearchForm: React.FC<Props> = ({ setSearchQuery }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigate = useNavigate();
@@ -85,7 +81,7 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
       debouncedFetch(value);
     } else {
       setOptions([]);
-      onSearchResults(null);
+      setSearchQuery(undefined);
     }
   };
 
@@ -121,10 +117,9 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
         .join('&');
 
       const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&${filterQuery}&pageSize=10&pageIndex=1`;
-      const results = await searchContent(apiQuery);
-      onSearchResults(results);
-    } catch (err) {
-      alert(err);
+      setSearchQuery(apiQuery);
+    } catch (err: any) {
+      setError(err);
     } finally {
       setIsSubmitting(false);
     }

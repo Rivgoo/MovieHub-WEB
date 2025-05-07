@@ -21,11 +21,10 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 interface Props {
-  films?: ContentFilterResponse;
-  filters?: number[];
+  searchQuery: string | undefined;
 }
 
-const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
+const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
   const theme = useTheme();
   const styles = getFilmGridStyles(theme);
   const navigate = useNavigate();
@@ -93,30 +92,30 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   };
 
   useEffect(() => {
-    if (filmsFromProps !== undefined) {
-      setLocalFilms(filmsFromProps);
-      setCurrentPage(filmsFromProps.pageIndex ?? 1);
-      return;
-    }
+    setCurrentPage(1);
+  }, [searchQuery]);
 
+  useEffect(() => {
     const fetchFilmsLocally = async () => {
       try {
-        const baseQuery = `pageSize=10&pageIndex=${currentPage}`;
-        let finalQuery = `?${baseQuery}`;
-
-        const filterQuery = filters?.map((id) => `GenreIds=${id}`).join('&');
-        finalQuery = `?${filterQuery}&${baseQuery}`;
+        const params = new URLSearchParams(
+          searchQuery ? searchQuery.replace(/^\?/, '') : ''
+        );
+        params.set('pageIndex', currentPage.toString());
+        if (!params.has('pageSize')) {
+          params.set('pageSize', '10');
+        }
+        const finalQuery = '?' + params.toString();
 
         const result = await searchContent(finalQuery);
         setLocalFilms(result);
       } catch (error) {
         setLocalFilms(defaultState);
-      } finally {
       }
     };
 
     fetchFilmsLocally();
-  }, [filmsFromProps, filters, currentPage]);
+  }, [searchQuery, currentPage]);
 
   return (
     <Container sx={styles.filmGridWrapper}>
