@@ -120,7 +120,7 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
         })
         .join('&');
 
-      const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&${filterQuery}&pageSize=20&pageIndex=1`;
+      const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&${filterQuery}&pageSize=10&pageIndex=1`;
       const results = await searchContent(apiQuery);
       onSearchResults(results);
     } catch (err) {
