@@ -1,17 +1,34 @@
 import { Theme } from '@mui/material';
 
 const getFilterBarStyles = (theme: Theme) => ({
-  filterBarWrapper: {},
-  filterBarForm: {
+  filterBarWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    gap: '12px',
+    justifyContent: {
+      md: 'space-between',
+    },
+    overflowX: {
+      xs: 'auto',
+      md: 'visible',
+    },
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+  },
+  filterLabelText: {
+    whiteSpace: 'nowrap',
   },
   filterBarSelector: {
     width: '100%',
     maxWidth: '200px',
     border: `1px solid ${theme.palette.primary.dark}`,
-    colors: theme.palette.text.primary,
+    color: theme.palette.text.primary,
+    '& .MuiSelect-icon': {
+      color: theme.palette.primary.main,
+    },
   },
   filterBarSelectorItem: {
     color: theme.palette.text.secondary,

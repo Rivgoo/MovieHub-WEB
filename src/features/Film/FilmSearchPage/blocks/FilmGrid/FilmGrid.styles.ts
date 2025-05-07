@@ -2,7 +2,6 @@ import { Theme } from '@mui/material';
 
 const getFilmGridStyles = (theme: Theme) => ({
   filmGridWrapper: {
-    mt: 4,
     mb: 4,
     display: 'flex',
     flexDirection: 'column',
@@ -69,10 +68,18 @@ const getFilmGridStyles = (theme: Theme) => ({
     gap: 2,
     mt: 4,
     p: 1,
+    ml: 'auto',
+    mr: 'auto',
+    boxSizing: 'border-box',
   },
   filmPageNavigationButton: {
     height: 'auto',
     p: 0,
+    minWidth: {
+      xs: '26px',
+      sm: '36px',
+      md: '48px',
+    },
   },
   filmPageNavigationButtonActive: {
     color: theme.palette.secondary.contrastText,
