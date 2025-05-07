@@ -7,7 +7,7 @@ import {
   CardMedia,
   Container,
   Typography,
-  useTheme
+  useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { searchContent } from '../../../../../core/api/requests/request.content';
@@ -30,8 +30,6 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   const styles = getFilmGridStyles(theme);
   const navigate = useNavigate();
 
-  console.log(filmsFromProps);
-
   const defaultState: ContentFilterResponse = {
     items: [],
     pageIndex: 1,
@@ -45,7 +43,6 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
   const [localFilms, setLocalFilms] =
     useState<ContentFilterResponse>(defaultState);
   const [currentPage, setCurrentPage] = useState(1);
-  //const [isLoading, setIsLoading] = useState(false);
 
   const handleFilmChosing = (id: number) => {
     navigate(`/film/${id}`);
@@ -97,34 +94,24 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
 
   useEffect(() => {
     if (filmsFromProps !== undefined) {
-      console.log('FilmGrid: Використання даних з props', filmsFromProps);
       setLocalFilms(filmsFromProps);
       setCurrentPage(filmsFromProps.pageIndex ?? 1);
-      //setIsLoading(false);
       return;
     }
 
     const fetchFilmsLocally = async () => {
-      //setIsLoading(true);
       try {
         const baseQuery = `pageSize=10&pageIndex=${currentPage}`;
         let finalQuery = `?${baseQuery}`;
 
-        if (filters && filters.length > 0) {
-          const filterQuery = filters.map((id) => `GenreIds=${id}`).join('&');
-          finalQuery = `?${filterQuery}&${baseQuery}`;
-          console.log('FilmGrid: Запит з фільтрами', finalQuery);
-        } else {
-          console.log('FilmGrid: Запит без фільтрів', finalQuery);
-        }
+        const filterQuery = filters?.map((id) => `GenreIds=${id}`).join('&');
+        finalQuery = `?${filterQuery}&${baseQuery}`;
 
         const result = await searchContent(finalQuery);
         setLocalFilms(result);
       } catch (error) {
-        console.error('FilmGrid: Помилка завантаження фільмів:', error);
         setLocalFilms(defaultState);
       } finally {
-        //setIsLoading(false);
       }
     };
 
@@ -148,7 +135,6 @@ const FilmGrid: React.FC<Props> = ({ films: filmsFromProps, filters }) => {
                       height="200"
                       image={el.posterUrl}
                       alt={`${el.title ?? 'Film'} poster`}
-                      // sx={styles.filmPoster}
                     />
                   ) : (
                     <Box sx={styles.filmPosterAltBox}>
