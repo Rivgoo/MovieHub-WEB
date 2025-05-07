@@ -64,4 +64,5 @@ export interface UpdateActorRequest {
   lastName: string;
 }
 
+
 export type UpdateActorResponse = void;
