@@ -55,12 +55,34 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, setFilters }) => {
       defaultLabel: 'Будь-який',
     },
     {
+      name: 'duration',
+      label: 'Тривалість',
+      options: [
+        { value: 'MaxDurationMinutes', label: '< 2 год' },
+        { value: 'MinDurationMinutes', label: '> 2 год' },
+      ],
+      defaultLabel: 'Усі',
+    },
+    {
       name: 'availableInCinema',
       label: 'У кінотеатрі',
       options: [
         { value: 'true', label: 'Так' },
         { value: 'false', label: 'Ні' },
       ],
+      defaultLabel: 'Усі',
+    },
+    {
+      name: 'releaseYear',
+      label: 'Рік виходу',
+      options: Array.from({ length: 50 }, (_, i) => {
+        const currentYear = new Date().getFullYear();
+        const year = currentYear - i;
+        return {
+          value: year,
+          label: year.toString(),
+        };
+      }),
       defaultLabel: 'Усі',
     },
   ];
@@ -72,28 +94,26 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, setFilters }) => {
 
   return (
     <Container sx={styles.filterBarWrapper}>
-      <Box sx={styles.filterBarForm}>
-        {filterFields.map((el) => (
-          <Box key={el.name} sx={{ mb: 2 }}>
-            <Typography>{el.label}</Typography>
-            <Select
-              value={filters[el.name] ?? ''}
-              onChange={handleChange}
-              name={el.name}
-              displayEmpty
-              sx={styles.filterBarSelector}>
-              <MenuItem value="">
-                <em>{el.defaultLabel}</em>
+      {filterFields.map((el) => (
+        <Box key={el.name}>
+          <Typography sx={styles.filterLabelText}>{el.label}</Typography>
+          <Select
+            value={filters[el.name] ?? ''}
+            onChange={handleChange}
+            name={el.name}
+            displayEmpty
+            sx={styles.filterBarSelector}>
+            <MenuItem value="">
+              <em>{el.defaultLabel}</em>
+            </MenuItem>
+            {el.options.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
               </MenuItem>
-              {el.options.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-        ))}
-      </Box>
+            ))}
+          </Select>
+        </Box>
+      ))}
     </Container>
   );
 };

@@ -166,7 +166,7 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
         <GlowButton
           disabled={!localFilms.hasPreviousPage}
           onClick={handlePrevPage}
-          sx={styles.filmPageNavigationButton}>
+          sx={{ ...styles.filmPageNavigationButton }}>
           <ArrowBackIosIcon
             sx={
               localFilms.hasPreviousPage
@@ -195,7 +195,7 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
         )}
         <GlowButton
           disabled={!localFilms.hasNextPage}
-          sx={styles.filmPageNavigationButton}
+          sx={{ ...styles.filmPageNavigationButton }}
           onClick={handleNextPage}>
           <ArrowForwardIosIcon
             sx={

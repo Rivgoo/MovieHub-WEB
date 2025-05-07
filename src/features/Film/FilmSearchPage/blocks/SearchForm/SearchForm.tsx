@@ -111,6 +111,10 @@ const SearchForm: React.FC<Props> = ({ setSearchQuery }) => {
               return `GenreIds=${v}`;
             case 'availableInCinema':
               return `HasSessions=${v}`;
+            case 'duration':
+              return `${v}=120`;
+            case 'releaseYear':
+              return `MinReleaseYear=${Number(v) - 1}`;
             default:
               return `${k}=${v}`;
           }

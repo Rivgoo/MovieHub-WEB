@@ -4,7 +4,6 @@ import { alpha } from '@mui/material/styles';
 export default (theme: Theme) => ({
   searchFormWrapper: {
     mt: 20,
-    mb: 4,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
