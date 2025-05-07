@@ -31,10 +31,11 @@ function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
 }
 
 interface Props {
-  onSearchResults: (results: ContentFilterResponse | null) => void;
+  searchQuery: string | undefined;
+  setSearchQuery: (query: string | undefined) => void;
 }
 
-const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
+const SearchForm: React.FC<Props> = ({ searchQuery, setSearchQuery }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
       debouncedFetch(value);
     } else {
       setOptions([]);
-      onSearchResults(null);
+      setSearchQuery(undefined);
     }
   };
 
@@ -121,10 +122,10 @@ const SearchForm: React.FC<Props> = ({ onSearchResults }) => {
         .join('&');
 
       const apiQuery = `?SearchTerms=${encodeURIComponent(trimmedQuery)}&${filterQuery}&pageSize=10&pageIndex=1`;
-      const results = await searchContent(apiQuery);
-      onSearchResults(results);
-    } catch (err) {
-      alert(err);
+      // const results = await searchContent(apiQuery);
+      setSearchQuery(apiQuery);
+    } catch (err: any) {
+      setError(err);
     } finally {
       setIsSubmitting(false);
     }
