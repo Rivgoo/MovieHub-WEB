@@ -1,0 +1,150 @@
+.actor-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 105vh;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+  
+.actor-modal-window {
+    background-color: var(--admin-dark);
+    color: var(--admin-orange-button-text-color);
+    padding: 40px 40px 50px 40px;
+    border-radius: 10px;
+    max-width: 800px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+}
+  
+.actor-modal-window h2 {
+    font-size: 1.5em;
+}
+  
+.actor-modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.625em;
+    color: var(--admin-orange-button-text-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+  
+.actor-modal-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+    justify-content: space-between;
+}
+  
+.actor-modal-image-headline {
+    text-align: center;
+}
+  
+.actor-modal-image-headline p {
+    font-size: 1.125em;
+}
+  
+.actor-modal-form-left,
+.actor-modal-form-right {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+  
+.actor-modal-form-left label {
+    font-size: 1.1875em;
+}
+  
+input {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: var(--admin-list-item-color);
+    color: var(--admin-orange-button-text-color);
+    font-size: 1em;
+}
+
+.input-error {
+    color: var(--admin-error-red);
+    font-size: 0.85em;
+    height: 18px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+}
+  
+.input-error:empty::after {
+    content: ".";
+    visibility: hidden;
+}
+  
+.actor-modal-image-preview {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+  
+.actor-modal-image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+  
+.actor-modal-placeholder {
+    color: var(-admin-actions-btn-divider-color);
+    font-size: 1em;
+}
+  
+.actor-modal-image-input {
+    text-align: center;
+    font-size: 0.875em;
+}
+  
+.actor-modal-submit-button {
+    padding: 13px 55px;
+    background-color: var(--primary-light);
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1.0625em;
+    color: var(--admin-add-button-text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 235px;
+    margin: 0 auto;
+}
+  
+@media (max-width: 500px) {
+    .actor-modal-image-preview {
+      width: 150px;
+      height: 150px;
+    }
+}
+  
+@media (min-width: 1000px) {
+    .actor-modal-form {
+      gap: 120px;
+    }
+  
+    .actor-modal-window {
+      padding: 40px 50px 50px 40px;
+      gap: 30px;
+    }
+}
+  
