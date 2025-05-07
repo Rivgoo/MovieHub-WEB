@@ -82,6 +82,7 @@ const SearchForm: React.FC<Props> = ({ setSearchQuery }) => {
     } else {
       setOptions([]);
       setSearchQuery(undefined);
+      setSearchQuery(undefined);
     }
   };
 
