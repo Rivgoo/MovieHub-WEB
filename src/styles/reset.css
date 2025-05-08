@@ -124,11 +124,4 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-html,
-body,
-#root {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  margin: 0;
-}
+

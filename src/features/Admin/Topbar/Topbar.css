@@ -1,0 +1,37 @@
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding: 10px 0px;
+    background-color: var(--admin-navy);
+    border-bottom: 1px solid var(--admin-dark);
+}
+
+  
+.profileBox {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 1.25rem;
+    width: fit-content;
+    text-align: right;
+}
+  
+.profileName {
+    color: white;
+    font-weight: bold;
+    font-size: 0.875em;
+}
+  
+.profileRole {
+    color: #8d99ae;
+    font-size: 0.95em;
+}
+  
+/* Media Queries */
+@media (max-width: 750px) {
+    .topbar {
+      padding-left: 0;
+      padding-right: 0;
+    }
+}

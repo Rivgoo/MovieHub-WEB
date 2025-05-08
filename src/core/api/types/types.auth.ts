@@ -3,6 +3,6 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface LoginSuccessResponse {
+export interface LoginResponse {
   accessToken: string;
 }

@@ -27,6 +27,8 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+const USER_INFO_SESSION_KEY = 'userInfoDataSession';
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -54,14 +56,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               `AuthProvider: Token valid but missing user ID or invalid/missing role ('${userRoleString}').`
             );
             localStorage.removeItem('accessToken');
+            sessionStorage.removeItem(USER_INFO_SESSION_KEY);
           }
         } else {
           localStorage.removeItem('accessToken');
+          sessionStorage.removeItem(USER_INFO_SESSION_KEY);
         }
       }
     } catch (error) {
       console.error('AuthProvider: Error processing token from storage', error);
       localStorage.removeItem('accessToken');
+      sessionStorage.removeItem(USER_INFO_SESSION_KEY);
     } finally {
       setIsLoading(false);
     }
@@ -79,11 +84,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (userId && userRoleString && isValidUserRole(userRoleString)) {
         setUser({ id: userId, role: userRoleString });
+        sessionStorage.removeItem(USER_INFO_SESSION_KEY);
       } else {
         console.error(
           `Login: Decoded token missing user ID or invalid/missing role ('${userRoleString}').`
         );
         localStorage.removeItem('accessToken');
+        sessionStorage.removeItem(USER_INFO_SESSION_KEY);
         setToken(null);
         setUser(null);
       }
@@ -91,6 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Login: Error decoding token:', e);
 
       localStorage.removeItem('accessToken');
+      sessionStorage.removeItem(USER_INFO_SESSION_KEY);
       setToken(null);
       setUser(null);
     }
@@ -98,6 +106,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = useCallback(() => {
     localStorage.removeItem('accessToken');
+    sessionStorage.removeItem(USER_INFO_SESSION_KEY);
     setToken(null);
     setUser(null);
   }, []);
