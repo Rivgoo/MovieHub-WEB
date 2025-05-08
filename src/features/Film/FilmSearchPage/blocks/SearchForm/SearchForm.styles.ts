@@ -45,7 +45,7 @@ export default (theme: Theme) => ({
         borderWidth: '2px',
       },
       '&:hover fieldset': {
-        borderColor: theme.palette.primary.main,
+        borderColor: theme.palette.primary.dark,
       },
       '&.Mui-focused fieldset': {
         borderColor: theme.palette.primary.dark,
@@ -67,26 +67,38 @@ export default (theme: Theme) => ({
       color: theme.palette.action.active,
     },
     '& .MuiAutocomplete-popupIndicator': {
-      color: theme.palette.action.active,
+      display: 'none'
     },
-    '& .MuiAutocomplete-inputRoot': {
+    '& .MuiAutocomplete-hasPopupIcon': {
+      display: 'none'
+    },
+    '&& .MuiAutocomplete-inputRoot': {
       padding: '0.4rem 0 0.4rem 0.4rem', 
     },
     '& .MuiAutocomplete-inputRoot:hover': {
       borderColor: theme.palette.primary.dark,
     },
   },
+  searchFormDropdownPaperLoading: {
+    display: 'none'
+  },
   searchFormDropdownPaper: {
     bgcolor: theme.palette.background.default,
     color: theme.palette.text.primary,
+    border: `2px solid ${theme.palette.primary.dark}`,
     marginTop: theme.spacing(0.5),
-    borderRadius: '16px',
+    borderRadius: '1.25rem',
     overflow: 'hidden',
+    mt: '0.5rem',
     '& .MuiAutocomplete-option': {
-      padding: theme.spacing(1, 2),
+      padding: theme.spacing(0.25, 2),
       color: theme.palette.text.primary,
       backgroundColor: theme.palette.background.default,
       borderBottom: `1px solid ${theme.palette.divider}`,
+      transition: 'all 0.1s ease',
+      '&:hover': {
+        color: theme.palette.primary.dark,
+      },
       '&:last-child': {
         borderBottom: 'none',
       },
@@ -101,8 +113,8 @@ export default (theme: Theme) => ({
       },
     },
     '& .MuiAutocomplete-noOptions, & .MuiAutocomplete-loading': {
-      color: theme.palette.grey[500],
-      padding: theme.spacing(1, 2),
+      display: 'none !important',
+      border: 'none'
     },
   },
 

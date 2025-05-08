@@ -50,11 +50,13 @@ const SearchForm: React.FC<Props> = ({
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
+  const [hasSearchedForCurrentQuery, setHasSearchedForCurrentQuery] = useState(false);
 
   const fetchOptions = useCallback(async (query: string) => {
     const trimmedQuery = query.trim();
     if (!trimmedQuery) {
       setOptions([]);
+      setHasSearchedForCurrentQuery(true);
       return;
     }
     setIsLoadingOptions(true);
@@ -72,9 +74,11 @@ const SearchForm: React.FC<Props> = ({
       const items = response.data?.items ?? [];
       setOptions(items);
     } catch (err) {
+      console.error('Error fetching options:', err);
       setOptions([]);
     } finally {
       setIsLoadingOptions(false);
+      setHasSearchedForCurrentQuery(true);
     }
   }, []);
 
@@ -85,6 +89,8 @@ const SearchForm: React.FC<Props> = ({
 
   const handleInputChange = (_: React.SyntheticEvent, value: string) => {
     setMovieQuery(value);
+    setHasSearchedForCurrentQuery(false);
+
     if (value.trim()) {
       debouncedFetch(value);
     } else {
@@ -155,9 +161,10 @@ const SearchForm: React.FC<Props> = ({
         </Typography>
 
         <Autocomplete
-          freeSolo
+        freeSolo
           disableClearable
-          options={options.slice(0, 3)}
+          options={options.slice(0, 4)}
+          filterOptions={(optionsArg) => optionsArg}
           getOptionLabel={(option) =>
             typeof option === 'string' ? option : (option?.title ?? '')
           }
@@ -165,20 +172,20 @@ const SearchForm: React.FC<Props> = ({
           onInputChange={handleInputChange}
           onChange={handleOptionSelect}
           loading={isLoadingOptions}
-          loadingText="Завантаження..."
-          noOptionsText="Фільм не знайдено"
+          loadingText={null}
+          noOptionsText={null} 
           sx={styles.searchFormAutoComplete}
           slotProps={{
-            paper: { sx: styles.searchFormDropdownPaper },
+            paper: { sx: (isLoadingOptions || (!isLoadingOptions && options.length === 0) ? styles.searchFormDropdownPaperLoading : styles.searchFormDropdownPaper) },
           }}
           renderOption={(props, option) => (
-            <SuggestionItem
-              key={option.id}
-              props={props}
-              option={option}
-              styles={styles}
-            />
-          )}
+              <SuggestionItem
+                key={typeof option === 'string' ? option : option.id}
+                props={props}
+                option={option}
+                styles={styles}
+              />
+            )}
           renderInput={(params) => (
             <SearchBar
               params={params}
@@ -188,6 +195,21 @@ const SearchForm: React.FC<Props> = ({
             />
           )}
         />
+
+{isLoadingOptions && (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1, gap: 1 }}>
+          <CircularProgress size={20} color="primary" />
+          <Typography sx={{ opacity: '0.5', color: theme.palette.text.primary }}>
+            Завантаження...
+          </Typography>
+        </Box>
+      )}
+
+      {!isLoadingOptions && hasSearchedForCurrentQuery && movieQuery.trim() !== '' && options.length === 0 && !error && (
+        <Typography sx={{ textAlign: 'center', opacity: '0.5', color: theme.palette.text.primary }}>
+          Фільмів не знайдено
+        </Typography>
+      )}
 
         {error && (
           <Alert severity="error" sx={styles.searchFormErrorBox}>
