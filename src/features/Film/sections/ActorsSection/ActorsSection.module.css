@@ -1,37 +1,119 @@
+.actorsSection_wrapper { 
+margin-bottom: 2rem;
+}
+.actorsSection_container { 
+text-align: center;
+position: relative;
+}
+.actorsSection_title { 
+font-weight: 600 !important;
+color: var(--primary-light) !important;
+margin-bottom: 2rem !important;
+}
+.actorsSection_card { 
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.actorsSection_avatar { 
+background-color: var(--bg-avatar-placeholder) !important;
+width: 80px !important;
+height: 80px !important;
+margin-bottom: 0.5rem !important;
+box-shadow: var(--shadow-avatar) !important;
+}
+.actorsSection_name { 
+color: var(--primary-light) !important;
+font-weight: 500 !important;
+}
 
-:root {
-  --primary-light: #F8FCF8; --text-light: #F8FCF8;
-  --bg-avatar-placeholder: #424242; --shadow-avatar: 0px 4px 10px rgba(0, 0, 0, 0.25);
+
+.actorsSection_scrollContainer {
+  display: flex;
+  overflow-x: auto;
+  padding-left: 1rem;
+  padding-right: 0.5rem; 
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem; 
+  gap: 1rem;
+  scrollbar-width: thin; 
+  scrollbar-color: var(--primary-main) rgba(255, 255, 255, 0.1); 
+  
 }
-.actorsWrapper { 
-  margin-bottom: 2rem;
-}
-.actorsContainer { 
-  text-align: center;
-}
-.actorsTitle { 
-  font-weight: 600 !important; color: var(--primary-light) !important;
+
+.actorsSection_title {
+  font-weight: 600 !important;
+  color: var(--primary-light) !important;
   margin-bottom: 2rem !important;
 }
-.actorCard { 
-  display: flex; flex-direction: column; align-items: center;
-}
-.actorAvatar {
-  background-color: var(--bg-avatar-placeholder) !important; width: 80px !important;
-  height: 80px !important; margin-bottom: 0.5rem !important;
-  box-shadow: var(--shadow-avatar) !important;
-}
-.actorName {
-  color: var(--primary-light) !important; font-weight: 500 !important;
+
+.actorsSection_scrollContainer {
+  display: flex;
+  overflow-x: auto;
+  padding-left: 1rem;
+  padding-right: 0.5rem; 
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+  gap: 1rem;
+
+
+  &::-webkit-scrollbar { display: none; }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-@media (min-width: 600px) { 
-  .actorsTitle { margin-bottom: 2.5rem !important; }
-  .actorAvatar { width: 100px !important; height: 100px !important; margin-bottom: 0.75rem !important; }
-  .actorsWrapper { margin-bottom: 2.5rem; }
+
+.actorsSection_scrollContainer::after {
+    content: '';
+    min-width: 1rem;
 }
-@media (min-width: 900px) { 
-  .actorsTitle { margin-bottom: 3rem !important; }
-  .actorAvatar { width: 120px !important; height: 120px !important; margin-bottom: 1rem !important; }
-  .actorsWrapper { margin-bottom: 3rem; }
+
+
+.actorsSection_container::before,
+.actorsSection_container::after {
+    content: '';
+    position: absolute;
+    top: 0;       
+    bottom: 0;     
+    width: 60px; 
+    z-index: 2;    
+    pointer-events: none; 
+}
+
+.actorsSection_container::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-default) 20%, transparent);
+}
+
+.actorsSection_container::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-default) 20%, transparent);
+}
+
+
+
+@media (min-width: 600px) {
+    .actorsSection_scrollContainer { gap: 1.5rem; padding-left: 1.5rem; padding-right: 0.75rem;}
+    .actorsSection_scrollContainer::after { min-width: 1.5rem; }
+    .actorsSection_title { margin-bottom: 2.5rem !important; }
+    .actorsSection_avatar { width: 100px !important; height: 100px !important; margin-bottom: 0.75rem !important; }
+    .actorsSection_wrapper { margin-bottom: 2.5rem; }
+
+ 
+    .actorsSection_container::before,
+    .actorsSection_container::after {
+        width: 80px;
+    }
+}
+@media (min-width: 900px) {
+    .actorsSection_scrollContainer { gap: 2rem; padding-left: 2rem; padding-right: 1rem;}
+    .actorsSection_scrollContainer::after { min-width: 2rem; }
+    .actorsSection_title { margin-bottom: 3rem !important; }
+    .actorsSection_avatar { width: 120px !important; height: 120px !important; margin-bottom: 1rem !important; }
+    .actorsSection_wrapper { margin-bottom: 3rem; }
+
+    .actorsSection_container::before,
+    .actorsSection_container::after {
+        width: 100px;
+    }
 }
