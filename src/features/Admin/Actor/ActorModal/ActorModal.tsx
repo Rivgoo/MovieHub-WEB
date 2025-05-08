@@ -126,7 +126,7 @@ const ActorModal: React.FC<ActorModalProps> = ({
                   placeholder="Введіть імʼя актора"
                   className={nameError ? "input-error-border" : ""}
                 />
-                <p className="input-error">{nameError || "\u00A0"}</p>
+                <p className="input-error">{nameError}</p>
 
                 <label>Прізвище</label>
                 <input
@@ -136,7 +136,7 @@ const ActorModal: React.FC<ActorModalProps> = ({
                   placeholder="Введіть прізвище актора"
                   className={surnameError ? "input-error-border" : ""}
                 />
-                <p className="input-error">{surnameError || "\u00A0"}</p>
+                <p className="input-error">{surnameError}</p>
               </>
             ) : (
               <>
