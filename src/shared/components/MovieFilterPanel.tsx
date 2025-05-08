@@ -1,4 +1,4 @@
-// src/shared/components/MovieFilterPanel.tsx
+
 import React, { useState, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -8,88 +8,81 @@ import Button from '@mui/material/Button';
 import ReplayIcon from '@mui/icons-material/Replay';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
-// Імпортуємо компонент вибору та опції
+
 import FilterSelect from './FilterSelect';
 import {
     GENRE_FILTER_OPTIONS,
     YEAR_FILTER_OPTIONS,
     RATING_FILTER_OPTIONS,
     SORT_FILTER_OPTIONS,
-    FilterOption, // Імпортуємо тип опції для зручності
-    // DURATION_FILTER_OPTIONS // Якщо потрібна тривалість
+    FilterOption, 
+
 } from '../constants/FilterOptions';
 
-// Тип для об'єкта, що представляє поточні значення фільтрів
+
 export interface FiltersState {
     sort: string | number | null;
     genre: string | number | null;
     year: string | number | null;
     rating: string | number | null;
-    // duration: string | number | null; // Якщо потрібна тривалість
+
 }
 
-// Пропси для нашого компонента панелі фільтрів
+
 interface MovieFilterPanelProps {
-    // Функція, яка викликатиметься при будь-якій зміні фільтра,
-    // передаючи поточний стан всіх фільтрів
+
     onFiltersChange: (filters: FiltersState) => void;
-    // Початкові значення фільтрів (необов'язково)
+
     initialFilters?: Partial<FiltersState>;
-    // Додаткові стилі для Paper (необов'язково)
+
     sx?: object;
 }
 
-// Визначаємо початкові значення за замовчуванням
+
 const DEFAULT_SORT = SORT_FILTER_OPTIONS[0]?.value ?? null;
 const DEFAULT_GENRE = 'all';
 const DEFAULT_YEAR = 0;
 const DEFAULT_RATING = 0;
-// const DEFAULT_DURATION = 'any';
+
 
 const MovieFilterPanel: React.FC<MovieFilterPanelProps> = ({
     onFiltersChange,
-    initialFilters = {}, // Порожній об'єкт за замовчуванням
-    sx = {}, // Порожній об'єкт стилів за замовчуванням
+    initialFilters = {}, 
+    sx = {}, 
 }) => {
-    // --- Стани для КОЖНОГО фільтра всередині цієї панелі ---
+
     const [selectedSort, setSelectedSort] = useState<string | number | null>(initialFilters.sort ?? DEFAULT_SORT);
     const [selectedGenre, setSelectedGenre] = useState<string | number | null>(initialFilters.genre ?? DEFAULT_GENRE);
     const [selectedYear, setSelectedYear] = useState<string | number | null>(initialFilters.year ?? DEFAULT_YEAR);
     const [selectedRating, setSelectedRating] = useState<string | number | null>(initialFilters.rating ?? DEFAULT_RATING);
-    // const [selectedDuration, setSelectedDuration] = useState<string | number | null>(initialFilters.duration ?? DEFAULT_DURATION);
 
-    // --- Обробники Змін ---
-    // Використовуємо useCallback, щоб уникнути зайвих ререндерів FilterSelect, якщо обробники передаються далі
     const handleSortChange = useCallback((value: string | number | null) => setSelectedSort(value), []);
     const handleGenreChange = useCallback((value: string | number | null) => setSelectedGenre(value), []);
     const handleYearChange = useCallback((value: string | number | null) => setSelectedYear(value), []);
     const handleRatingChange = useCallback((value: string | number | null) => setSelectedRating(value), []);
-    // const handleDurationChange = useCallback((value: string | number | null) => setSelectedDuration(value), []);
 
-    // --- Обробник Скидання ---
     const handleResetFilters = useCallback(() => {
         setSelectedSort(DEFAULT_SORT);
         setSelectedGenre(DEFAULT_GENRE);
         setSelectedYear(DEFAULT_YEAR);
         setSelectedRating(DEFAULT_RATING);
-        // setSelectedDuration(DEFAULT_DURATION);
-        // Викликаємо onFiltersChange з дефолтними значеннями ПІСЛЯ оновлення стану (в useEffect)
+
     }, []);
 
-    // --- Ефект для передачі змін батьківському компоненту ---
+
     useEffect(() => {
-        // Збираємо поточний стан всіх фільтрів
+
         const currentFilters: FiltersState = {
             sort: selectedSort,
             genre: selectedGenre,
             year: selectedYear,
             rating: selectedRating,
-            // duration: selectedDuration,
+
         };
-        // Викликаємо функцію зворотного виклику, передану ззовні
+
         onFiltersChange(currentFilters);
-    }, [selectedSort, selectedGenre, selectedYear, selectedRating, /* selectedDuration, */ onFiltersChange]);
-    // Залежність від усіх станів фільтрів та функції onFiltersChange
+    }, [selectedSort, selectedGenre, selectedYear, selectedRating, onFiltersChange]);
+
 
     return (
         <Paper
@@ -104,7 +97,7 @@ const MovieFilterPanel: React.FC<MovieFilterPanelProps> = ({
                 alignItems: 'center',
                 gap: { xs: 1, sm: 1.5 },
                 border: '1px solid #505050',
-                ...sx, // Застосовуємо додаткові стилі з пропсів
+                ...sx, 
             }}
         >
             <FilterListIcon sx={{ color: '#FFFFFF', mr: 1, display: { xs: 'none', sm: 'block' } }} />
@@ -119,7 +112,7 @@ const MovieFilterPanel: React.FC<MovieFilterPanelProps> = ({
                 label="Сортування"
                 options={SORT_FILTER_OPTIONS}
                 selectedValue={selectedSort}
-                onChange={handleSortChange} // Передаємо внутрішній обробник
+                onChange={handleSortChange} 
             />
             <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(255, 255, 255, 0.12)', mx: { xs: 0.5, sm: 1} }} />
 
