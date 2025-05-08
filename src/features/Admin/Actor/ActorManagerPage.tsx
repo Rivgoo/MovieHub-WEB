@@ -7,6 +7,7 @@ import ActorModal from "./ActorModal/ActorModal";
 import { actorApi } from "../../../core/api/actorApi";
 import { ActorDto } from "../../../core/api/types/types.actor";
 import ConfirmModal from '../../ConfirmModal/ConfirmModal';
+import Pagination from "../Pagination/Pagination";
 
 const ActorManagerPage: React.FC = () => {
   const [actors, setActors] = useState<ActorDto[]>([]);
@@ -15,17 +16,20 @@ const ActorManagerPage: React.FC = () => {
   const [isPhotoStep, setIsPhotoStep] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [actorIdToDelete, setActorIdToDelete] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 30;
 
   useEffect(() => {
-    loadActors();
-  }, []);
+    loadActors(currentPage);
+  }, [currentPage]);
 
-  const loadActors = async () => {
+  const loadActors = async (page: number = currentPage) => {
     try {
-      const response = await actorApi.filter({ pageIndex: 1, pageSize: 100 });
+      const response = await actorApi.filter({ pageIndex: page, pageSize });
       setActors(response.items || []);
+      setTotalPages(Math.ceil((response.totalCount || 0) / pageSize));
     } catch (error) {
-      console.error("Помилка при завантаженні акторів", error);
       setActors([]);
     }
   };
@@ -50,7 +54,6 @@ const ActorManagerPage: React.FC = () => {
         await actorApi.delete(actorIdToDelete);
         await loadActors();
       } catch (error) {
-        console.error("Помилка при видаленні актора", error);
       } finally {
         setActorIdToDelete(null);
         setIsConfirmModalOpen(false);
@@ -84,26 +87,21 @@ const ActorManagerPage: React.FC = () => {
       setCurrentActor(tempActor);
       setIsPhotoStep(true); 
     } catch (error) {
-      console.error("Помилка при створенні актора", error);
     }
   };
 
   const handleActorPhotoSubmit = async (base64Image: string | undefined) => {
-    console.log("Submitting new image: ", base64Image);  // Для перевірки
-  
     try {
       if (!currentActor) {
-        alert("Актор не вибраний");
         return;
       }
       if (!base64Image) {
-        alert("Нове фото не вибрано");
         return;
       }
       const actorId = currentActor.id;
       const cleanedBase64 = base64Image.replace(/^data:image\/\w+;base64,/, "");
   
-      // @ts-ignore
+    //   @ts-ignore
       const response = await actorApi.uploadPhoto(actorId, {
         base64Image: cleanedBase64,
       });
@@ -112,7 +110,6 @@ const ActorManagerPage: React.FC = () => {
       setIsModalOpen(false);
       setIsPhotoStep(false);
     } catch (error) {
-      console.error("Помилка при завантаженні фото", error);
     }
   };
 
@@ -134,10 +131,8 @@ const ActorManagerPage: React.FC = () => {
       );
       setIsPhotoStep(true);
     } catch (error) {
-      console.error("Помилка при оновленні імені-прізвища актора", error);
     }
   };
-
 
   const handleSubmit = async (data: { name: string; surname: string }) => {
     if (currentActor) {
@@ -148,8 +143,7 @@ const ActorManagerPage: React.FC = () => {
       setIsPhotoStep(true); 
     }
   };
-
-  
+ 
   return (
     <AdminLayout>
       <Box>
@@ -180,6 +174,11 @@ const ActorManagerPage: React.FC = () => {
     />
 ))}
           </div>
+          <Pagination 
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            onPageChange={(page) => setCurrentPage(page)} 
+          />
         </div>
 
         <ActorModal

@@ -33,6 +33,10 @@ export const actorApi = {
     await apiClient.put(`/actors/${id}`, data);
   },
 
+  uploadPhoto: async (id: number, data: { base64Image: string }): Promise<void> => {
+    await apiClient.post(`/actors/${id}/photo`, data);
+  },
+
   delete: async (id: number): Promise<void> => {
     await apiClient.delete(`/actors/${id}`);
   },
