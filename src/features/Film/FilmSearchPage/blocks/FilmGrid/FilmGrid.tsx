@@ -20,10 +20,29 @@ import {
 import { GlowButton } from '../../../../../shared/components/Buttons';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 interface Props {
   searchQuery: string | undefined;
 }
+
+const formatDuration = (totalMinutes: number | undefined): string => {
+  if (totalMinutes === undefined || totalMinutes <= 0) {
+    return '';
+  }
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  let durationString = '';
+  if (hours > 0) {
+    durationString += `${hours} год. `;
+  }
+  if (minutes > 0) {
+    durationString += `${minutes} хв.`;
+  }
+  return durationString.trim();
+};
 
 const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
   const theme = useTheme();
@@ -106,7 +125,7 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
         );
         params.set('pageIndex', currentPage.toString());
         if (!params.has('pageSize')) {
-          params.set('pageSize', '10');
+          params.set('pageSize', '10'); // Default page size
         }
         const finalQuery = '?' + params.toString();
 
@@ -139,44 +158,69 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
         <Box sx={styles.filmCardContainer}>
           {Array.isArray(localFilms.items) &&
             localFilms.items.length > 0 &&
-            localFilms.items.map((el: ContentDto) => (
-              <Box key={el.id} sx={styles.filmCardItem}>
-                <Card
-                  onClick={() => handleFilmChosing(el.id)}
-                  sx={{ height: '100%' }}>
-                  <CardActionArea sx={{ height: '100%' }}>
-                    {el.posterUrl ? (
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={el.posterUrl}
-                        alt={`${el.title ?? 'Film'} poster`}
-                      />
-                    ) : (
-                      <Box sx={styles.filmPosterAltBox}>
-                        <Typography sx={styles.filmPosterAltText}>
-                          No Poster
-                        </Typography>
-                      </Box>
-                    )}
-                    <CardContent>
-                      <Typography
-                        gutterBottom
-                        variant="h6"
-                        component="div"
-                        sx={styles.filmTitle}>
-                        {el.title ?? 'No Title'}
-                      </Typography>
-                      {el.durationMinutes && (
-                        <Typography variant="body2" sx={styles.filmDuration}>
-                          {el.durationMinutes} хв
-                        </Typography>
+            localFilms.items.map((el: ContentDto) => {
+              const durationText = formatDuration(el.durationMinutes);
+              return (
+                <Box key={el.id} sx={styles.filmCardItem}>
+                  <Card
+                    onClick={() => handleFilmChosing(el.id)}
+                    sx={{ height: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
+                    <CardActionArea sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
+                      {el.posterUrl ? (
+                        <CardMedia
+                          component="img"
+                          image={el.posterUrl}
+                          alt={`${el.title ?? 'Film'} poster`}
+                          sx={styles.filmPoster}
+                        />
+                      ) : (
+                        <Box sx={styles.filmPosterAltBox}>
+                          <Typography sx={styles.filmPosterAltText}>
+                            No Poster
+                          </Typography>
+                        </Box>
                       )}
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Box>
-            ))}
+                      <CardContent sx={{ width: '100%', ...styles.filmCardContent }}>
+                        <Typography
+                          gutterBottom
+                          variant="h6"
+                          component="div"
+                          sx={styles.filmTitle}>
+                          {el.title ?? 'No Title'}
+                        </Typography>
+                        
+                        <Box sx={styles.filmInfoContainer}>
+                          {durationText && (
+                            <Box sx={styles.filmInfoItem}>
+                              <AccessTimeIcon sx={styles.filmInfoIcon} />
+                              <Typography variant="body2" sx={styles.filmInfoText}>
+                                {durationText}
+                              </Typography>
+                            </Box>
+                          )}
+                          {typeof el.rating === 'number' && el.rating > 0 && (
+                            <Box sx={styles.filmInfoItem}>
+                              <StarOutlineIcon sx={styles.filmInfoIcon} />
+                              <Typography variant="body2" sx={styles.filmInfoText}>
+                              {(el.rating / 10).toFixed(1)} 
+                              </Typography>
+                            </Box>
+                          )}
+                          {el.releaseYear && (
+                            <Box sx={styles.filmInfoItem}>
+                              <CalendarTodayIcon sx={styles.filmInfoIcon} />
+                              <Typography variant="body2" sx={styles.filmInfoText}>
+                                {el.releaseYear}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Box>
+              );
+            })}
         </Box>
       )}
 
@@ -208,7 +252,7 @@ const FilmGrid: React.FC<Props> = ({ searchQuery }) => {
               <Typography>{page}</Typography>
             </GlowButton>
           ) : (
-            <Typography key={idx}>...</Typography>
+            <Typography key={idx} sx={{color: theme.palette.text.primary, alignSelf: 'center'}}>...</Typography>
           )
         )}
         <GlowButton
