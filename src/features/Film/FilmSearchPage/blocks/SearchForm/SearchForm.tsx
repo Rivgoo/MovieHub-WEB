@@ -107,7 +107,7 @@ const SearchForm: React.FC<Props> = ({
     setIsSubmitting(true);
 
     try {
-      const query = buildContentQuery(filters, movieQuery, 10, 1);
+      const query = buildContentQuery(filters, movieQuery, 1);
       setSearchQuery(query);
     } catch (err: any) {
       setError(err.message || 'Помилка формування запиту');
@@ -132,7 +132,7 @@ const SearchForm: React.FC<Props> = ({
   }, [filters]);
 
   return (
-    <Container maxWidth={false} sx={styles.searchFormWrapper}>
+    <Container sx={styles.searchFormWrapper}>
       <Box
         component="form"
         onSubmit={(e) => {
@@ -141,17 +141,17 @@ const SearchForm: React.FC<Props> = ({
         }}
         sx={styles.searchFormForm}>
         <Typography
-          variant="h4"
+          variant="h5"
           component="h1"
           gutterBottom
           sx={styles.searchFormTitle}>
-          Пошук фільму
+          Шукаєте фільм?
         </Typography>
 
         <Typography variant="body1" sx={styles.searchFormSubText}>
           {isSmallScreen
             ? 'Введіть назву для пошуку.'
-            : 'Введіть назву фільму. Це допоможе знайти відповідний результат.'}
+            : "Введіть назву і ми обов'язково знайдемо його для вас."}
         </Typography>
 
         <Autocomplete
@@ -202,7 +202,7 @@ const SearchForm: React.FC<Props> = ({
         )}
       </Box>
 
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 2 }}>
         <FilterBar filters={filters} setFilters={setFilters} />
       </Box>
     </Container>

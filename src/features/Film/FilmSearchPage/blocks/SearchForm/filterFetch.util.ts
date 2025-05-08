@@ -3,7 +3,6 @@ export type ContentFilters = Record<string, string>;
 export function buildContentQuery(
   filters: ContentFilters,
   searchTerm: string,
-  pageSize: number = 10,
   pageIndex: number = 1
 ): string {
   const params = new URLSearchParams();
@@ -38,7 +37,6 @@ export function buildContentQuery(
     }
   });
 
-  params.set('pageSize', pageSize.toString());
   params.set('pageIndex', pageIndex.toString());
 
   return `?${params.toString()}`;

@@ -3,16 +3,16 @@ import { alpha } from '@mui/material/styles';
 
 export default (theme: Theme) => ({
   searchFormWrapper: {
+    maxWidth: { md: 'md', sm: 'sm', xs: 'xs' },
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    mt: 20,
+    mt: 5,
     background: theme.palette.background.default,
     p: 0,
   },
   searchFormForm: {
     width: '100%',
-    maxWidth: '500px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -22,13 +22,13 @@ export default (theme: Theme) => ({
   },
   searchFormTitle: {
     fontWeight: 600,
-    mb: 2,
+    textAlign: 'center',
+    mb: 1,
     color: theme.palette.primary.light,
   },
   searchFormSubText: {
-    mb: 1,
     color: theme.palette.text.primary,
-    opacity: 0.7,
+    opacity: 0.65,
     textAlign: 'center',
   },
 
@@ -42,10 +42,10 @@ export default (theme: Theme) => ({
       backgroundColor: theme.palette.secondary.main,
       '& fieldset': {
         borderColor: theme.palette.primary.main,
-        borderWidth: '1px',
+        borderWidth: '2px',
       },
       '&:hover fieldset': {
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.main,
       },
       '&.Mui-focused fieldset': {
         borderColor: theme.palette.primary.dark,
@@ -62,11 +62,18 @@ export default (theme: Theme) => ({
 
   searchFormAutoComplete: {
     width: '100%',
+    maxWidth: { sm: 'sm' },
     '& .MuiAutocomplete-clearIndicator': {
       color: theme.palette.action.active,
     },
     '& .MuiAutocomplete-popupIndicator': {
       color: theme.palette.action.active,
+    },
+    '& .MuiAutocomplete-inputRoot': {
+      padding: '0.4rem 0 0.4rem 0.4rem', 
+    },
+    '& .MuiAutocomplete-inputRoot:hover': {
+      borderColor: theme.palette.primary.dark,
     },
   },
   searchFormDropdownPaper: {
@@ -112,7 +119,7 @@ export default (theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '0 20px 20px 0',
+    borderRadius: '0 15px 15px 0',
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.text.primary,
     m: 0,

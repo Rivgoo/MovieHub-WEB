@@ -21,7 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = memo(
       <TextField
         {...params}
         margin="normal"
-        placeholder="Введіть назву фільму..."
+        placeholder="Вводьте тут..."
         fullWidth
         sx={styles.searchFormInputArea}
         disabled={isSubmitting}
