@@ -15,7 +15,6 @@ import {
     YEAR_FILTER_OPTIONS,
     RATING_FILTER_OPTIONS,
     SORT_FILTER_OPTIONS,
-    FilterOption, 
 
 } from '../constants/FilterOptions';
 

@@ -2,13 +2,12 @@
 
 import React from 'react';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box'; // Додано Box для контенту
+import Box from '@mui/material/Box'; 
 import Layout from '../../shared/components/Layout';
-import { useTheme } from '@mui/material/styles'; // Імпортуємо для доступу до теми
+import { useTheme } from '@mui/material/styles'; 
 
-// --- ПЕРЕКЛАДЕНИЙ ТЕКСТ УМОВ ВИКОРИСТАННЯ ---
+
 const termsOfServiceHtml = `
 <h1>Умови використання</h1>
 <p>Останнє оновлення: 01 травня 2025 року</p>
@@ -93,12 +92,12 @@ const termsOfServiceHtml = `
 // ---------------------------------------------
 
 const TermsPage: React.FC = () => {
-  const theme = useTheme(); // Отримуємо доступ до теми
+  const theme = useTheme(); 
 
   return (
     <Layout>
       <Container
-        maxWidth="md" // Ширина контейнера
+        maxWidth="md" 
         sx={{
           mt: 4,
           mb: 4,
@@ -108,38 +107,38 @@ const TermsPage: React.FC = () => {
         <Paper
           elevation={3}
           sx={{
-            p: { xs: 2, sm: 3, md: 4 }, // Адаптивні падінги
+            p: { xs: 2, sm: 3, md: 4 }, 
             width: '100%',
-            bgcolor: '#303030', // Фон паперу з теми
-            color: theme.palette.mode === 'dark' ? theme.palette.text.primary : theme.palette.text.secondary, // Адаптивний колір тексту
-            textAlign: 'left', // Вирівнювання
-            borderRadius: '0.75rem', // <-- ВАШЕ СКРУГЛЕННЯ
+            bgcolor: '#303030',
+            color: theme.palette.mode === 'dark' ? theme.palette.text.primary : theme.palette.text.secondary, 
+            textAlign: 'left', 
+            borderRadius: '0.75rem', 
 
-            // --- Стилізація вкладених HTML тегів (ідентична PrivacyPage) ---
+ 
             '& h1': {
-              ...theme.typography.h4, // Використовуємо стиль h4 для h1
-              color: theme.palette.text.primary, // Колір основного тексту
+              ...theme.typography.h4, 
+              color: theme.palette.text.primary, 
               fontWeight: 600,
               marginBottom: theme.spacing(2),
-              textAlign: 'center', // Перший H1 центруємо
+              textAlign: 'center', 
             },
             '& h2': {
-              ...theme.typography.h5, // Стиль h5 для h2
+              ...theme.typography.h5, 
               color: theme.palette.text.primary,
               fontWeight: 600,
-              marginTop: theme.spacing(4), // Більший відступ зверху для секцій
+              marginTop: theme.spacing(4), 
               marginBottom: theme.spacing(1.5),
-              borderBottom: `1px solid ${theme.palette.divider}`, // Лінія під заголовком секції
+              borderBottom: `1px solid ${theme.palette.divider}`, 
               paddingBottom: theme.spacing(0.5),
             },
             '& h3': {
-              ...theme.typography.h6, // Стиль h6 для h3
+              ...theme.typography.h6, 
               color: theme.palette.text.primary,
               fontWeight: 500,
               marginTop: theme.spacing(3),
               marginBottom: theme.spacing(1),
             },
-             '& h4': { // Стиль для підзаголовків типу "Personal Data"
+             '& h4': { 
               ...theme.typography.subtitle1,
               color: theme.palette.text.primary,
               fontWeight: 'bold',
@@ -148,36 +147,35 @@ const TermsPage: React.FC = () => {
             },
             '& p': {
               ...theme.typography.body1,
-              color: theme.palette.text.primary, // Колір тексту параграфів
-              lineHeight: 1.7, // Збільшуємо міжрядковий інтервал для читабельності
-              marginBottom: theme.spacing(2), // Відступ знизу параграфа
+              color: theme.palette.text.primary, 
+              lineHeight: 1.7, 
+              marginBottom: theme.spacing(2), 
             },
             '& ul': {
-              listStyleType: 'disc', // Стандартні маркери списку
-              paddingLeft: theme.spacing(4), // Відступ зліва для списку
+              listStyleType: 'disc', 
+              paddingLeft: theme.spacing(4), 
               marginBottom: theme.spacing(2),
               color: theme.palette.text.primary,
             },
             '& li': {
-              marginBottom: theme.spacing(1.5), // Відступ між пунктами списку
-              '& p': { // Якщо всередині li є параграфи, зменшуємо їх нижній відступ
+              marginBottom: theme.spacing(1.5), 
+              '& p': { 
                 marginBottom: theme.spacing(0.5),
               },
             },
             '& a': {
-              color: theme.palette.primary.main, // Колір посилань з теми (помаранчевий)
+              color: theme.palette.primary.main, 
               textDecoration: 'underline',
               '&:hover': {
                 textDecoration: 'none',
               },
             },
             '& strong': {
-              fontWeight: theme.typography.fontWeightBold, // Жирність з теми
-              color: theme.palette.text.primary, // Колір жирного тексту
+              fontWeight: theme.typography.fontWeightBold, 
+              color: theme.palette.text.primary, 
             },
-            // --------------------------------------------------------------
+
           }}>
-          {/* Рендеримо HTML */}
           <Box dangerouslySetInnerHTML={{ __html: termsOfServiceHtml }} />
         </Paper>
       </Container>
