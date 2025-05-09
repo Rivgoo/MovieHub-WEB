@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import {
   AppBar,
   Box,
@@ -25,7 +25,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
-
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { useNavigate, NavLink, useMatch } from 'react-router-dom';
 import Logo from '../../../assets/svg/Logo';
 import { useAuth } from '../../../core/auth/useAuth';
@@ -33,11 +35,18 @@ import { PrimaryButton } from '../Buttons';
 import getStyles from './HeaderStyles';
 import { UserRole } from '../../../core/auth/types';
 
-const navItems = [
+const mainNavItems = [
   { label: 'Головна', path: '/', icon: <HomeIcon /> },
   { label: 'Фільми', path: '/film-search', icon: <MovieIcon /> },
   { label: 'Сеанси', path: '/session-search', icon: <TheatersIcon /> },
 ];
+
+const customerAccountNavItems = [
+  { label: 'Про Вас', path: '/account', icon: <ManageAccountsIcon /> },
+  { label: 'Вподобані фільми', path: '/account/favorite', icon: <FavoriteBorderIcon /> },
+  { label: 'Ваші бронювання', path: '/account/booking', icon: <BookOnlineIcon /> },
+];
+
 
 function LogoComponent() {
   const navigate = useNavigate();
@@ -80,29 +89,30 @@ export default function Header() {
     handleNavigationAndCloseDrawer('/');
   };
 
-  const DrawerNavItem = ({ item }: { item: (typeof navItems)[0] }) => {
-    const isActive = useMatch({ path: item.path, end: item.path === '/' });
+  const DrawerNavItem = ({ item, isAccountItem = false }: { item: { label: string; path: string; icon: JSX.Element }, isAccountItem?: boolean }) => {
+  const isActive = useMatch({ path: item.path, end: item.path === '/' || isAccountItem });
 
     return (
-      <NavLink
-        to={item.path}
-        onClick={handleDrawerToggle}
-        style={{ textDecoration: 'none', color: 'inherit' }}>
-        <ListItem disablePadding>
-          <ListItemButton
-            sx={{
-              ...(isActive && {
+      <ListItem disablePadding onClick={() => handleNavigationAndCloseDrawer(item.path)}>
+        <ListItemButton
+          selected={!!isActive}
+          sx={{
+            '&.Mui-selected': {
+              color: theme.palette.primary.main,
+              backgroundColor: theme.palette.action.selected,
+              '& .MuiListItemIcon-root': {
                 color: theme.palette.primary.main,
-                '& .MuiListItemIcon-root': {
-                  color: theme.palette.primary.main,
-                },
-              }),
-            }}>
-            <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.label} />
-          </ListItemButton>
-        </ListItem>
-      </NavLink>
+              },
+            },
+            color: 'text.primary',
+             '& .MuiListItemIcon-root': {
+                color: 'text.primary',
+            },
+          }}>
+          <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.label} />
+        </ListItemButton>
+      </ListItem>
     );
   };
 
@@ -115,36 +125,49 @@ export default function Header() {
       </Typography>
       <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.12)' }} />
       <List>
-        {navItems.map((item) => (
-          <DrawerNavItem key={item.path} item={item} />
+        {mainNavItems.map((item) => (
+          <DrawerNavItem key={`main-${item.path}`} item={item} />
         ))}
       </List>
-      <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.12)' }} />
+
+      {/* Умовне відображення пунктів меню кабінету */}
+      {user && user.role === UserRole.Customer && (
+        <>
+          <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.12)' }} />
+          <List>
+            {customerAccountNavItems.map((item) => (
+              <DrawerNavItem key={`customer-${item.path}`} item={item} isAccountItem={true} />
+            ))}
+          </List>
+          <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.12)' }} />
+        </>
+      )}
+
       <List>
         {user ? (
           <>
-            <ListItem
-              disablePadding
-              onClick={() =>
-                handleNavigationAndCloseDrawer(
-                  user.role === UserRole.Customer
-                    ? '/account'
-                    : '/admin/dashboard'
-                )
-              }>
-              <ListItemButton>
-                <ListItemIcon sx={{ color: 'inherit' }}>
-                  {' '}
-                  <AccountCircleIcon />{' '}
-                </ListItemIcon>
-                <ListItemText primary="Кабінет" />
-              </ListItemButton>
-            </ListItem>
+            {user.role !== UserRole.Customer && (
+                <ListItem
+                disablePadding
+                onClick={() =>
+                    handleNavigationAndCloseDrawer(
+                    user.role === UserRole.Admin
+                        ? '/admin/dashboard'
+                        : '/account'
+                    )
+                }>
+                <ListItemButton sx={{color: 'text.primary', '& .MuiListItemIcon-root': {color: 'text.primary'}}}>
+                    <ListItemIcon sx={{ color: 'inherit' }}>
+                    <AccountCircleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Кабінет" />
+                </ListItemButton>
+                </ListItem>
+            )}
             <ListItem disablePadding onClick={handleLogoutAndCloseDrawer}>
-              <ListItemButton>
+              <ListItemButton sx={{color: 'text.primary', '& .MuiListItemIcon-root': {color: 'text.primary'}}}>
                 <ListItemIcon sx={{ color: 'inherit' }}>
-                  {' '}
-                  <LogoutIcon />{' '}
+                  <LogoutIcon />
                 </ListItemIcon>
                 <ListItemText primary="Вийти" />
               </ListItemButton>
@@ -155,10 +178,9 @@ export default function Header() {
             <ListItem
               disablePadding
               onClick={() => handleNavigationAndCloseDrawer('/login')}>
-              <ListItemButton>
+              <ListItemButton sx={{color: 'text.primary', '& .MuiListItemIcon-root': {color: 'text.primary'}}}>
                 <ListItemIcon sx={{ color: 'inherit' }}>
-                  {' '}
-                  <LoginIcon />{' '}
+                  <LoginIcon />
                 </ListItemIcon>
                 <ListItemText primary="Увійти" />
               </ListItemButton>
@@ -166,10 +188,9 @@ export default function Header() {
             <ListItem
               disablePadding
               onClick={() => handleNavigationAndCloseDrawer('/registration')}>
-              <ListItemButton>
+              <ListItemButton sx={{color: 'text.primary', '& .MuiListItemIcon-root': {color: 'text.primary'}}}>
                 <ListItemIcon sx={{ color: 'inherit' }}>
-                  {' '}
-                  <PersonAddIcon />{' '}
+                  <PersonAddIcon />
                 </ListItemIcon>
                 <ListItemText primary="Зареєструватися" />
               </ListItemButton>
@@ -203,7 +224,7 @@ export default function Header() {
           </Box>
           <Box sx={styles.desktopNavContainer}>
             <Stack direction="row" spacing={3} sx={styles.navLinksStack}>
-              {navItems.map(({ label, path }) => (
+              {mainNavItems.map(({ label, path }) => (
                 <NavLink
                   key={path}
                   to={path}
@@ -231,26 +252,22 @@ export default function Header() {
                       { replace: true }
                     )
                   }>
-                  {' '}
-                  Кабінет{' '}
+                  Кабінет
                 </PrimaryButton>
               ) : (
                 <Box sx={styles.authBox}>
-                  {' '}
                   <Button
                     sx={styles.loginButton}
                     onClick={() => navigate('/login', { replace: true })}>
-                    {' '}
-                    Увійти{' '}
-                  </Button>{' '}
+                    Увійти
+                  </Button>
                   <PrimaryButton
                     sx={styles.registerButton}
                     onClick={() =>
                       navigate('/registration', { replace: true })
                     }>
-                    {' '}
-                    Зареєструватися{' '}
-                  </PrimaryButton>{' '}
+                    Зареєструватися
+                  </PrimaryButton>
                 </Box>
               )}
             </Box>

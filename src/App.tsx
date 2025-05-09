@@ -26,6 +26,9 @@ const SessionPage = React.lazy(() => import('./features/Session/SessionPage'));
 const SessionSearchPage = React.lazy(
   () => import('./features/Session/SessionSearchPage')
 );
+
+// Customer Pages and Layout
+const CustomerAccountLayout = React.lazy( () => import('./features/Customer/CustomerAccountLayout'));
 const CustomerAccountPage = React.lazy(
   () => import('./features/Customer/AccountPage')
 );
@@ -69,6 +72,7 @@ const LoadingFallback = () => (
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh',
+      backgroundColor: theme.palette.background.default, // Ensure fallback has theme background
     }}>
     <CircularProgress />
   </Box>
@@ -93,21 +97,24 @@ function App() {
               <Route path="/session/:id" element={<SessionPage />} />
               <Route path="/session-search" element={<SessionSearchPage />} />
 
-              {/* User Routes */}
+              {/* User Routes with CustomerAccountLayout */}
               <Route
                 path="/account"
                 element={
                   <ProtectedRoute allowedRoles={[UserRole.Customer]}>
-                    <CustomerAccountPage />
+                    <CustomerAccountLayout>
+                      <CustomerAccountPage />
+                    </CustomerAccountLayout>
                   </ProtectedRoute>
                 }
               />
-
               <Route
                 path="/account/favorite"
                 element={
                   <ProtectedRoute allowedRoles={[UserRole.Customer]}>
-                    <FavoritePage />
+                    <CustomerAccountLayout>
+                      <FavoritePage />
+                    </CustomerAccountLayout>
                   </ProtectedRoute>
                 }
               />
@@ -115,7 +122,9 @@ function App() {
                 path="/account/booking"
                 element={
                   <ProtectedRoute allowedRoles={[UserRole.Customer]}>
-                    <BookingPage />
+                    <CustomerAccountLayout>
+                      <BookingPage />
+                    </CustomerAccountLayout>
                   </ProtectedRoute>
                 }
               />
