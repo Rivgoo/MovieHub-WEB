@@ -37,7 +37,6 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
         const fetchedGenres = await getAllGenres();
         setGenres(fetchedGenres);
       } catch (error) {
-        console.error('Failed to fetch genres:', error);
       } finally {
         setIsLoadingGenres(false);
       }

@@ -8,27 +8,30 @@ interface SuggestionItemProps {
   option: ContentDto | string;
 }
 
-const SuggestionItem: React.FC<SuggestionItemProps> = ({
-  htmlLiProps,
-  option,
-}) => {
-  const theme = useTheme();
-  const styles = getSearchFormStyles(theme);
+const SuggestionItem: React.FC<SuggestionItemProps> = React.memo(
+  ({ htmlLiProps, option }) => {
+    const theme = useTheme();
+    const styles = getSearchFormStyles(theme);
 
-  if (!option) {
-    return null;
+    if (!option) {
+      return null;
+    }
+
+    const title = typeof option === 'string' ? option : option.title;
+    const optionTextStyle = styles.searchFormOptionText || {};
+
+    const { key, ...restOfLiProps } = htmlLiProps as typeof htmlLiProps & {
+      key?: React.Key;
+    };
+    return (
+      <li key={key} {...restOfLiProps}>
+        <Typography sx={optionTextStyle}>
+          {title ?? 'Завантаження...'}
+        </Typography>
+      </li>
+    );
   }
-
-  const title = typeof option === 'string' ? option : option.title;
-  const optionTextStyle = styles.searchFormOptionText || {};
-  const { key: muiGeneratedKey, ...restOfHtmlLiProps } = htmlLiProps as any;
-
-  return (
-    <li {...restOfHtmlLiProps}>
-      <Typography sx={optionTextStyle}>{title ?? 'Loading...'}</Typography>
-    </li>
-  );
-};
+);
 
 SuggestionItem.displayName = 'SuggestionItem';
 export default SuggestionItem;
