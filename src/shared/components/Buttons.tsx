@@ -7,10 +7,14 @@ export const PrimaryButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
   color: theme.palette.secondary.contrastText,
   transition: 'all 0.3s ease',
+  boxShadow: theme.shadows[2],
   '&:hover': {
-    boxShadow: theme.shadows[3],
     backgroundColor: theme.palette.primary.dark,
   },
+  ':disabled': {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.secondary.main,
+  }
 }));
 
 export const PulseButton = styled(Button)(({ theme }) => ({
@@ -47,6 +51,10 @@ export const PulseButton = styled(Button)(({ theme }) => ({
       opacity: 0,
     },
   },
+  ':disabled': {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.secondary.main,
+  }
 }));
 
 export const RotateIconButton = styled(Button)(({ theme }) => ({
@@ -77,6 +85,10 @@ export const LiftShadowButton = styled(Button)(({ theme }) => ({
     boxShadow: theme.shadows[8],
     transform: 'translateY(-2px)',
   },
+  ':disabled': {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.secondary.main,
+  }
 }));
 
 export const FillBorderButton = styled(Button)(({ theme }) => ({
@@ -104,6 +116,10 @@ export const FillBorderButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     color: theme.palette.secondary.contrastText,
   },
+  ':disabled': {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.secondary.main,
+  }
 }));
 
 export const BorderButton = styled(Button)(({ theme }) => ({
@@ -116,7 +132,7 @@ export const BorderButton = styled(Button)(({ theme }) => ({
   '&:hover': {
     color: theme.palette.primary.main,
     border: `2px solid ${theme.palette.primary.main}`,
-  },
+  }
 }));
 
 export const NeonButton = styled(Button)(({ theme }) => ({

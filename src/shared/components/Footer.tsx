@@ -1,6 +1,7 @@
 import React from "react";
 import {Box, Typography, Link} from "@mui/material";
 import { useNavigate } from 'react-router-dom';
+import Logo from '../../assets/svg/Logo';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -12,28 +13,33 @@ const Footer: React.FC = () => {
         backgroundColor: "secondary.main",
         color: "secondary.contrastText",
         py: {xs: 4, md: 6},
-        m: "auto",
         width: "100%",
-        maxWidth: { lg: 'lg', md: 'md', sm: 'sm' },
       }}
     >
       {/* Background */}
-      <Box sx={{ mx: "auto"}}>
+
+      <Box sx={{
+        mx: "auto",
+        width: "100%",
+        maxWidth: { lg: 'lg', md: 'md', sm: 'sm', xs: 'xs' },
+        px: 2,
+      }}>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: {xs: "column", sm: "row"},
-            justifyContent: {xs: "center", sm: "space-evenly"},
-            textAlign: {xs: "center", sm: "left"},
-            alignItems: {xs: "center", sm: "center"},
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: '1fr auto 1fr', 
+            },
+            alignItems: 'center', 
+            gap: { xs: 3, sm: 2 },
           }}
         >
           {/* Column 1 */}
           <Box
             sx={{
-              flex: {xs: "100%", sm: "1 1 33%"},
-              maxWidth: {sm: "33%"},
-              textAlign: {xs: "center", sm: "left"},
+              textAlign: { xs: "center", sm: "left" },
+              order: { xs: 2, sm: 1 },
             }}
           >
             <Typography variant="body2" sx={{mb: 1}}>
@@ -49,31 +55,30 @@ const Footer: React.FC = () => {
 
           {/* Logo */}
           <Typography
-            variant="h6"
+            variant="h5"
+            component="div"
             sx={{
               fontWeight: 700,
               textAlign: "center",
-              color: "primary.main",
+              color: "primary.light",
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: 1,
-              my: {xs: 2, sm: 0},
+              order: { xs: 1, sm: 2 },
             }}
           >
-            <img
-              src="https://i.postimg.cc/bJFFRDrc/logo.png"
-              alt="Logo"
-              style={{width: "40px"}}
-            />
+            <Logo />
             MovieHub
           </Typography>
 
           {/* Column 2 */}
           <Box
             sx={{
-              flex: {xs: "100%", sm: "1 1 33%"},
-              maxWidth: {sm: "33%"},
-              textAlign: {xs: "center", sm: "right"},
+              order: { xs: 3, sm: 3 },
+              display: 'flex',           
+              flexDirection: 'column', 
+              alignItems: { xs: 'center', sm: 'flex-end' } 
             }}
           >
             <Link
@@ -84,8 +89,12 @@ const Footer: React.FC = () => {
               }}
               color="inherit"
               underline="hover"
-              display="block"
-              sx={{mb: 1}}
+              sx={{
+                mb: 1,
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
             >
               Privacy Policy
             </Link>
@@ -97,8 +106,12 @@ const Footer: React.FC = () => {
               }}
               color="inherit"
               underline="hover"
-              display="block"
-              sx={{mb: 1}}
+              sx={{
+                mb: 1,
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
             >
               Terms of Service
             </Link>
@@ -110,8 +123,11 @@ const Footer: React.FC = () => {
               }}
               color="inherit"
               underline="hover"
-              display="block"
-              sx={{mb: 1}}
+              sx={{
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
             >
               About Us
             </Link>
@@ -122,8 +138,8 @@ const Footer: React.FC = () => {
         <Box
           sx={{
             textAlign: "center",
-            mt: {xs: 3, md: 4},
-            pt: 2,
+            mt: { xs: 4, md: 5 },
+            pt: 3,
             borderTop: 1,
             borderColor: "rgba(255, 255, 255, 0.1)",
           }}
