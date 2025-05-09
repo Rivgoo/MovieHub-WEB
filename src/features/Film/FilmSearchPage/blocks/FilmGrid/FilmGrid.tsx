@@ -58,7 +58,9 @@ const FilmGrid: React.FC<Props> = ({
         setTotalPages(response.totalPages);
       } catch (err: any) {
         setError(
-          err.response?.data?.detail || err.message || 'Failed to fetch films'
+          err.response?.data?.detail ||
+            err.message ||
+            'Помилка отримання фільмів'
         );
         setFilms([]);
         setTotalPages(0);
