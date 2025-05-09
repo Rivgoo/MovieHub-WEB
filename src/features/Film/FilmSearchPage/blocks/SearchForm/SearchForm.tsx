@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -8,227 +8,264 @@ import {
   CircularProgress,
   useMediaQuery,
   Autocomplete,
+  Paper,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Button,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-
-import SearchBar from './SearchBar.tsx';
+import FilterBar from '../FilterBar/FilterBar.tsx';
+import SearchIcon from '@mui/icons-material/Search';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import SuggestionItem from './SuggestionItem.tsx';
 import { ContentDto } from '../../../../../core/api/types/types.content.ts';
+import { searchContent } from '../../../../../core/api/requests/request.content.ts';
+import { useNavigate } from 'react-router-dom';
 import getStyles from './SearchForm.styles.ts';
-import apiClient from '../../../../../core/api/client.ts';
-import FilterBar from '../FilterBar/FilterBar.tsx';
-import { buildContentQuery } from './filterFetch.util.ts';
+
+type FilterBarKeys =
+  | 'rating'
+  | 'releaseYear'
+  | 'duration'
+  | 'genreId'
+  | 'isNowShowing'
+  | 'ageRating';
 
 function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
   let timeoutId: ReturnType<typeof setTimeout>;
-  return ((...args: Parameters<F>) => {
+  return function (this: any, ...args: any[]) {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), ms);
-  }) as F;
+    timeoutId = setTimeout(() => fn.apply(this, args), ms);
+  } as F;
 }
 
 interface Props {
-  setSearchQuery: (query: string | undefined) => void;
-  initialFilters: Record<string, string>;
-  initialSearch: string;
+  onSearchTermChange: (query: string) => void;
+  filters: Record<string, string>;
+  onFilterChange: (filterBarKey: FilterBarKeys, value: string) => void;
+  onResetFilters: () => void;
+  initialSearchTerm?: string;
 }
+
 const SearchForm: React.FC<Props> = ({
-  setSearchQuery,
-  initialFilters,
-  initialSearch,
+  onSearchTermChange,
+  filters,
+  onFilterChange,
+  onResetFilters,
+  initialSearchTerm = '',
 }) => {
   const theme = useTheme();
   const styles = getStyles(theme);
-  const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery('(max-width:900px)');
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const [movieQuery, setMovieQuery] = useState(initialSearch || '');
-  const [filters, setFilters] = useState<Record<string, string>>(
-    initialFilters || {}
-  );
-  const [options, setOptions] = useState<readonly ContentDto[]>([]);
+  const [inputValue, setInputValue] = useState<string>(initialSearchTerm);
+  const [options, setOptions] = useState<readonly (ContentDto | string)[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoadingOptions, setIsLoadingOptions] = useState(false);
-  const [hasSearchedForCurrentQuery, setHasSearchedForCurrentQuery] = useState(false);
+  const navigate = useNavigate();
 
-  const fetchOptions = useCallback(async (query: string) => {
-    const trimmedQuery = query.trim();
-    if (!trimmedQuery) {
+  useEffect(() => {
+    setInputValue(initialSearchTerm);
+  }, [initialSearchTerm]);
+
+  const fetchSuggestions = async (query: string) => {
+    if (query.length < 2) {
       setOptions([]);
-      setHasSearchedForCurrentQuery(true);
+      setLoadingSuggestions(false);
       return;
     }
-    setIsLoadingOptions(true);
+    setLoadingSuggestions(true);
     setError(null);
-    const params: { SearchTerms: string; pageSize?: number } = {
-      SearchTerms: trimmedQuery,
-      pageSize: 10,
-    };
-
     try {
-      const response = await apiClient.get<{ items: ContentDto[] }>(
-        '/contents/filter',
-        { params }
-      );
-      const items = response.data?.items ?? [];
-      setOptions(items);
-    } catch (err) {
-      console.error('Error fetching options:', err);
+      const suggestionQueryParts = new URLSearchParams();
+      suggestionQueryParts.append('SearchTerm', query);
+      suggestionQueryParts.append('pageSize', '5');
+      suggestionQueryParts.append('pageIndex', '1');
+
+      const response = await searchContent(suggestionQueryParts.toString());
+      setOptions(response.items);
+    } catch (err: any) {
+      console.error('Error fetching suggestions:', err);
+      const errorDetail =
+        err.response?.data?.detail ||
+        err.message ||
+        'Failed to fetch suggestions';
+      setError(errorDetail);
       setOptions([]);
     } finally {
-      setIsLoadingOptions(false);
-      setHasSearchedForCurrentQuery(true);
-    }
-  }, []);
-
-  const debouncedFetch = useMemo(
-    () => debounce(fetchOptions, 500),
-    [fetchOptions]
-  );
-
-  const handleInputChange = (_: React.SyntheticEvent, value: string) => {
-    setMovieQuery(value);
-    setHasSearchedForCurrentQuery(false);
-
-    if (value.trim()) {
-      debouncedFetch(value);
-    } else {
-      setOptions([]);
-      setSearchQuery(undefined);
+      setLoadingSuggestions(false);
     }
   };
 
+  const debouncedFetchSuggestions = useMemo(
+    () => debounce(fetchSuggestions, 300),
+    []
+  );
+
+  const handleLocalInputChange = (
+    _event: React.SyntheticEvent,
+    newValue: string,
+    reason: string
+  ) => {
+    setInputValue(newValue);
+    if (reason === 'input' && newValue) {
+      debouncedFetchSuggestions(newValue);
+    } else if (reason === 'clear' || (reason === 'input' && !newValue)) {
+      setOptions([]);
+    }
+  };
+
+  const handleSubmit = () => {
+    onSearchTermChange(inputValue.trim());
+    setOptions([]);
+  };
+
   const handleOptionSelect = (
-    _: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     value: string | ContentDto | null
   ) => {
     if (value && typeof value !== 'string' && value.id) {
       navigate(`/film/${value.id}`);
+    } else if (typeof value === 'string') {
+      setInputValue(value);
+      onSearchTermChange(value.trim());
+      setOptions([]);
     }
   };
 
-  const handleSubmit = async () => {
-    setError(null);
-    setIsSubmitting(true);
-
-    try {
-      const query = buildContentQuery(filters, movieQuery, 1);
-      setSearchQuery(query);
-    } catch (err: any) {
-      setError(err.message || 'Помилка формування запиту');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    const hasInitialData =
-      initialSearch.trim() !== '' || Object.keys(initialFilters).length > 0;
-
-    if (hasInitialData) {
-      setFilters(initialFilters);
-    }
-  }, [initialSearch, initialFilters]);
-
-  useEffect(() => {
-    if (Object.keys(filters).length > 0) {
-      handleSubmit();
-    }
-  }, [filters]);
+  const hasActiveFilters = Object.values(filters).some(
+    (value) => value && value !== 'any' && value !== '' && value !== 'Всі'
+  );
 
   return (
     <Container sx={styles.searchFormWrapper}>
+      <Typography variant="h4" component="h1" sx={styles.searchFormTitle}>
+        Шукаєте фільм?
+      </Typography>
+      {!isSmallScreen ? (
+        <Typography variant="subtitle1" sx={styles.searchFormSubText}>
+          Введіть назву і ми обов'язково знайдемо його для вас.
+        </Typography>
+      ) : (
+        <Typography variant="subtitle1" sx={styles.searchFormSubText}>
+          Введіть назву для пошуку.
+        </Typography>
+      )}
       <Box
+        sx={styles.searchFormForm}
         component="form"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
-        }}
-        sx={styles.searchFormForm}>
-        <Typography
-          variant="h5"
-          component="h1"
-          gutterBottom
-          sx={styles.searchFormTitle}>
-          Шукаєте фільм?
-        </Typography>
-
-        <Typography variant="body1" sx={styles.searchFormSubText}>
-          {isSmallScreen
-            ? 'Введіть назву для пошуку.'
-            : "Введіть назву і ми обов'язково знайдемо його для вас."}
-        </Typography>
-
-        <Autocomplete
-        freeSolo
-          disableClearable
-          options={options.slice(0, 4)}
-          filterOptions={(optionsArg) => optionsArg}
-          getOptionLabel={(option) =>
-            typeof option === 'string' ? option : (option?.title ?? '')
-          }
-          inputValue={movieQuery}
-          onInputChange={handleInputChange}
-          onChange={handleOptionSelect}
-          loading={isLoadingOptions}
-          loadingText={null}
-          noOptionsText={null} 
-          sx={styles.searchFormAutoComplete}
-          slotProps={{
-            paper: { sx: (isLoadingOptions || (!isLoadingOptions && options.length === 0) ? styles.searchFormDropdownPaperLoading : styles.searchFormDropdownPaper) },
-          }}
-          renderOption={(props, option) => (
-              <SuggestionItem
-                key={typeof option === 'string' ? option : option.id}
-                props={props}
-                option={option}
-                styles={styles}
+        }}>
+        <Box sx={styles.searchFormInputArea}>
+          <Autocomplete
+            freeSolo
+            autoHighlight
+            sx={styles.searchFormAutoComplete}
+            options={options}
+            getOptionLabel={(option) =>
+              typeof option === 'string' ? option : option.title
+            }
+            inputValue={inputValue}
+            onInputChange={handleLocalInputChange}
+            onChange={handleOptionSelect}
+            loading={loadingSuggestions && inputValue.length >= 2}
+            PaperComponent={(params) => (
+              <Paper
+                elevation={3}
+                {...params}
+                sx={
+                  loadingSuggestions &&
+                  inputValue.length >= 2 &&
+                  options.length === 0
+                    ? styles.searchFormDropdownPaperLoading
+                    : styles.searchFormDropdownPaper
+                }
               />
             )}
-          renderInput={(params) => (
-            <SearchBar
-              params={params}
-              isSubmitting={isSubmitting || isLoadingOptions}
-              onSubmit={handleSubmit}
-              styles={styles}
-            />
-          )}
-        />
-
-{isLoadingOptions && (
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 1, gap: 1 }}>
-          <CircularProgress size={20} color="primary" />
-          <Typography sx={{ opacity: '0.5', color: theme.palette.text.primary }}>
-            Завантаження...
-          </Typography>
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Вводьте тут..."
+                variant="outlined"
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loadingSuggestions && inputValue.length >= 2 ? (
+                        <CircularProgress
+                          color="inherit"
+                          size={20}
+                          sx={{ mr: 1 }}
+                        />
+                      ) : null}
+                      {params.InputProps.endAdornment}
+                      <InputAdornment position="end" sx={{ height: '100%' }}>
+                        <IconButton
+                          type="submit"
+                          sx={styles.searchFormSubmitButton}
+                          disabled={loadingSuggestions}
+                          onClick={handleSubmit}>
+                          <SearchIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    </>
+                  ),
+                }}
+              />
+            )}
+            renderOption={(htmlLiProps, optionData) => (
+              <SuggestionItem
+                htmlLiProps={
+                  htmlLiProps as React.HTMLAttributes<HTMLLIElement> & {
+                    key?: React.Key;
+                  }
+                }
+                option={optionData as ContentDto | string}
+              />
+            )}
+            filterOptions={(x) => x}
+            noOptionsText=""
+            loadingText=""
+          />
         </Box>
-      )}
-
-      {!isLoadingOptions && hasSearchedForCurrentQuery && movieQuery.trim() !== '' && options.length === 0 && !error && (
-        <Typography sx={{ textAlign: 'center', opacity: '0.5', color: theme.palette.text.primary }}>
-          Фільмів не знайдено
-        </Typography>
-      )}
-
         {error && (
-          <Alert severity="error" sx={styles.searchFormErrorBox}>
+          <Alert
+            severity="error"
+            sx={{
+              ...styles.searchFormErrorBox,
+              mt: 2,
+              width: '100%',
+              maxWidth: { sm: 'sm' },
+            }}>
             {error}
           </Alert>
         )}
-
-        {isSubmitting && !isLoadingOptions && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <CircularProgress size={24} color="primary" />
-          </Box>
-        )}
       </Box>
-
-      <Box sx={{ mt: 2 }}>
-        <FilterBar filters={filters} setFilters={setFilters} />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          width: '100%',
+          mt: 2,
+          gap: 2,
+        }}>
+        <FilterBar filters={filters} onFilterChange={onFilterChange} />
+        {(hasActiveFilters ||
+          (!!initialSearchTerm && inputValue !== initialSearchTerm)) && (
+          <Button
+            variant="outlined"
+            onClick={onResetFilters}
+            startIcon={<RotateLeftIcon />}
+            size="small"
+            sx={{ maxWidth: 'max-content' }}>
+            Скинути фільтри
+          </Button>
+        )}
       </Box>
     </Container>
   );
 };
-
 export default SearchForm;

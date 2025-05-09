@@ -17,7 +17,6 @@ export default (theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    alignSelf: 'center',
     p: 2,
   },
   searchFormTitle: {
@@ -35,6 +34,10 @@ export default (theme: Theme) => ({
   searchFormInputArea: {
     position: 'relative',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     '& .MuiOutlinedInput-root': {
       borderRadius: '20px',
       paddingRight: 0,
@@ -63,24 +66,25 @@ export default (theme: Theme) => ({
   searchFormAutoComplete: {
     width: '100%',
     maxWidth: { sm: 'sm' },
+
     '& .MuiAutocomplete-clearIndicator': {
       color: theme.palette.action.active,
     },
     '& .MuiAutocomplete-popupIndicator': {
-      display: 'none'
+      display: 'none',
     },
     '& .MuiAutocomplete-hasPopupIcon': {
-      display: 'none'
+      display: 'none',
     },
     '&& .MuiAutocomplete-inputRoot': {
-      padding: '0.4rem 0 0.4rem 0.4rem', 
+      padding: '0.4rem 0 0.4rem 0.4rem',
     },
     '& .MuiAutocomplete-inputRoot:hover': {
       borderColor: theme.palette.primary.dark,
     },
   },
   searchFormDropdownPaperLoading: {
-    display: 'none'
+    display: 'none',
   },
   searchFormDropdownPaper: {
     bgcolor: theme.palette.background.default,
@@ -114,7 +118,7 @@ export default (theme: Theme) => ({
     },
     '& .MuiAutocomplete-noOptions, & .MuiAutocomplete-loading': {
       display: 'none !important',
-      border: 'none'
+      border: 'none',
     },
   },
 

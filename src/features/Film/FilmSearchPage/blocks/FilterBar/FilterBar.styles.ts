@@ -3,21 +3,22 @@ import { Theme } from '@mui/material';
 const getFilterBarStyles = (theme: Theme) => ({
   filterBarWrapper: {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     flexWrap: 'nowrap',
-    gap: '12px',
-    px: 2,
+    gap: theme.spacing(1.5),
+    px: theme.spacing(2),
     overflowX: {
       xs: 'auto',
       md: 'visible',
     },
-    minWidth: 'max-content',
+    minWidth: 0,
+
+    width: '100%',
     WebkitOverflowScrolling: 'touch',
     '&::-webkit-scrollbar': {
       display: 'none',
     },
+    scrollbarWidth: 'none',
   },
 
   filterLabelText: {
@@ -33,7 +34,7 @@ const getFilterBarStyles = (theme: Theme) => ({
     },
   },
   filterBarSelectorItem: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.primary,
     backgroundColor: 'transparent',
   },
 });

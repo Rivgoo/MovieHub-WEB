@@ -20,7 +20,7 @@ const getFilmGridStyles = (theme: Theme) => ({
     display: 'flex',
     flexGrow: 1,
     flexShrink: 1,
-    
+
     flexBasis: `calc(50% - ${theme.spacing(2 / 2)})`,
     maxWidth: `calc(50% - ${theme.spacing(2 / 2)})`,
 
@@ -33,7 +33,7 @@ const getFilmGridStyles = (theme: Theme) => ({
       flexBasis: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
       maxWidth: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
     },
-    minWidth: '150px', 
+    minWidth: '250px',
   },
   filmPoster: {
     width: '100%',
@@ -69,7 +69,7 @@ const getFilmGridStyles = (theme: Theme) => ({
     WebkitBoxOrient: 'vertical',
     fontWeight: 600,
     fontSize: '1rem',
-    minHeight: '2.4em', 
+    minHeight: '2.4em',
     marginBottom: theme.spacing(1),
     lineHeight: 1.2,
   },
@@ -105,7 +105,7 @@ const getFilmGridStyles = (theme: Theme) => ({
     gap: {
       xs: 1,
       sm: 1.5,
-      md: 2,
+      md: 3,
     },
     mt: 4,
     p: 1,
