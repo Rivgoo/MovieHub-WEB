@@ -409,15 +409,17 @@ const SearchForm: React.FC<Props> = ({
 
   return (
     <Container sx={styles.searchFormWrapper}>
-      {!isSmallScreen && (
-        <>
-          <Typography variant="h4" component="h1" sx={styles.searchFormTitle}>
-            Explore Films
-          </Typography>
-          <Typography variant="subtitle1" sx={styles.searchFormSubText}>
-            Find your next favorite movie by searching below.
-          </Typography>
-        </>
+      <Typography variant="h4" component="h1" sx={styles.searchFormTitle}>
+        Шукаєте фільм?
+      </Typography>
+      {!isSmallScreen ? (
+        <Typography variant="subtitle1" sx={styles.searchFormSubText}>
+          Введіть назву і ми обов'язково знайдемо його для вас.
+        </Typography>
+      ) : (
+        <Typography variant="subtitle1" sx={styles.searchFormSubText}>
+          Введіть назву для пошуку.
+        </Typography>
       )}
       <Box
         sx={styles.searchFormForm}
