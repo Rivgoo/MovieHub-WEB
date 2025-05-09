@@ -36,13 +36,9 @@ const FilmPage: React.FC = () => {
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
         entries.forEach(entry => {
-            console.log('Footer Intersection:', entry.isIntersecting); 
-         
             if (entry.isIntersecting) {
-                console.log('Hiding button'); 
                 setShowFloatingButton(false);
             } else {
-                console.log('Showing button'); 
                 setShowFloatingButton(true);
             }
         });
@@ -89,6 +85,7 @@ const FilmPage: React.FC = () => {
                 fontWeight: 600,
                 letterSpacing: '0.5px',
                 textTransform: 'none',
+                whiteSpace: 'nowrap',
                 boxShadow: '0px 8px 18px rgba(218, 98, 28, 0.35)',
                 '&:hover': {
                    bgcolor: 'primary.dark',
