@@ -14,8 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { searchContent } from '../../core/api/requests/request.content';
 import { ContentDto } from '../../core/api/types/types.content';
 import { useAuth } from '../../core/auth/useAuth';
-import { useTheme }
-    from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 const FavoritePage: React.FC = () => {
   const [favoriteMovies, setFavoriteMovies] = useState<ContentDto[]>([]);
@@ -51,11 +50,11 @@ const FavoritePage: React.FC = () => {
   }, [user]);
 
   const filteredMovies = useMemo(() => {
-    if (!searchTerm) {
+    if (!searchTerm.trim()) {
       return favoriteMovies;
     }
     return favoriteMovies.filter(movie =>
-      movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+      movie.title.toLowerCase().includes(searchTerm.toLowerCase().trim())
     );
   }, [favoriteMovies, searchTerm]);
 
@@ -64,10 +63,11 @@ const FavoritePage: React.FC = () => {
   };
 
   const cardWidthXs = '100%';
-  const cardWidthSm = 'calc(50% - 12px)';
-  const cardWidthMd = 'calc(33.333% - 16px)';
-  const cardWidthLg = 'calc(25% - 18px)';
   const spacingValue = theme.spacing(3);
+  const cardWidthSm = `calc(50% - (${spacingValue} / 2))`;
+  const cardWidthMd = `calc(33.333% - (${spacingValue} * (2/3)))`;
+  const cardWidthLg = `calc(25% - (${spacingValue} * (3/4)))`;
+
 
   return (
     <Paper
@@ -80,15 +80,61 @@ const FavoritePage: React.FC = () => {
         minHeight: '400px',
       }}
     >
-      <Typography>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        color="text.primary"
+        sx={{ fontWeight: 600, textAlign: 'center', mb: 3 }}
+      >
         Вподобані фільми
       </Typography>
 
-      <TextField/>
+      <TextField
+        fullWidth
+        variant="outlined"
+        label="Пошук за назвою..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{
+          mb: 3,
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'rgba(255,255,255,0.3)',
+            },
+            '&:hover fieldset': {
+              borderColor: 'primary.main',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: 'primary.main',
+            },
+          },
+          '& .MuiInputLabel-root': {
+            color: 'primary.light',
+          },
+          '& .MuiInputLabel-root.Mui-focused': {
+            color: 'primary.main',
+          },
+          input: { color: 'primary.light' }
+        }}
+      />
 
-      {isLoading && ( <Box> <CircularProgress /> </Box> )}
-      {error && !isLoading && ( <Alert>{error}</Alert> )}
-      {!isLoading && !error && filteredMovies.length === 0 && ( <Typography/> )}
+      {isLoading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1, py: 5 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {error && !isLoading && (
+        <Alert severity="error" sx={{ width: '100%', justifyContent: 'center' }}>{error}</Alert>
+      )}
+
+      {!isLoading && !error && filteredMovies.length === 0 && (
+        <Typography variant="body1" color="primary.light" sx={{ textAlign: 'center', py: 5 }}>
+          {favoriteMovies.length > 0 && searchTerm.trim() ? "За вашим запитом нічого не знайдено." : "У вас ще немає вподобаних фільмів."}
+        </Typography>
+      )}
+
       {!isLoading && !error && filteredMovies.length > 0 && (
         <Box
           sx={{
@@ -107,7 +153,7 @@ const FavoritePage: React.FC = () => {
                   md: cardWidthMd,
                   lg: cardWidthLg,
                 },
-                display: 'flex', 
+                display: 'flex',
               }}
             >
               <Card
