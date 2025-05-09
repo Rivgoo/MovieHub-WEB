@@ -20,7 +20,7 @@ interface CustomerAccountLayoutProps {
 }
 
 const sidebarNavItems = [
-  { label: 'Загальна інформація', path: '/account' },
+  { label: 'Про Вас', path: '/account' },
   { label: 'Вподобані фільми', path: '/account/favorite' },
   { label: 'Ваші бронювання', path: '/account/booking' },
 ];

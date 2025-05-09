@@ -28,8 +28,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-
-
 import { useNavigate, NavLink, useMatch } from 'react-router-dom';
 import Logo from '../../../assets/svg/Logo';
 import { useAuth } from '../../../core/auth/useAuth';
@@ -44,7 +42,7 @@ const mainNavItems = [
 ];
 
 const customerAccountNavItems = [
-  { label: 'Загальна інформація', path: '/account', icon: <ManageAccountsIcon /> },
+  { label: 'Про Вас', path: '/account', icon: <ManageAccountsIcon /> },
   { label: 'Вподобані фільми', path: '/account/favorite', icon: <FavoriteBorderIcon /> },
   { label: 'Ваші бронювання', path: '/account/booking', icon: <BookOnlineIcon /> },
 ];
@@ -131,14 +129,11 @@ export default function Header() {
           <DrawerNavItem key={`main-${item.path}`} item={item} />
         ))}
       </List>
-      <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.12)' }} />
 
       {/* Умовне відображення пунктів меню кабінету */}
       {user && user.role === UserRole.Customer && (
         <>
-          <Typography variant="overline" display="block" sx={{ color: 'text.secondary', mt: 2, mb:1, px: 2, textAlign: 'left' }}>
-            Мій кабінет
-          </Typography>
+          <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.12)' }} />
           <List>
             {customerAccountNavItems.map((item) => (
               <DrawerNavItem key={`customer-${item.path}`} item={item} isAccountItem={true} />

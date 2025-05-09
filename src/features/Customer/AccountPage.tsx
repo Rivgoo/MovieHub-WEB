@@ -57,9 +57,7 @@ const CustomerAccountPage = () => {
             {userInfo ? `Вітаємо, ${userInfo.firstName}!` : 'Мій Кабінет'}
           </Typography>
           <Typography variant="body1" color="text.primary" sx={{ mb: 3, textAlign: 'center' }}>
-            Це ваш особистий кабінет. Тут ви можете переглядати свої вподобання та бронювання.
-            <br />
-            Оберіть розділ з меню ліворуч.
+            Це ваш особистий кабінет. Тут ви можете дізнатися дані про свій акаунт.
           </Typography>
           {userInfo && (
             <Box sx={{textAlign: 'left', width: '100%', maxWidth: '400px', mt: 2, p:2, border: '1px solid', borderColor: 'divider', borderRadius: '8px' }}>
