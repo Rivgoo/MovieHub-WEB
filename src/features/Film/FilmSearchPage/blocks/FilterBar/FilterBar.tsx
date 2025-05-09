@@ -52,7 +52,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
   const ratingOptions = Array.from(new Array(10), (_, i) => {
     const apiValue = 10 - i;
     const displayValue = apiValue * 10;
-    return { value: apiValue.toString(), label: `${displayValue}+` };
+    return { value: apiValue.toString(), label: `${displayValue}/10` };
   }).reverse();
 
   const releaseYears = Array.from(
@@ -188,7 +188,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
         filters.releaseYear,
         mapYearsToValueLabel(releaseYears)
       )}
-      {renderSelect('rating', 'Рейтинг %', filters.rating, ratingOptions)}
+      {renderSelect('rating', 'Рейтинг', filters.rating, ratingOptions)}
       {renderSelect(
         'duration',
         'Тривалість',

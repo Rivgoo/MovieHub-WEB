@@ -17,8 +17,9 @@ import { searchContent } from '../../../../../core/api/requests/request.content'
 import getFilmGridStyles from './FilmGrid.styles';
 import { ContentDto } from '../../../../../core/api/types/types.content';
 import { GlowButton } from '../../../../../shared/components/Buttons';
-import TodayIcon from '@mui/icons-material/Today';
-import StarRateIcon from '@mui/icons-material/StarRate';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 interface Props {
   searchQuery: string | undefined;
@@ -90,7 +91,7 @@ const FilmGrid: React.FC<Props> = ({
           py: 5,
         }}>
         <CircularProgress />
-        <Typography sx={{ mt: 1 }}>PЗавантаження фільмів...</Typography>
+        <Typography sx={{ mt: 1 }}>Завантаження фільмів...</Typography>
       </Box>
     );
   }
@@ -126,7 +127,7 @@ const FilmGrid: React.FC<Props> = ({
           justifyContent: 'center',
           py: 5,
         }}>
-        <Typography>No films found matching your criteria.</Typography>
+        <Typography>Немає фільмів за цими критеріями</Typography>
       </Box>
     );
   }
@@ -152,17 +153,34 @@ const FilmGrid: React.FC<Props> = ({
                   {film.title}
                 </Typography>
                 <Box sx={styles.filmInfoContainer}>
-                  <Box sx={styles.filmInfoItem}>
-                    <TodayIcon sx={styles.filmInfoIcon} />
-                    <Typography sx={styles.filmInfoText}>
-                      {film.releaseYear}
-                    </Typography>
-                  </Box>
-                  <Box sx={styles.filmInfoItem}>
-                    <StarRateIcon sx={styles.filmInfoIcon} />
-                    <Typography sx={styles.filmInfoText}>
-                      {film.rating?.toFixed(1) ?? 'N/A'}
-                    </Typography>
+                  <Box sx={styles.filmInfoContainer}>
+                    {film.durationMinutes && (
+                      <Box sx={styles.filmInfoItem}>
+                        <AccessTimeIcon sx={styles.filmInfoIcon} />
+                        <Typography variant="body2" sx={styles.filmInfoText}>
+                          {film.durationMinutes}хв
+                        </Typography>
+                      </Box>
+                    )}
+                    {/* {typeof film.rating === 'number' && film.rating > 0 && ( */}
+                    <Box sx={styles.filmInfoItem}>
+                      <StarOutlineIcon sx={styles.filmInfoIcon} />
+                      <Typography variant="body2" sx={styles.filmInfoText}>
+                        {/* {(film.rating / 10).toFixed(1)} */}
+                        {typeof film.rating === 'number'
+                          ? (film.rating / 10).toFixed(1)
+                          : 'N/A'}
+                      </Typography>
+                    </Box>
+                    {/* )} */}
+                    {film.releaseYear && (
+                      <Box sx={styles.filmInfoItem}>
+                        <CalendarTodayIcon sx={styles.filmInfoIcon} />
+                        <Typography variant="body2" sx={styles.filmInfoText}>
+                          {film.releaseYear}
+                        </Typography>
+                      </Box>
+                    )}
                   </Box>
                 </Box>
               </CardContent>

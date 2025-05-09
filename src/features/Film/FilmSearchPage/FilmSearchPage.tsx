@@ -58,8 +58,8 @@ const FilmSearchPage: React.FC = () => {
         filterBarDisplayFilters['genreId'] = currentApiFilters.GenreIds;
       if (currentApiFilters.HasSessions !== undefined)
         filterBarDisplayFilters['isNowShowing'] = currentApiFilters.HasSessions;
-      if (currentApiFilters.MinAgeRating)
-        filterBarDisplayFilters['ageRating'] = currentApiFilters.MinAgeRating;
+      if (currentApiFilters.MaxAgeRating)
+        filterBarDisplayFilters['ageRating'] = currentApiFilters.MaxAgeRating;
       const minDuration = currentApiFilters.MinDurationMinutes;
       const maxDuration = currentApiFilters.MaxDurationMinutes;
       if (maxDuration === '119' && !minDuration)
@@ -126,7 +126,7 @@ const FilmSearchPage: React.FC = () => {
     }
 
     const orderedParams: Array<{ key: string; value: string }> = [];
-    orderedParams.push({ key: 'pageSize', value: '10' });
+    // orderedParams.push({ key: 'pageSize', value: '10' });
 
     const normalizedSearchVal = normalizeFilterValueForStateAndUrl(searchTerm);
     if (normalizedSearchVal)
@@ -165,11 +165,11 @@ const FilmSearchPage: React.FC = () => {
     if (hasSessions !== undefined)
       orderedParams.push({ key: 'HasSessions', value: hasSessions });
 
-    const minAgeRating = normalizeFilterValueForStateAndUrl(
-      apiFilters.MinAgeRating
+    const maxAgeRating = normalizeFilterValueForStateAndUrl(
+      apiFilters.MaxAgeRating
     );
-    if (minAgeRating)
-      orderedParams.push({ key: 'MinAgeRating', value: minAgeRating });
+    if (maxAgeRating)
+      orderedParams.push({ key: 'MaxAgeRating', value: maxAgeRating });
 
     const hasMeaningfulParams = orderedParams.some((p) => p.key !== 'pageSize');
     if (currentPage > 1 || hasMeaningfulParams) {
@@ -225,7 +225,7 @@ const FilmSearchPage: React.FC = () => {
         } else if (filterBarKey === 'isNowShowing') {
           delete updatedApiFilters.HasSessions;
         } else if (filterBarKey === 'ageRating') {
-          delete updatedApiFilters.MinAgeRating;
+          delete updatedApiFilters.MaxAgeRating;
         }
 
         if (normalizedValue !== undefined) {
@@ -249,7 +249,7 @@ const FilmSearchPage: React.FC = () => {
               updatedApiFilters.HasSessions = normalizedValue;
               break;
             case 'ageRating':
-              updatedApiFilters.MinAgeRating = normalizedValue;
+              updatedApiFilters.MaxAgeRating = normalizedValue;
               break;
           }
         }

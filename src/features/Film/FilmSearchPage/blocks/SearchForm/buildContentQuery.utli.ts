@@ -5,7 +5,7 @@ export type ApiFilterKeys =
   | 'MaxDurationMinutes'
   | 'GenreIds'
   | 'HasSessions'
-  | 'MinAgeRating';
+  | 'MaxAgeRating';
 export type StateFilters = Partial<Record<ApiFilterKeys, string>>;
 
 const normalizeFilterValueForApi = (
@@ -73,11 +73,11 @@ export function buildContentQuery(
     queryParams.append('HasSessions', hasSessions);
   }
 
-  const minAgeRating = normalizeFilterValueForApi(
-    filtersFromState.MinAgeRating
+  const maxAgeRating = normalizeFilterValueForApi(
+    filtersFromState.MaxAgeRating
   );
-  if (minAgeRating) {
-    queryParams.append('MinAgeRating', minAgeRating);
+  if (maxAgeRating) {
+    queryParams.append('MaxAgeRating', maxAgeRating);
   }
 
   queryParams.append('PageIndex', pageIndexFromState.toString());
