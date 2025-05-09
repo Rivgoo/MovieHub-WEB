@@ -8,6 +8,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../core/auth/useAuth';
 import { PrimaryButton } from '../../shared/components/Buttons';
@@ -27,7 +28,7 @@ const sidebarNavItems = [
 const CustomerAccountLayout: React.FC<CustomerAccountLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const theme = useTheme();
   const stickyTopOffset = theme.spacing(13);
 
@@ -46,77 +47,76 @@ const CustomerAccountLayout: React.FC<CustomerAccountLayoutProps> = ({ children 
           mb: 4,
           display: 'flex',
           width: '100%',
+          gap: { sm: 2, md: 3 }
         }}
       >
-        <Box sx={{ display: 'flex', width: '100%', gap: { xs: 2, md: 3 } }}>
-          <Paper
-            elevation={3}
-            sx={{
-              width: { xs: '100%', sm: '280px' },
-              display: { xs: 'none', sm: 'flex' },
-              flexDirection: 'column',
-              flexShrink: 0,
-              p: 2.5,
-              height: 'fit-content',
-              position: 'sticky',
-              top: stickyTopOffset,
-              alignSelf: 'flex-start',
-            }}
-          >
-            <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', pl: 1, fontWeight: 'bold' }}>
-              Мій кабінет
-            </Typography>
-            <Divider sx={{ mb: 2, borderColor: 'rgba(255,255,255,0.2)' }} />
-            <List component="nav" sx={{ p: 0, width: '100%' }}>
-              {sidebarNavItems.map((item) => (
-                <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
-                  <ListItemButton
-                    onClick={() => navigate(item.path)}
-                    selected={location.pathname === item.path}
-                    sx={{
-                      borderRadius: '8px',
-                      '&.Mui-selected': {
-                        backgroundColor: 'primary.main',
-                        color: 'primary.contrastText',
-                        '&:hover': {
-                          backgroundColor: 'primary.dark',
-                        },
-                        '& .MuiListItemText-primary': {
-                            color: 'primary.contrastText',
-                        }
-                      },
+        <Paper
+          elevation={3}
+          sx={{
+            width: '280px',
+            display: { xs: 'none', sm: 'flex' },
+            flexDirection: 'column',
+            flexShrink: 0,
+            p: 2.5,
+            height: 'fit-content',
+            position: 'sticky',
+            top: stickyTopOffset,
+            alignSelf: 'flex-start',
+          }}
+        >
+          <Typography variant="h6" gutterBottom sx={{ color: 'text.primary', pl: 1, fontWeight: 'bold' }}>
+            Мій кабінет
+          </Typography>
+          <Divider sx={{ mb: 2, borderColor: 'rgba(255,255,255,0.2)' }} />
+          <List component="nav" sx={{ p: 0, width: '100%' }}>
+            {sidebarNavItems.map((item) => (
+              <ListItem key={item.path} disablePadding sx={{ mb: 0.5 }}>
+                <ListItemButton
+                  onClick={() => navigate(item.path)}
+                  selected={location.pathname === item.path}
+                  sx={{
+                    borderRadius: '8px',
+                    '&.Mui-selected': {
+                      backgroundColor: 'primary.main',
+                      color: 'primary.contrastText',
                       '&:hover': {
-                        backgroundColor: 'action.hover',
+                        backgroundColor: 'primary.dark',
                       },
-                      color: 'text.primary',
-                      py: 1.25,
-                       '& .MuiListItemText-primary': {
-                            color: location.pathname === item.path ? 'primary.contrastText': 'text.primary',
-                        }
-                    }}
-                  >
-                    <ListItemText primary={item.label} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-            <Box sx={{ marginTop: '2rem', pt: 2 }}>
+                      '& .MuiListItemText-primary': {
+                          color: 'primary.contrastText',
+                      }
+                    },
+                    '&:hover': {
+                      backgroundColor: 'action.hover',
+                    },
+                    py: 1.25,
+                     '& .MuiListItemText-primary': {
+                          color: location.pathname === item.path ? 'primary.contrastText': 'text.primary',
+                      }
+                  }}
+                >
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          {user && (
+            <Box sx={{ marginTop: 'auto', pt: 2 }}>
               <PrimaryButton onClick={handleLogout} fullWidth>
                 Вийти
               </PrimaryButton>
             </Box>
-          </Paper>
+          )}
+        </Paper>
 
-          {/* Main Content Area (Outlet) */}
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              width: { xs: '100%', sm: 'auto' },
-            }}
-          >
-            {children}
-          </Box>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            width: { xs: '100%', sm: 'auto' },
+          }}
+        >
+          {children}
         </Box>
       </Container>
     </Layout>
