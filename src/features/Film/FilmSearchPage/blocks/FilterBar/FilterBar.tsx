@@ -55,6 +55,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
     const displayValue = apiValue * 10;
     return { value: apiValue.toString(), label: `${displayValue}+` };
   }).reverse();
+
   const releaseYears = Array.from(
     new Array(40),
     (_, i) => new Date().getFullYear() - i
@@ -84,85 +85,126 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
   const renderSelect = (
     filterBarKey: FilterBarFieldKeys,
     labelText: string,
-    value: string | undefined = filters[filterBarKey] || 'any',
+    initialValueFromProps: string | undefined = filters[filterBarKey],
     options: Array<{ value: string; label: string } | GenreDto>,
-    isLoading?: boolean
-  ) => (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 0.5,
-        minWidth: 150,
-        maxWidth: 200,
-      }}>
-      <Typography variant="caption" sx={styles.filterLabelText}>
-        {labelText}
-      </Typography>
-      <Select
-        aria-label={labelText}
-        name={filterBarKey}
-        value={value}
-        onChange={handleChange}
-        sx={styles.filterBarSelector}
-        MenuProps={{ PaperProps: {} }}
-        disabled={isLoading}
-        size="small">
-        <MenuItem value="any" sx={styles.filterBarSelectorItem}>
-          Всі
-        </MenuItem>
+    isLoadingOptions?: boolean
+  ) => {
+    let valueToRender =
+      initialValueFromProps !== undefined ? initialValueFromProps : 'any';
 
-        {isLoading && (
-          <MenuItem disabled sx={styles.filterBarSelectorItem}>
-            Завантаження...
+    if (filterBarKey === 'genreId') {
+      if (isLoadingOptions || (!isLoadingOptions && genres.length === 0)) {
+        if (valueToRender !== 'any') {
+          valueToRender = 'any';
+        }
+      } else if (!isLoadingOptions && genres.length > 0) {
+        const isValidGenreId = genres.some(
+          (g) => g.id.toString() === initialValueFromProps
+        );
+        if (
+          initialValueFromProps !== 'any' &&
+          initialValueFromProps !== undefined &&
+          !isValidGenreId
+        ) {
+          valueToRender = 'any';
+        }
+      }
+    }
+
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 0.5,
+          minWidth: 150,
+          maxWidth: 200,
+        }}>
+        <Typography variant="caption" sx={styles.filterLabelText}>
+          {labelText}
+        </Typography>
+        <Select
+          aria-label={labelText}
+          name={filterBarKey}
+          value={valueToRender}
+          onChange={handleChange}
+          sx={styles.filterBarSelector}
+          MenuProps={{ PaperProps: {} }}
+          disabled={isLoadingOptions}
+          size="small">
+          <MenuItem value="any" sx={styles.filterBarSelectorItem}>
+            Всі
           </MenuItem>
-        )}
 
-        {!isLoading &&
-          options.map((opt) => {
-            if ('id' in opt && 'name' in opt) {
-              return (
-                <MenuItem
-                  key={opt.id}
-                  value={opt.id.toString()}
-                  sx={styles.filterBarSelectorItem}>
-                  {opt.name}
-                </MenuItem>
-              );
-            }
-            if ('value' in opt && 'label' in opt && opt.value !== 'any') {
-              return (
-                <MenuItem
-                  key={opt.value}
-                  value={opt.value as string}
-                  sx={styles.filterBarSelectorItem}>
-                  {opt.label as string}
-                </MenuItem>
-              );
-            }
-            return null;
-          })}
-      </Select>
-    </Box>
-  );
+          {isLoadingOptions && (
+            <MenuItem disabled sx={styles.filterBarSelectorItem}>
+              Завантаження...
+            </MenuItem>
+          )}
+
+          {!isLoadingOptions &&
+            options.map((opt) => {
+              if ('id' in opt && 'name' in opt) {
+                return (
+                  <MenuItem
+                    key={opt.id}
+                    value={opt.id.toString()}
+                    sx={styles.filterBarSelectorItem}>
+                    {opt.name}
+                  </MenuItem>
+                );
+              }
+              if ('value' in opt && 'label' in opt && opt.value !== 'any') {
+                return (
+                  <MenuItem
+                    key={opt.value}
+                    value={opt.value as string}
+                    sx={styles.filterBarSelectorItem}>
+                    {opt.label as string}
+                  </MenuItem>
+                );
+              }
+              return null;
+            })}
+        </Select>
+      </Box>
+    );
+  };
 
   const mapYearsToValueLabel = (years: number[]) =>
     years.map((year) => ({ value: year.toString(), label: year.toString() }));
 
   return (
     <Box sx={styles.filterBarWrapper}>
-      {renderSelect('genreId', 'Жанр', undefined, genres, isLoadingGenres)}
+      {renderSelect(
+        'genreId',
+        'Жанр',
+        filters.genreId,
+        genres,
+        isLoadingGenres
+      )}
       {renderSelect(
         'releaseYear',
         'Рік',
-        undefined,
+        filters.releaseYear,
         mapYearsToValueLabel(releaseYears)
       )}
-      {renderSelect('rating', 'Рейтинг %', undefined, ratingOptions)}
-      {renderSelect('duration', 'Тривалість', undefined, durationOptions)}
-      {renderSelect('isNowShowing', 'В кіно', undefined, nowShowingOptions)}
-      {renderSelect('ageRating', 'Вік', undefined, ageRatingOptions)}
+      {renderSelect('rating', 'Рейтинг %', filters.rating, ratingOptions)}
+      {renderSelect(
+        'duration',
+        'Тривалість',
+        filters.duration,
+        durationOptions
+      )}
+      {renderSelect(
+        'isNowShowing',
+        'В кіно',
+        filters.isNowShowing,
+        nowShowingOptions
+      )}
+      {renderSelect('ageRating', 'Вік', filters.ageRating, ageRatingOptions)}
     </Box>
   );
 };
+
 export default FilterBar;

@@ -90,7 +90,7 @@ const FilmGrid: React.FC<Props> = ({
           py: 5,
         }}>
         <CircularProgress />
-        <Typography sx={{ mt: 1 }}>Loading films...</Typography>
+        <Typography sx={{ mt: 1 }}>PЗавантаження фільмів...</Typography>
       </Box>
     );
   }

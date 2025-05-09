@@ -1,7 +1,14 @@
-export type ContentFilters = Partial<Record<StateFilterKeys, string>>; // Використовуємо StateFilterKeys
+export type ApiFilterKeys =
+  | 'MinRating'
+  | 'MinReleaseYear'
+  | 'MinDurationMinutes'
+  | 'MaxDurationMinutes'
+  | 'GenreIds'
+  | 'HasSessions'
+  | 'MinAgeRating';
+export type StateFilters = Partial<Record<ApiFilterKeys, string>>;
 
-// Функція normalizeFilterValueUtil тут або імпортована
-const normalizeFilterValueUtil = (
+const normalizeFilterValueForApi = (
   value: string | undefined
 ): string | undefined => {
   if (
@@ -10,14 +17,13 @@ const normalizeFilterValueUtil = (
     value === undefined ||
     value === 'Всі'
   ) {
-    // Додано "Всі"
     return undefined;
   }
   return value;
 };
 
 export function buildContentQuery(
-  filtersFromState: ContentFilters,
+  filtersFromState: StateFilters,
   searchTermFromState: string,
   pageIndexFromState: number = 1,
   pageSizeToUse: number = 10
@@ -26,56 +32,55 @@ export function buildContentQuery(
 
   queryParams.append('pageSize', pageSizeToUse.toString());
 
-  const normalizedSearch = normalizeFilterValueUtil(searchTermFromState);
+  const normalizedSearch = normalizeFilterValueForApi(searchTermFromState);
   if (normalizedSearch) {
     queryParams.append('SearchTerms', normalizedSearch.trim());
   }
 
-  // Обробляємо фільтри з API ключами зі стану filtersFromState
-  const minRating = normalizeFilterValueUtil(filtersFromState.MinRating);
-  if (minRating) queryParams.append('MinRating', minRating);
+  const minRating = normalizeFilterValueForApi(filtersFromState.MinRating);
+  if (minRating) {
+    queryParams.append('MinRating', minRating);
+  }
 
-  const minReleaseYear = normalizeFilterValueUtil(
+  const minReleaseYear = normalizeFilterValueForApi(
     filtersFromState.MinReleaseYear
   );
-  if (minReleaseYear) queryParams.append('MinReleaseYear', minReleaseYear);
+  if (minReleaseYear) {
+    queryParams.append('MinReleaseYear', minReleaseYear);
+  }
 
-  // Нова логіка для тривалості - перевіряємо і Min і Max зі стану
-  const minDuration = normalizeFilterValueUtil(
+  const minDuration = normalizeFilterValueForApi(
     filtersFromState.MinDurationMinutes
   );
-  const maxDuration = normalizeFilterValueUtil(
+  if (minDuration) {
+    queryParams.append('MinDurationMinutes', minDuration);
+  }
+
+  const maxDuration = normalizeFilterValueForApi(
     filtersFromState.MaxDurationMinutes
   );
-  if (minDuration) queryParams.append('MinDurationMinutes', minDuration);
-  if (maxDuration) queryParams.append('MaxDurationMinutes', maxDuration); // API має підтримувати це
+  if (maxDuration) {
+    queryParams.append('MaxDurationMinutes', maxDuration);
+  }
 
-  const genreIds = normalizeFilterValueUtil(filtersFromState.GenreIds);
-  if (genreIds) queryParams.append('GenreIds', genreIds);
+  const genreIds = normalizeFilterValueForApi(filtersFromState.GenreIds);
+  if (genreIds) {
+    queryParams.append('GenreIds', genreIds);
+  }
 
-  // hasSessions може бути 'true' або 'false'
-  const hasSessions = normalizeFilterValueUtil(filtersFromState.HasSessions);
+  const hasSessions = normalizeFilterValueForApi(filtersFromState.HasSessions);
   if (hasSessions !== undefined) {
-    // Додаємо, якщо є true або false
     queryParams.append('HasSessions', hasSessions);
   }
 
-  // Новий фільтр віку
-  const minAgeRating = normalizeFilterValueUtil(filtersFromState.MinAgeRating);
-  if (minAgeRating) queryParams.append('MinAgeRating', minAgeRating);
+  const minAgeRating = normalizeFilterValueForApi(
+    filtersFromState.MinAgeRating
+  );
+  if (minAgeRating) {
+    queryParams.append('MinAgeRating', minAgeRating);
+  }
 
   queryParams.append('PageIndex', pageIndexFromState.toString());
 
   return queryParams.toString();
 }
-
-// Визначення StateFilterKeys тут або імпортоване звідкись
-type StateFilterKeys =
-  | 'SearchTerms'
-  | 'MinRating'
-  | 'MinReleaseYear'
-  | 'MinDurationMinutes'
-  | 'MaxDurationMinutes'
-  | 'GenreIds'
-  | 'HasSessions'
-  | 'MinAgeRating';

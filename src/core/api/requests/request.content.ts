@@ -16,9 +16,11 @@ import {
 export const searchContent = async (
   query: string
 ): Promise<ContentFilterResponse> => {
+  console.log(query);
   const { data } = await apiClient.get<ContentFilterResponse>(
     `/contents/filter${query.startsWith('?') ? query : `?${query}`}`
   );
+
   return data;
 };
 

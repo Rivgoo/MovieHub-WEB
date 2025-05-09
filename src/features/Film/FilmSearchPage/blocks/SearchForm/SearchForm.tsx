@@ -17,11 +17,11 @@ import {
 import FilterBar from '../FilterBar/FilterBar.tsx';
 import SearchIcon from '@mui/icons-material/Search';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
-import SuggestionItem from './SuggestionItem.tsx';
 import { ContentDto } from '../../../../../core/api/types/types.content.ts';
 import { searchContent } from '../../../../../core/api/requests/request.content.ts';
 import { useNavigate } from 'react-router-dom';
 import getStyles from './SearchForm.styles.ts';
+import SuggestionItem from './SuggestionItem.tsx';
 
 type FilterBarKeys =
   | 'rating'

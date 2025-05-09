@@ -3,9 +3,12 @@ import Layout from '../../../shared/components/Layout.tsx';
 import SearchForm from './blocks/SearchForm/SearchForm.tsx';
 import FilmGrid from './blocks/FilmGrid/FilmGrid.tsx';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { buildContentQuery } from './blocks/SearchForm/buildContentQuery.utli.ts';
+import {
+  buildContentQuery,
+  StateFilters as ApiStateFiltersType,
+} from './blocks/SearchForm/buildContentQuery.utli.ts';
 
-const normalizeFilterValue = (
+const normalizeFilterValueForStateAndUrl = (
   value: string | undefined
 ): string | undefined => {
   if (
@@ -19,18 +22,8 @@ const normalizeFilterValue = (
   return value;
 };
 
-type StateFilterKeys =
-  | 'SearchTerms'
-  | 'MinRating'
-  | 'MinReleaseYear'
-  | 'MinDurationMinutes'
-  | 'MaxDurationMinutes'
-  | 'GenreIds'
-  | 'HasSessions'
-  | 'MinAgeRating';
-
-type FilterBarKeys =
-  | 'searchTerm'
+type ApiFilterKeys = keyof ApiStateFiltersType;
+type FilterBarInputKeys =
   | 'rating'
   | 'releaseYear'
   | 'duration'
@@ -43,248 +36,242 @@ const FilmSearchPage: React.FC = () => {
   const navigate = useNavigate();
   const { search: urlSearchString } = location;
 
-  const [filters, setFilters] = useState<
-    Partial<Record<StateFilterKeys, string>>
-  >({});
+  const [apiFilters, setApiFilters] = useState<ApiStateFiltersType>({});
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchQueryForGrid, setSearchQueryForGrid] = useState<
     string | undefined
   >(undefined);
 
-  const hasInitializedFromUrl = useRef(false);
-  const prevUrlRef = useRef<string>(location.search);
+  const isInitialLoadDone = useRef(false);
+  const currentGeneratedUrl = useRef<string>(location.search);
 
   const mapApiFiltersToFilterBar = useCallback(
-    (
-      apiFilters: Partial<Record<StateFilterKeys, string>>
-    ): Record<string, string> => {
-      const filterBarFilters: Record<string, string> = {};
-
-      if (apiFilters.MinRating)
-        filterBarFilters['rating'] = apiFilters.MinRating;
-      if (apiFilters.MinReleaseYear)
-        filterBarFilters['releaseYear'] = apiFilters.MinReleaseYear;
-      if (apiFilters.GenreIds)
-        filterBarFilters['genreId'] = apiFilters.GenreIds;
-      if (apiFilters.HasSessions !== undefined)
-        filterBarFilters['isNowShowing'] = apiFilters.HasSessions;
-      if (apiFilters.MinAgeRating)
-        filterBarFilters['ageRating'] = apiFilters.MinAgeRating;
-
-      const minDuration = apiFilters.MinDurationMinutes;
-      const maxDuration = apiFilters.MaxDurationMinutes;
-      if (maxDuration === '119') {
-        filterBarFilters['duration'] = 'lt120';
-      } else if (minDuration === '120') {
-        filterBarFilters['duration'] = 'gte120';
-      } else {
-        filterBarFilters['duration'] = 'any';
-      }
-
-      return filterBarFilters;
+    (currentApiFilters: ApiStateFiltersType): Record<string, string> => {
+      const filterBarDisplayFilters: Record<string, string> = {};
+      if (currentApiFilters.MinRating)
+        filterBarDisplayFilters['rating'] = currentApiFilters.MinRating;
+      if (currentApiFilters.MinReleaseYear)
+        filterBarDisplayFilters['releaseYear'] =
+          currentApiFilters.MinReleaseYear;
+      if (currentApiFilters.GenreIds)
+        filterBarDisplayFilters['genreId'] = currentApiFilters.GenreIds;
+      if (currentApiFilters.HasSessions !== undefined)
+        filterBarDisplayFilters['isNowShowing'] = currentApiFilters.HasSessions;
+      if (currentApiFilters.MinAgeRating)
+        filterBarDisplayFilters['ageRating'] = currentApiFilters.MinAgeRating;
+      const minDuration = currentApiFilters.MinDurationMinutes;
+      const maxDuration = currentApiFilters.MaxDurationMinutes;
+      if (maxDuration === '119' && !minDuration)
+        filterBarDisplayFilters['duration'] = 'lt120';
+      else if (minDuration === '120' && !maxDuration)
+        filterBarDisplayFilters['duration'] = 'gte120';
+      else if (!minDuration && !maxDuration)
+        filterBarDisplayFilters['duration'] = 'any';
+      else filterBarDisplayFilters['duration'] = 'any';
+      return filterBarDisplayFilters;
     },
     []
   );
 
   useEffect(() => {
     const params = new URLSearchParams(urlSearchString);
-    const newApiFiltersFromURL: Partial<Record<StateFilterKeys, string>> = {};
+    const newApiFiltersFromURL: ApiStateFiltersType = {};
     let newSearchTermFromURL = '';
     let newCurrentPageFromURL = 1;
 
     params.forEach((value, key) => {
       const paramKey = key as
-        | StateFilterKeys
+        | ApiFilterKeys
+        | 'SearchTerms'
+        | 'SearchTerm'
         | 'PageIndex'
         | 'page'
-        | 'SearchTerm'
         | 'pageSize';
-
-      if (paramKey === 'SearchTerms' || paramKey === 'SearchTerm') {
+      if (paramKey === 'SearchTerms' || paramKey === 'SearchTerm')
         newSearchTermFromURL = value;
-      } else if (paramKey === 'PageIndex' || paramKey === 'page') {
+      else if (paramKey === 'PageIndex' || paramKey === 'page') {
         const pageVal = parseInt(value, 10);
         newCurrentPageFromURL = !isNaN(pageVal) && pageVal > 0 ? pageVal : 1;
       } else if (paramKey !== 'pageSize') {
-        const normalizedValue = normalizeFilterValue(value);
-        if (normalizedValue !== undefined) {
-          newApiFiltersFromURL[paramKey as StateFilterKeys] = normalizedValue;
-        }
+        const normalizedVal = normalizeFilterValueForStateAndUrl(value);
+        if (normalizedVal)
+          newApiFiltersFromURL[paramKey as ApiFilterKeys] = normalizedVal;
       }
     });
 
-    let stateNeedsUpdate = false;
-    if (JSON.stringify(filters) !== JSON.stringify(newApiFiltersFromURL)) {
-      setFilters(newApiFiltersFromURL);
-      stateNeedsUpdate = true;
-    }
-    if (searchTerm !== newSearchTermFromURL) {
-      setSearchTerm(newSearchTermFromURL);
-      stateNeedsUpdate = true;
-    }
-    if (currentPage !== newCurrentPageFromURL) {
-      setCurrentPage(newCurrentPageFromURL);
-      stateNeedsUpdate = true;
-    }
+    setApiFilters(newApiFiltersFromURL);
+    setSearchTerm(newSearchTermFromURL);
+    setCurrentPage(newCurrentPageFromURL);
 
-    if (!hasInitializedFromUrl.current) {
-      hasInitializedFromUrl.current = true;
+    const initialGridQuery = buildContentQuery(
+      newApiFiltersFromURL,
+      newSearchTermFromURL,
+      newCurrentPageFromURL
+    );
+    setSearchQueryForGrid(initialGridQuery);
 
-      if (!stateNeedsUpdate && urlSearchString === '') {
-        const initialGridQuery = buildContentQuery(
-          newApiFiltersFromURL,
-          newSearchTermFromURL,
-          newCurrentPageFromURL
-        );
-        setSearchQueryForGrid(initialGridQuery);
-      }
-    }
-    prevUrlRef.current = urlSearchString;
-  }, [urlSearchString]);
+    currentGeneratedUrl.current = urlSearchString;
+    isInitialLoadDone.current = true;
+  }, []);
 
   useEffect(() => {
-    if (!hasInitializedFromUrl.current) {
+    if (!isInitialLoadDone.current) {
       return;
     }
 
-    const currentGridQuery = buildContentQuery(
-      filters,
-      searchTerm,
-      currentPage
-    );
-
-    if (searchQueryForGrid !== currentGridQuery) {
-      setSearchQueryForGrid(currentGridQuery);
+    const newGridQuery = buildContentQuery(apiFilters, searchTerm, currentPage);
+    if (searchQueryForGrid !== newGridQuery) {
+      setSearchQueryForGrid(newGridQuery);
     }
 
     const orderedParams: Array<{ key: string; value: string }> = [];
     orderedParams.push({ key: 'pageSize', value: '10' });
 
-    const normalizedSearchVal = normalizeFilterValue(searchTerm);
+    const normalizedSearchVal = normalizeFilterValueForStateAndUrl(searchTerm);
     if (normalizedSearchVal)
       orderedParams.push({
         key: 'SearchTerms',
         value: encodeURIComponent(normalizedSearchVal.trim()),
       });
 
-    if (filters.MinRating)
-      orderedParams.push({ key: 'MinRating', value: filters.MinRating });
-    if (filters.MinReleaseYear)
-      orderedParams.push({
-        key: 'MinReleaseYear',
-        value: filters.MinReleaseYear,
-      });
-    if (filters.MinDurationMinutes)
-      orderedParams.push({
-        key: 'MinDurationMinutes',
-        value: filters.MinDurationMinutes,
-      });
-    if (filters.MaxDurationMinutes)
-      orderedParams.push({
-        key: 'MaxDurationMinutes',
-        value: filters.MaxDurationMinutes,
-      });
-    if (filters.GenreIds)
-      orderedParams.push({ key: 'GenreIds', value: filters.GenreIds });
-    if (filters.HasSessions)
-      orderedParams.push({ key: 'HasSessions', value: filters.HasSessions });
-    if (filters.MinAgeRating)
-      orderedParams.push({ key: 'MinAgeRating', value: filters.MinAgeRating });
+    const minRating = normalizeFilterValueForStateAndUrl(apiFilters.MinRating);
+    if (minRating) orderedParams.push({ key: 'MinRating', value: minRating });
 
-    const hasMeaningfulParams = orderedParams.length > 1;
+    const minReleaseYear = normalizeFilterValueForStateAndUrl(
+      apiFilters.MinReleaseYear
+    );
+    if (minReleaseYear)
+      orderedParams.push({ key: 'MinReleaseYear', value: minReleaseYear });
+
+    const minDuration = normalizeFilterValueForStateAndUrl(
+      apiFilters.MinDurationMinutes
+    );
+    if (minDuration)
+      orderedParams.push({ key: 'MinDurationMinutes', value: minDuration });
+
+    const maxDuration = normalizeFilterValueForStateAndUrl(
+      apiFilters.MaxDurationMinutes
+    );
+    if (maxDuration)
+      orderedParams.push({ key: 'MaxDurationMinutes', value: maxDuration });
+
+    const genreIds = normalizeFilterValueForStateAndUrl(apiFilters.GenreIds);
+    if (genreIds) orderedParams.push({ key: 'GenreIds', value: genreIds });
+
+    const hasSessions = normalizeFilterValueForStateAndUrl(
+      apiFilters.HasSessions
+    );
+    if (hasSessions !== undefined)
+      orderedParams.push({ key: 'HasSessions', value: hasSessions });
+
+    const minAgeRating = normalizeFilterValueForStateAndUrl(
+      apiFilters.MinAgeRating
+    );
+    if (minAgeRating)
+      orderedParams.push({ key: 'MinAgeRating', value: minAgeRating });
+
+    const hasMeaningfulParams = orderedParams.some((p) => p.key !== 'pageSize');
     if (currentPage > 1 || hasMeaningfulParams) {
       orderedParams.push({ key: 'PageIndex', value: currentPage.toString() });
     }
 
-    let newGeneratedUrlSearchString = orderedParams
+    let newUrlString = orderedParams
       .map((p) => `${p.key}=${p.value}`)
       .join('&');
     const targetPath = location.pathname;
-    if (newGeneratedUrlSearchString)
-      newGeneratedUrlSearchString = `?${newGeneratedUrlSearchString}`;
+    if (newUrlString) newUrlString = `?${newUrlString}`;
 
-    if (prevUrlRef.current !== newGeneratedUrlSearchString) {
-      prevUrlRef.current = newGeneratedUrlSearchString;
-
-      if (newGeneratedUrlSearchString === '' && location.search !== '') {
+    if (currentGeneratedUrl.current !== newUrlString) {
+      currentGeneratedUrl.current = newUrlString;
+      if (newUrlString === '' && location.search !== '') {
         navigate(targetPath, { replace: true });
-      } else if (newGeneratedUrlSearchString !== '') {
-        navigate(`${targetPath}${newGeneratedUrlSearchString}`, {
-          replace: true,
-        });
+      } else if (newUrlString !== '' && location.search !== newUrlString) {
+        navigate(`${targetPath}${newUrlString}`, { replace: true });
       }
     }
   }, [
-    filters,
+    apiFilters,
     searchTerm,
     currentPage,
     navigate,
-    location.pathname,
+    location,
     searchQueryForGrid,
+    normalizeFilterValueForStateAndUrl,
   ]);
 
   const handleActualSearch = useCallback((newSearchQuery: string) => {
+    setApiFilters((prev) => ({ ...prev }));
     setSearchTerm(newSearchQuery);
     setCurrentPage(1);
   }, []);
 
   const handleFilterChange = useCallback(
-    (filterBarKey: FilterBarKeys, filterValue: string) => {
-      setFilters((prevApiFilters) => {
-        const updatedApiFilters = { ...prevApiFilters };
-        const normalizedValue = normalizeFilterValue(filterValue);
+    (filterBarKey: FilterBarInputKeys, filterValueFromBar: string) => {
+      setApiFilters((prevApiFilters) => {
+        const updatedApiFilters: ApiStateFiltersType = { ...prevApiFilters };
+        const normalizedValue =
+          normalizeFilterValueForStateAndUrl(filterValueFromBar);
 
-        if (filterBarKey === 'rating') delete updatedApiFilters['MinRating'];
-        if (filterBarKey === 'releaseYear')
-          delete updatedApiFilters['MinReleaseYear'];
         if (filterBarKey === 'duration') {
-          delete updatedApiFilters['MinDurationMinutes'];
-          delete updatedApiFilters['MaxDurationMinutes'];
+          delete updatedApiFilters.MinDurationMinutes;
+          delete updatedApiFilters.MaxDurationMinutes;
+        } else if (filterBarKey === 'rating') {
+          delete updatedApiFilters.MinRating;
+        } else if (filterBarKey === 'releaseYear') {
+          delete updatedApiFilters.MinReleaseYear;
+        } else if (filterBarKey === 'genreId') {
+          delete updatedApiFilters.GenreIds;
+        } else if (filterBarKey === 'isNowShowing') {
+          delete updatedApiFilters.HasSessions;
+        } else if (filterBarKey === 'ageRating') {
+          delete updatedApiFilters.MinAgeRating;
         }
-        if (filterBarKey === 'genreId') delete updatedApiFilters['GenreIds'];
-        if (filterBarKey === 'isNowShowing')
-          delete updatedApiFilters['HasSessions'];
-        if (filterBarKey === 'ageRating')
-          delete updatedApiFilters['MinAgeRating'];
 
         if (normalizedValue !== undefined) {
-          if (filterBarKey === 'rating')
-            updatedApiFilters['MinRating'] = normalizedValue;
-          if (filterBarKey === 'releaseYear')
-            updatedApiFilters['MinReleaseYear'] = normalizedValue;
-          updatedApiFilters['GenreIds'] = normalizedValue;
-          if (filterBarKey === 'isNowShowing')
-            updatedApiFilters['HasSessions'] = normalizedValue;
-          if (filterBarKey === 'ageRating')
-            updatedApiFilters['MinAgeRating'] = normalizedValue;
-          if (filterBarKey === 'duration') {
-            if (normalizedValue === 'lt120') {
-              updatedApiFilters['MaxDurationMinutes'] = '119';
-            } else if (normalizedValue === 'gte120') {
-              updatedApiFilters['MinDurationMinutes'] = '120';
-            }
+          switch (filterBarKey) {
+            case 'rating':
+              updatedApiFilters.MinRating = normalizedValue;
+              break;
+            case 'releaseYear':
+              updatedApiFilters.MinReleaseYear = normalizedValue;
+              break;
+            case 'duration':
+              if (normalizedValue === 'lt120')
+                updatedApiFilters.MaxDurationMinutes = '119';
+              else if (normalizedValue === 'gte120')
+                updatedApiFilters.MinDurationMinutes = '120';
+              break;
+            case 'genreId':
+              updatedApiFilters.GenreIds = normalizedValue;
+              break;
+            case 'isNowShowing':
+              updatedApiFilters.HasSessions = normalizedValue;
+              break;
+            case 'ageRating':
+              updatedApiFilters.MinAgeRating = normalizedValue;
+              break;
           }
         }
-
         return updatedApiFilters;
       });
       setCurrentPage(1);
     },
-    [normalizeFilterValue]
+    []
   );
 
   const handleResetFilters = useCallback(() => {
-    setFilters({});
+    setApiFilters({});
     setSearchTerm('');
     setCurrentPage(1);
   }, []);
 
   const handlePageChange = useCallback((newPage: number) => {
+    setApiFilters((prev) => ({ ...prev }));
     setCurrentPage(newPage);
   }, []);
 
-  if (!hasInitializedFromUrl.current && urlSearchString !== '') {
+  if (!isInitialLoadDone.current && urlSearchString !== '') {
     return null;
   }
 
@@ -292,7 +279,7 @@ const FilmSearchPage: React.FC = () => {
     <Layout>
       <SearchForm
         onSearchTermChange={handleActualSearch}
-        filters={mapApiFiltersToFilterBar(filters)}
+        filters={mapApiFiltersToFilterBar(apiFilters)}
         onFilterChange={handleFilterChange}
         onResetFilters={handleResetFilters}
         initialSearchTerm={searchTerm}
