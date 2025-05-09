@@ -5,6 +5,7 @@
     --admin-navy: #242424;
     --admin-list-item-color: #393939;
     --admin-list-item-hover-color: #474747;
+    --admin-pagination-inactive-bg: #b0b0b0;
     --admin-orange-button-text-color: #f8fafc;
     --admin-actions-btn-divider-color: #ccc;
     --admin-input-bg: #e7e7e7;
@@ -12,6 +13,8 @@
     --confirm-modal-bg: #fff;
     --confirm-modal-overlay: rgba(0, 0, 0, 0.5);
     --confirm-modal-focus-shadow: rgba(24, 21, 21, 0.5);
+    --admin-error-red: red;
+    --admin-pagination-item-bg: #5e5959;
 }
 
 .adminLayout {

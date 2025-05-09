@@ -12,7 +12,7 @@ export const getPaginationStyles = (theme: Theme): SxProps<Theme> => ({
       color: theme.palette.primary.light,
     },
   },
-  '& .Mui-selected': {
+  '&& .Mui-selected': {
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.light,
     fontWeight: 'bold',
