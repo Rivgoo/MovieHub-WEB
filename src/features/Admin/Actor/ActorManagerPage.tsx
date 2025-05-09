@@ -7,7 +7,7 @@ import ActorModal from "./ActorModal/ActorModal";
 import { actorApi } from "../../../core/api/actorApi";
 import { ActorDto } from "../../../core/api/types/types.actor";
 import ConfirmModal from '../../ConfirmModal/ConfirmModal';
-import Pagination from "../Pagination/Pagination";
+import StandardPagination from "../../../shared/components/Pagination/StandardPagination";
 
 const ActorManagerPage: React.FC = () => {
   const [actors, setActors] = useState<ActorDto[]>([]);
@@ -174,11 +174,12 @@ const ActorManagerPage: React.FC = () => {
     />
 ))}
           </div>
-          <Pagination 
-            currentPage={currentPage} 
-            totalPages={totalPages} 
-            onPageChange={(page) => setCurrentPage(page)} 
-          />
+          
+          <StandardPagination
+          sx={{ marginTop: "1rem" }}
+          count={totalPages} 
+          page={currentPage} 
+          onChange={(_event, page) => setCurrentPage(page)}/>
         </div>
 
         <ActorModal
