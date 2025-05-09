@@ -1,0 +1,65 @@
+.horizontal-scroller-container {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  .horizontal-scroller-content {
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap; 
+    padding: 10px 0; 
+    gap: 16px;
+  
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  
+    scroll-behavior: smooth;
+    cursor: grab;
+    user-select: none;
+  }
+  
+  .horizontal-scroller-content.dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+  }
+  
+ .horizontal-scroller-content > * {
+    flex-shrink: 0;
+  }
+  
+  .scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(30, 30, 30, 0.6) !important; 
+    color: white !important;
+    z-index: 10;
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  }
+  
+  .scroll-button:hover {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+  }
+  
+  .scroll-button.left {
+    left: 12px;
+  }
+  
+  .scroll-button.right {
+    right: 12px;
+  }
+  
+  .scroll-button.Mui-disabled {
+    opacity: 0 !important;
+    pointer-events: none;
+  }

@@ -20,6 +20,7 @@ import { GlowButton } from '../../../../../shared/components/Buttons';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import StandardPagination from '../../../../../shared/components/Pagination/StandardPagination';
 
 interface Props {
   searchQuery: string | undefined;
@@ -203,6 +204,11 @@ const FilmGrid: React.FC<Props> = ({
             showFirstButton={!isSmallScreen}
             showLastButton={!isSmallScreen}
           />
+          {/* <StandardPagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChangeInternal}
+          /> */}
         </Box>
       )}
     </Container>
