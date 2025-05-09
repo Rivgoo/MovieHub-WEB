@@ -1,5 +1,3 @@
-// src/features/Terms/TermsPage.tsx
-
 import React from 'react';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
@@ -27,7 +25,7 @@ const termsOfServiceHtml = `
 <li><strong>Країна</strong> — Україна.</li>
 <li><strong>Пристрій</strong> — будь-який пристрій, який може отримати доступ до Сервісу, наприклад, комп’ютер, мобільний телефон або планшет.</li>
 <li><strong>Сервіс</strong> — це Вебсайт.</li>
-<li><strong>Вебсайт</strong> — це KinoAfisha, доступний за адресою <a href="http://localhost:5173/" rel="external nofollow noopener" target="_blank">http://localhost:5173/</a>.</li>
+<li><strong>Вебсайт</strong> — це KinoAfisha, доступний за адресою <a href="https://moviehub-ua.netlify.app/" rel="external nofollow noopener" target="_blank">https://moviehub-ua.netlify.app/</a>.</li>
 <li><strong>Ви</strong> — фізична особа, яка використовує Сервіс, або компанія чи інша юридична особа, від імені якої така особа використовує Сервіс.</li>
 </ul>
 
@@ -89,8 +87,6 @@ const termsOfServiceHtml = `
 <li>За номером телефону: +380 99 999 99 99</li>
 </ul>
 `
-// ---------------------------------------------
-
 const TermsPage: React.FC = () => {
   const theme = useTheme(); 
 

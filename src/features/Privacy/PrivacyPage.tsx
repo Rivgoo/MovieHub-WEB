@@ -48,7 +48,7 @@ const privacyPolicyHtml = `
 <p><strong>Дані про використання</strong> відносяться до даних, зібраних автоматично, або згенерованих під час використання Сервісу, або з самої інфраструктури Сервісу (наприклад, тривалість відвідування сторінки).</p>
 </li>
 <li>
-<p><strong>Веб-сайт</strong> відноситься до MovieHub, доступного за адресою <a href="http://localhost:5173/" rel="external nofollow noopener" target="_blank">http://localhost:5173/</a></p>
+<p><strong>Веб-сайт</strong> відноситься до MovieHub, доступного за адресою <a href="https://moviehub-ua.netlify.app/" rel="external nofollow noopener" target="_blank">https://moviehub-ua.netlify.app/</a></p>
 </li>
 <li>
 <p><strong>Ви</strong> означає фізичну особу, яка отримує доступ або використовує Сервіс, або компанію чи іншу юридичну особу, від імені якої така фізична особа отримує доступ або використовує Сервіс, залежно від обставин.</p>

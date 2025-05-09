@@ -105,7 +105,6 @@ const MovieFilterPanel: React.FC<MovieFilterPanelProps> = ({
             </Typography>
             <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(255, 255, 255, 0.12)', mr: 1, display: { xs: 'none', md: 'block' } }} />
 
-            {/* --- Фільтри --- */}
             <FilterSelect
                 id="panel-sort-filter"
                 label="Сортування"
@@ -140,9 +139,6 @@ const MovieFilterPanel: React.FC<MovieFilterPanelProps> = ({
                 selectedValue={selectedYear}
                 onChange={handleYearChange}
             />
-            {/* Додайте FilterSelect для Тривалості, якщо потрібно */}
-
-            {/* --- Кнопка Скидання --- */}
             <Box sx={{ flexGrow: 1 }} />
             <Divider orientation="vertical" flexItem sx={{ borderColor: 'rgba(255, 255, 255, 0.12)', ml: 1 }} />
             <Button
