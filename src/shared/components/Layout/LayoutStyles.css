@@ -28,6 +28,11 @@
     --shadow-avatar: 0px 4px 10px rgba(0, 0, 0, 0.25);
   
     --hero-favorite-glow-color: #ff8c00; 
+    --scroller-bg-color: #1e1e1e;
+    --scroller-button-bg: rgba(40, 40, 40, 0.7);
+    --scroller-button-bg-hover: rgba(20, 20, 20, 0.9);
+    --scroller-button-color: white;
+    --scroller-gradient-start: var(--scroller-bg-color);
   
   
   }
