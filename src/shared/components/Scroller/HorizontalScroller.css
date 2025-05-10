@@ -34,7 +34,7 @@
 }
 
 .scroll-button {
-  position: absolute;
+  position: absolute !important;
   top: 50%;
   transform: translateY(-50%);
   background-color: var(--scroller-button-bg) !important;
@@ -78,7 +78,7 @@
    
   }
   .scroll-button .MuiSvgIcon-root {
-      font-size: 1.4rem !important;
+      font-size: 1.15rem !important;
   }
   .scroll-button.left {
     left: 12px;
