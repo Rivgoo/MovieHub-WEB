@@ -51,7 +51,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
 
   const ratingOptions = Array.from(new Array(10), (_, i) => {
     const apiValue = 10 - i;
-    const displayValue = apiValue * 10;
+    const displayValue = apiValue;
     return { value: apiValue.toString(), label: `${displayValue}/10` };
   }).reverse();
 

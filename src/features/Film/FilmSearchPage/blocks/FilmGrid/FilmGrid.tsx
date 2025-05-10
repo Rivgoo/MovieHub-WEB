@@ -20,6 +20,7 @@ import { GlowButton } from '../../../../../shared/components/Buttons';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PersonIcon from '@mui/icons-material/Person';
 // import StandardPagination from '../../../../../shared/components/Pagination/StandardPagination';
 
 interface Props {
@@ -81,6 +82,7 @@ const FilmGrid: React.FC<Props> = ({
     value: number
   ) => {
     onPageChange(value);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (loading) {
@@ -157,33 +159,42 @@ const FilmGrid: React.FC<Props> = ({
                 </Typography>
                 <Box sx={styles.filmInfoContainer}>
                   <Box sx={styles.filmInfoContainer}>
-                    {film.durationMinutes && (
+                    <Box sx={styles.filmInfoContainerRows}>
+                      {film.durationMinutes && (
+                        <Box sx={styles.filmInfoItem}>
+                          <AccessTimeIcon sx={styles.filmInfoIcon} />
+                          <Typography variant="body2" sx={styles.filmInfoText}>
+                            {film.durationMinutes}хв
+                          </Typography>
+                        </Box>
+                      )}
                       <Box sx={styles.filmInfoItem}>
-                        <AccessTimeIcon sx={styles.filmInfoIcon} />
+                        <StarOutlineIcon sx={styles.filmInfoIcon} />
                         <Typography variant="body2" sx={styles.filmInfoText}>
-                          {film.durationMinutes}хв
+                          {typeof film.rating === 'number'
+                            ? (film.rating / 10).toFixed(1)
+                            : 'N/A'}
                         </Typography>
                       </Box>
-                    )}
-                    {/* {typeof film.rating === 'number' && film.rating > 0 && ( */}
-                    <Box sx={styles.filmInfoItem}>
-                      <StarOutlineIcon sx={styles.filmInfoIcon} />
-                      <Typography variant="body2" sx={styles.filmInfoText}>
-                        {/* {(film.rating / 10).toFixed(1)} */}
-                        {typeof film.rating === 'number'
-                          ? (film.rating / 10).toFixed(1)
-                          : 'N/A'}
-                      </Typography>
                     </Box>
-                    {/* )} */}
-                    {film.releaseYear && (
+                    <Box sx={styles.filmInfoContainerRows}>
+                      {film.releaseYear && (
+                        <Box sx={styles.filmInfoItem}>
+                          <CalendarTodayIcon sx={styles.filmInfoIcon} />
+                          <Typography variant="body2" sx={styles.filmInfoText}>
+                            {film.releaseYear}
+                          </Typography>
+                        </Box>
+                      )}
                       <Box sx={styles.filmInfoItem}>
-                        <CalendarTodayIcon sx={styles.filmInfoIcon} />
+                        <PersonIcon sx={styles.filmInfoIcon} />
                         <Typography variant="body2" sx={styles.filmInfoText}>
-                          {film.releaseYear}
+                          {typeof film.ageRating === 'number'
+                            ? `${film.ageRating}+`
+                            : 'N/A'}
                         </Typography>
                       </Box>
-                    )}
+                    </Box>
                   </Box>
                 </Box>
               </CardContent>
@@ -200,9 +211,8 @@ const FilmGrid: React.FC<Props> = ({
             color="primary"
             shape="rounded"
             boundaryCount={1}
-            siblingCount={0}
-            showFirstButton={!isSmallScreen}
-            showLastButton={!isSmallScreen}
+            siblingCount={1}
+            size={isSmallScreen ? 'small' : 'large'}
           />
           {/* <StandardPagination
             count={totalPages}
