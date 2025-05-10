@@ -116,8 +116,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
           display: 'flex',
           flexDirection: 'column',
           gap: 0.5,
-          minWidth: 150,
-          maxWidth: 200,
+          maxWidth: '200px',
+          minWidth: '130px',
         }}>
         <Typography variant="caption" sx={styles.filterLabelText}>
           {labelText}
