@@ -26,7 +26,7 @@ export function buildContentQuery(
   filtersFromState: StateFilters,
   searchTermFromState: string,
   pageIndexFromState: number = 1,
-  pageSizeToUse: number = 10
+  pageSizeToUse: number = 8
 ): string {
   const queryParams = new URLSearchParams();
 

@@ -157,16 +157,27 @@ const SearchForm: React.FC<Props> = ({
         <Box sx={styles.searchFormInputArea}>
           <Autocomplete
             freeSolo
-            autoHighlight
             sx={styles.searchFormAutoComplete}
             options={options}
+            filterOptions={(x) => x}
             getOptionLabel={(option) =>
               typeof option === 'string' ? option : (option as ContentDto).title
             }
+            slotProps={{
+              paper: {
+                sx:
+                  loadingSuggestions ||
+                  (!loadingSuggestions && options.length === 0)
+                    ? styles.searchFormDropdownPaperLoading
+                    : styles.searchFormDropdownPaper,
+              },
+            }}
             inputValue={inputValue}
             onInputChange={handleLocalInputChange}
             onChange={handleOptionSelect}
             loading={loadingSuggestions && inputValue.length >= 2}
+            loadingText={null}
+            noOptionsText={null}
             PaperComponent={(params) => (
               <Paper
                 elevation={3}
@@ -231,9 +242,6 @@ const SearchForm: React.FC<Props> = ({
                 />
               );
             }}
-            filterOptions={(x) => x}
-            noOptionsText="Немає таких фільмів ;("
-            loadingText="Завантаження варіантів ..."
           />
         </Box>
         {error && (
