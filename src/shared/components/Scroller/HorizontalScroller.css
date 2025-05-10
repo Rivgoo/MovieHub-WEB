@@ -2,53 +2,23 @@
   position: relative;
   width: 100%;
   margin: 0 auto;
-  overflow: hidden;
-}
-
-.horizontal-scroller-container::before,
-.horizontal-scroller-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 60px;
-  z-index: 5;
-  pointer-events: none;
-  transition: opacity 0.3s ease-in-out;
-  opacity: 0;
-  display: none; 
-}
-
-.horizontal-scroller-container::before {
-  left: 0;
-  background: linear-gradient(to right, var(--scroller-gradient-start) 20%, transparent 100%);
-}
-
-.horizontal-scroller-container::after {
-  right: 0;
-  background: linear-gradient(to left, var(--scroller-gradient-start) 20%, transparent 100%);
-}
-
-.horizontal-scroller-container.can-scroll-left::before {
-  opacity: 1;
-}
-.horizontal-scroller-container.can-scroll-right::after {
-  opacity: 1;
 }
 
 .horizontal-scroller-content {
   display: flex;
   overflow-x: scroll;
   overflow-y: hidden;
-  overflow-anchor: none;
-  white-space: nowrap;
-  padding: 10px 0;
+  white-space: nowrap; 
+  padding: 10px 0; 
   gap: 16px;
+
   &::-webkit-scrollbar {
     display: none;
   }
+
   scrollbar-width: none;
   -ms-overflow-style: none;
+
   scroll-behavior: smooth;
   cursor: grab;
   user-select: none;
@@ -79,44 +49,32 @@
   align-items: center !important;
   justify-content: center !important;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  opacity: 0;
   transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
-.scroll-button .MuiSvgIcon-root {
-    font-size: 1.1rem !important;
-}
-
-.horizontal-scroller-container:hover .scroll-button:not(.Mui-disabled) {
-  opacity: 1;
-}
-
-.scroll-button:hover:not(.Mui-disabled) {
-  background-color: var(--scroller-button-bg-hover) !important;
+.scroll-button:hover {
+  background-color: rgba(0, 0, 0, 0.8) !important;
 }
 
 .scroll-button.left {
-  left: 8px;
+  left: 12px;
 }
 
 .scroll-button.right {
-  right: 8px;
+  right: 12px;
 }
 
 .scroll-button.Mui-disabled {
-  opacity: 0.2 !important;
-  cursor: default !important;
+  opacity: 0 !important;
+  background-color: var(--scroller-button-bg-hover) !important;
   pointer-events: none;
+  transition: all 0.5s ease-in-out;
 }
 
 @media (min-width: 600px) { 
-  .horizontal-scroller-container::before,
-  .horizontal-scroller-container::after {
-    display: block; 
-  }
   .scroll-button {
-    width: 36px !important;
-    height: 36px !important;
+    width: 24px !important;
+    height: 24px !important;
    
   }
   .scroll-button .MuiSvgIcon-root {
@@ -127,10 +85,6 @@
   }
   .scroll-button.right {
     right: 12px;
-  }
-   .horizontal-scroller-container::before,
-   .horizontal-scroller-container::after {
-    width: 70px;
   }
 }
 
