@@ -1,65 +1,106 @@
 .horizontal-scroller-container {
-    position: relative;
-    width: 100%;
-    margin: 0 auto;
-  }
-  
-  .horizontal-scroller-content {
-    display: flex;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    white-space: nowrap; 
-    padding: 10px 0; 
-    gap: 16px;
-  
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
 
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  
-    scroll-behavior: smooth;
-    cursor: grab;
-    user-select: none;
+.horizontal-scroller-content {
+  display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap; 
+  padding: 10px 0; 
+  gap: 16px;
+
+  &::-webkit-scrollbar {
+    display: none;
   }
-  
-  .horizontal-scroller-content.dragging {
-    cursor: grabbing;
-    scroll-behavior: auto;
-  }
-  
- .horizontal-scroller-content > * {
-    flex-shrink: 0;
-  }
-  
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  scroll-behavior: smooth;
+  cursor: grab;
+  user-select: none;
+}
+
+.horizontal-scroller-content.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.horizontal-scroller-content > * {
+  flex-shrink: 0;
+}
+
+.scroll-button {
+  position: absolute !important;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--scroller-button-bg) !important;
+  color: var(--scroller-button-color) !important;
+  z-index: 10;
+  border-radius: 50% !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: auto !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.scroll-button:hover {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.scroll-button.left {
+  left: 12px;
+}
+
+.scroll-button.right {
+  right: 12px;
+}
+
+.scroll-button.Mui-disabled {
+  opacity: 0 !important;
+  background-color: var(--scroller-button-bg-hover) !important;
+  pointer-events: none;
+  transition: all 0.5s ease-in-out;
+}
+
+@media (min-width: 600px) { 
   .scroll-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(30, 30, 30, 0.6) !important; 
-    color: white !important;
-    z-index: 10;
-    border-radius: 50% !important;
-    width: 36px !important;
-    height: 36px !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    width: 24px !important;
+    height: 24px !important;
+   
   }
-  
-  .scroll-button:hover {
-    background-color: rgba(0, 0, 0, 0.8) !important;
+  .scroll-button .MuiSvgIcon-root {
+      font-size: 1.15rem !important;
   }
-  
   .scroll-button.left {
     left: 12px;
   }
-  
   .scroll-button.right {
     right: 12px;
   }
-  
-  .scroll-button.Mui-disabled {
-    opacity: 0 !important;
-    pointer-events: none;
+}
+
+@media (min-width: 960px) { 
+  .scroll-button {
+    width: 40px !important;
+    height: 40px !important;
+    
   }
+   .scroll-button .MuiSvgIcon-root {
+      font-size: 1.6rem !important;
+  }
+  .scroll-button.left {
+    left: 16px;
+  }
+  .scroll-button.right {
+    right: 16px;
+  }
+}

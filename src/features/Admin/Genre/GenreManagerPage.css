@@ -84,43 +84,6 @@ body {
     flex-grow: 1;
 }
   
-.genre-item .actions {
-    display: flex;
-    background-color: var( --admin-dark);
-    padding: 0;
-    border-radius: 10px;
-}
-  
-.genre-item .actions .edit-btn,
-.genre-item .actions .delete-btn {
-    background-color: var( --admin-dark);
-    background-repeat: no-repeat;
-    background-size: cover;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-}
-  
-.genre-item .actions .edit-btn {
-    background-image: url(/src/assets/svg/icons/edit.svg);
-}
-  
-.genre-item .actions .delete-btn {
-    background-image: url(/src/assets/svg/icons/delete.svg);
-}
-  
-.genre-item .actions .btn-wrapper {
-    width: 100%;
-    height: 100%;
-    padding: 10px 15px;
-}
-  
-.genre-item .actions .btn-wrapper:first-of-type {
-    border-right: 1px solid var(--admin-actions-btn-divider-color);
-}
-  
 .genre-item input {
     width: 30%;
     padding: 8px 18px;
@@ -145,10 +108,6 @@ body {
     .genre-item input {
       font-size: 1.1875em;
       padding: 18px 18px 18px 35px;
-    }
-  
-    .genre-item .actions .btn-wrapper {
-      padding: 12px 22px;
     }
 }
 

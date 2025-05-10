@@ -3,6 +3,8 @@ import './GenreManagerPage.css';
 import AdminLayout from '../AdminLayout';
 import { GenreDto } from '../../../core/api/types/types.genre';
 import ConfirmModal from '../../ConfirmModal/ConfirmModal';
+import AdminActions from '../AdminActions/AdminActions';
+
 import {
   getAllGenres,
   createGenre,
@@ -143,20 +145,10 @@ const GenreManagerPage: React.FC = () => {
               ) : (
                 <span>{genre.name}</span>
               )}
-              <div className="actions">
-                <div className="btn-wrapper">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEditGenre(index)}
-                  ></button>
-                </div>
-                <div className="btn-wrapper">
-                  <button
-                    className="delete-btn"
-                    onClick={() => confirmDeleteGenre(index)}
-                  ></button>
-                </div>
-              </div>
+              <AdminActions
+                onEdit={() => handleEditGenre(index)}
+                onDelete={() => confirmDeleteGenre(index)}
+                />
             </div>
           ))}
         </div>
