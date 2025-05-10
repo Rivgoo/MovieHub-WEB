@@ -26,14 +26,25 @@ const getFilterBarStyles = (theme: Theme) => ({
 
   filterLabelText: {
     whiteSpace: 'nowrap',
+    fontSize: '0.85rem',
+    fontWeight: 500,
+    pl: theme.spacing(1),
   },
   filterBarSelector: {
     width: '100%',
     maxWidth: '200px',
+    borderRadius: '0.5rem',
     border: `1px solid ${theme.palette.primary.dark}`,
     color: theme.palette.text.primary,
+    '&:hover': {
+      borderColor: theme.palette.primary.main,
+      color: theme.palette.primary.dark
+    },
     '& .MuiSelect-icon': {
       color: theme.palette.primary.main,
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      border: 'none'
     },
   },
   filterBarSelectorItem: {
