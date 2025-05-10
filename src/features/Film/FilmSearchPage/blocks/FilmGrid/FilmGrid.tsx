@@ -164,7 +164,7 @@ const FilmGrid: React.FC<Props> = ({
                         <Box sx={styles.filmInfoItem}>
                           <AccessTimeIcon sx={styles.filmInfoIcon} />
                           <Typography variant="body2" sx={styles.filmInfoText}>
-                            {film.durationMinutes}хв
+                            {film.durationMinutes} хв
                           </Typography>
                         </Box>
                       )}
