@@ -1,65 +1,152 @@
 .horizontal-scroller-container {
-    position: relative;
-    width: 100%;
-    margin: 0 auto;
-  }
-  
-  .horizontal-scroller-content {
-    display: flex;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    white-space: nowrap; 
-    padding: 10px 0; 
-    gap: 16px;
-  
-    &::-webkit-scrollbar {
-      display: none;
-    }
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
 
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  
-    scroll-behavior: smooth;
-    cursor: grab;
-    user-select: none;
+.horizontal-scroller-container::before,
+.horizontal-scroller-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 5;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+  display: none; 
+}
+
+.horizontal-scroller-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--scroller-gradient-start) 20%, transparent 100%);
+}
+
+.horizontal-scroller-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--scroller-gradient-start) 20%, transparent 100%);
+}
+
+.horizontal-scroller-container.can-scroll-left::before {
+  opacity: 1;
+}
+.horizontal-scroller-container.can-scroll-right::after {
+  opacity: 1;
+}
+
+.horizontal-scroller-content {
+  display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  overflow-anchor: none;
+  white-space: nowrap;
+  padding: 10px 0;
+  gap: 16px;
+  &::-webkit-scrollbar {
+    display: none;
   }
-  
-  .horizontal-scroller-content.dragging {
-    cursor: grabbing;
-    scroll-behavior: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
+  cursor: grab;
+  user-select: none;
+}
+
+.horizontal-scroller-content.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+}
+
+.horizontal-scroller-content > * {
+  flex-shrink: 0;
+}
+
+.scroll-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--scroller-button-bg) !important;
+  color: var(--scroller-button-color) !important;
+  z-index: 10;
+  border-radius: 50% !important;
+  width: 30px !important;
+  height: 30px !important;
+  min-width: auto !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.scroll-button .MuiSvgIcon-root {
+    font-size: 1.1rem !important;
+}
+
+.horizontal-scroller-container:hover .scroll-button:not(.Mui-disabled) {
+  opacity: 1;
+}
+
+.scroll-button:hover:not(.Mui-disabled) {
+  background-color: var(--scroller-button-bg-hover) !important;
+}
+
+.scroll-button.left {
+  left: 8px;
+}
+
+.scroll-button.right {
+  right: 8px;
+}
+
+.scroll-button.Mui-disabled {
+  opacity: 0.2 !important;
+  cursor: default !important;
+  pointer-events: none;
+}
+
+@media (min-width: 600px) { 
+  .horizontal-scroller-container::before,
+  .horizontal-scroller-container::after {
+    display: block; 
   }
-  
- .horizontal-scroller-content > * {
-    flex-shrink: 0;
-  }
-  
   .scroll-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(30, 30, 30, 0.6) !important; 
-    color: white !important;
-    z-index: 10;
-    border-radius: 50% !important;
     width: 36px !important;
     height: 36px !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+   
   }
-  
-  .scroll-button:hover {
-    background-color: rgba(0, 0, 0, 0.8) !important;
+  .scroll-button .MuiSvgIcon-root {
+      font-size: 1.4rem !important;
   }
-  
   .scroll-button.left {
     left: 12px;
   }
-  
   .scroll-button.right {
     right: 12px;
   }
-  
-  .scroll-button.Mui-disabled {
-    opacity: 0 !important;
-    pointer-events: none;
+   .horizontal-scroller-container::before,
+   .horizontal-scroller-container::after {
+    width: 70px;
   }
+}
+
+@media (min-width: 960px) { 
+  .scroll-button {
+    width: 40px !important;
+    height: 40px !important;
+    
+  }
+   .scroll-button .MuiSvgIcon-root {
+      font-size: 1.6rem !important;
+  }
+  .scroll-button.left {
+    left: 16px;
+  }
+  .scroll-button.right {
+    right: 16px;
+  }
+}
