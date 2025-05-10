@@ -1,41 +1,46 @@
 import { Box, Typography } from '@mui/material';
 import './Topbar.css';
 import { useState, useEffect } from 'react';
-import { getMyUserInfo, UserInfoResponse } from '../../../core/api/userApi';
+
+import {
+  getMyUserInfo,
+  UserInfoResponse,
+  getUserInfoFromSession
+} from '../../../core/api/userApi';
 
 const Topbar = () => {
-  const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(() => getUserInfoFromSession());
+  const [loading, setLoading] = useState<boolean>(!userInfo);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      setLoading(true);
       setError(null);
-
       try {
         const data = await getMyUserInfo();
-        setUserInfo(data);
+        setUserInfo(data); 
       } catch (err) {
+        console.error("Topbar useEffect: Failed to load user info.", err);
         setError('Failed to load user info.');
-      } finally {
-        setLoading(false);
+        } finally {
+        setLoading(false); 
       }
     };
 
-    fetchUserInfo();
+    if (!userInfo)
+      fetchUserInfo();
   }, []);
 
   const renderProfileContent = () => {
-    if (loading) {
+    if (loading && !userInfo) {
       return (
         <>
-          <Typography className="profileName">&nbsp;</Typography>
-          <Typography className="profileRole">&nbsp;</Typography>
+          <Typography className="profileName"> </Typography>
+          <Typography className="profileRole"> </Typography>
         </>
       );
     }
-    if (error) {
+    if (error && !userInfo) {
       return (
         <Typography className="profileName" color="error">
           {error}
@@ -53,7 +58,6 @@ const Topbar = () => {
         </>
       );
     }
-
     return (
       <Typography className="profileName">User Info Unavailable</Typography>
     );
