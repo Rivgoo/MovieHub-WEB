@@ -13,7 +13,7 @@ export default (theme: Theme) => ({
   },
   toolbar: {
     width: '100%',
-    maxWidth: { lg: 'lg', md: 'md', sm: 'sm' },
+    maxWidth: { lg: 'lg', md: 'md'},
     margin: 'auto',
     justifyContent: 'space-between',
     alignItems: 'center',
