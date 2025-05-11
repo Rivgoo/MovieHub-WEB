@@ -14,6 +14,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useNavigate } from 'react-router-dom';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { searchContent, removeFromFavorites } from '../../core/api/requests/request.content';
 import { ContentDto } from '../../core/api/types/types.content';
@@ -35,7 +36,7 @@ const formatDuration = (totalMinutes: number | undefined): string => {
   return durationString.trim();
 };
 
-const PAGE_SIZE = 8; // Кількість елементів на сторінці
+const PAGE_SIZE = 8;
 
 const FavoritePage: React.FC = () => {
   const [allFavoriteMovies, setAllFavoriteMovies] = useState<ContentDto[]>([]);
@@ -59,12 +60,9 @@ const FavoritePage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Припускаємо, що PageSize=1000 (або інше велике число) достатньо
-      // для завантаження всіх обраних фільмів користувача за один раз.
-      // Якщо ні, тут потрібна складніша логіка для обходу всіх сторінок API.
-      const queryParams = `IsFavorited=true&PageIndex=0&PageSize=1000`;
+      const queryParams = `IsFavorited=true&PageIndex=0&PageSize=1000`; 
       const response = await searchContent(queryParams);
-      setAllFavoriteMovies(response.items || []); // Гарантуємо, що це масив
+      setAllFavoriteMovies(response.items || []);
     } catch (err) {
       console.error("Error fetching all favorite movies:", err);
       setError("Не вдалося завантажити список вподобаних фільмів. Спробуйте пізніше.");
@@ -117,24 +115,26 @@ const FavoritePage: React.FC = () => {
     setIsRemoving(movie.id);
     try {
       await removeFromFavorites(movie.id);
-      
-      // Оновлюємо allFavoriteMovies, інші стани перерахуються через useMemo
+    
       const updatedAllFavorites = allFavoriteMovies.filter(m => m.id !== movie.id);
       setAllFavoriteMovies(updatedAllFavorites);
       
-      // Логіка для переходу на попередню сторінку, якщо поточна стала порожньою
-      const newTotalPages = Math.ceil(updatedAllFavorites.length / PAGE_SIZE);
+      const currentlyFilteredAfterRemoval = updatedAllFavorites.filter(m => m.title.toLowerCase().includes(searchTerm.toLowerCase().trim()));
+      const newTotalPages = Math.ceil(currentlyFilteredAfterRemoval.length / PAGE_SIZE);
+
       if (currentPage > newTotalPages && newTotalPages > 0) {
         setCurrentPage(newTotalPages);
-      } else if (currentPage > 1 && paginatedAndFilteredMovies.length === 1 && updatedAllFavorites.length % PAGE_SIZE === 0) {
-        // Якщо видалили останній елемент на не першій сторінці, і це призвело до зменшення кількості сторінок
-         setCurrentPage(prev => prev - 1);
+      } else if ((currentPage -1) * PAGE_SIZE >= currentlyFilteredAfterRemoval.length && currentPage > 1) {
+         setCurrentPage(prev => prev -1);
+      } else if (newTotalPages === 0 && currentPage > 1) {
+        setCurrentPage(1);
       }
 
-
-    } catch (err) {
+    } catch (err)
+     {
       console.error(`Error removing movie "${movie.title}" from favorites:`, err);
       setError(`Не вдалося видалити фільм "${movie.title}" з обраних.`);
+      setTimeout(() => setError(null), 5000);
     } finally {
       setIsRemoving(null);
     }
@@ -146,6 +146,8 @@ const FavoritePage: React.FC = () => {
   const cardWidthMd = `calc(25% - (${spacingValue} * (3/4)))`;
   const cardWidthLg = `calc(25% - (${spacingValue} * (3/4)))`;
 
+  const iconDetailSx = { color: theme.palette.primary.main, mr: 0.5, fontSize: '1rem' };
+
   return (
     <Paper
       elevation={3}
@@ -154,7 +156,7 @@ const FavoritePage: React.FC = () => {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        minHeight: '400px', // Для випадків, коли контенту мало
+        minHeight: '400px',
       }}
     >
       <Typography
@@ -277,7 +279,7 @@ const FavoritePage: React.FC = () => {
                         sx={{
                             fontWeight: '500',
                             lineHeight: 1.3,
-                            minHeight: '2.6em', // Приблизно 2 рядки
+                            minHeight: '2.6em', 
                             maxHeight: '2.6em',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
@@ -288,31 +290,42 @@ const FavoritePage: React.FC = () => {
                       >
                         {movie.title}
                       </Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 'auto', pt: 1 }}>
+                      
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 'auto', pt: 1 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <CalendarTodayIcon sx={{ color: theme.palette.primary.main, mr: 0.5, fontSize: '1rem' }} />
-                            <Typography variant="body2" color="text.primary" sx={{ lineHeight: 1.2 }}>
-                              {movie.releaseYear}
-                            </Typography>
-                          </Box>
-                          {movie.durationMinutes && movie.durationMinutes > 0 && (
+                           {movie.durationMinutes && movie.durationMinutes > 0 && (
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <AccessTimeIcon sx={{ color: theme.palette.primary.main, mr: 0.5, fontSize: '1rem' }} />
+                              <AccessTimeIcon sx={iconDetailSx} />
                               <Typography variant="caption" color="text.primary" sx={{ lineHeight: 1.2 }}>
                                 {formatDuration(movie.durationMinutes)}
                               </Typography>
                             </Box>
                           )}
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <CalendarTodayIcon sx={iconDetailSx} />
+                            <Typography variant="body2" color="text.primary" sx={{ lineHeight: 1.2 }}>
+                              {movie.releaseYear}
+                            </Typography>
+                          </Box>
                         </Box>
-                        {movie.rating != null && (
-                            <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
-                                <StarIcon sx={{ color: 'warning.main', mr: 0.25, fontSize: '1rem' }} />
-                                <Typography variant="body2" color="text.primary" sx={{fontWeight: 'medium', fontSize: '0.8rem'}}>
-                                    {(Number(movie.rating) > 10 ? Number(movie.rating) / 10 : Number(movie.rating)).toFixed(1)}
-                                </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0.5 }}>
+                           {movie.rating != null && (
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <StarIcon sx={{ color: 'warning.main', mr: 0.25, fontSize: '1rem' }} />
+                                    <Typography variant="body2" color="text.primary" sx={{fontWeight: 'medium', fontSize: '0.8rem'}}>
+                                        {(Number(movie.rating) > 10 ? Number(movie.rating) / 10 : Number(movie.rating)).toFixed(1)}
+                                    </Typography>
+                                </Box>
+                            )}
+                          {movie.ageRating != null && movie.ageRating >= 0 && (
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <PersonIcon sx={iconDetailSx} />
+                              <Typography variant="caption" color="text.primary" sx={{ lineHeight: 1.2 }}>
+                                {movie.ageRating === 0 ? "Для всіх" : `${movie.ageRating}+`}
+                              </Typography>
                             </Box>
-                        )}
+                          )}
+                        </Box>
                       </Box>
                     </CardContent>
                   </Box>
@@ -342,7 +355,7 @@ const FavoritePage: React.FC = () => {
               </Box>
             ))}
           </Box>
-          {totalPages > 0 && (
+          {totalPages > 1 && ( 
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb:1 }}>
               <StandardPagination
                 count={totalPages}
