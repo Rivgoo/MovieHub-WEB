@@ -86,6 +86,9 @@ export default (theme: Theme) => ({
     '&:hover': {
       bgcolor: theme.palette.primary.dark,
     },
+    '& .MuiButton-startIcon': {
+      marginRight: theme.spacing(0.5),
+    },
   },
 
   menuButton: {
