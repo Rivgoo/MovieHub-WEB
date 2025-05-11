@@ -35,7 +35,7 @@ import { CinemaHallDto } from '../../core/api/types/types.cinemahall';
 import { useAuth } from '../../core/auth/useAuth';
 import { useTheme, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import StandardPagination from '../../shared/components/Pagination/StandardPagination';
 
 interface EnrichedBooking {
@@ -77,16 +77,22 @@ function isMuiChipStandardColor(value: string): value is MuiChipStandardColor {
 const PAGE_SIZE = 5;
 
 const BookingPage: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const theme = useTheme();
+
   const [allBookings, setAllBookings] = useState<EnrichedBooking[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isCancelling, setIsCancelling] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<BookingStatus | 'all'>('all');
-  const { user } = useAuth();
-  const theme = useTheme();
-  const navigate = useNavigate();
+  
+  const initialUrlParams = new URLSearchParams(location.search);
+  const initialPage = parseInt(initialUrlParams.get('page') || '1', 10);
+  const initialStatus = (initialUrlParams.get('status') as BookingStatus | 'all') || 'all';
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(initialPage);
+  const [statusFilter, setStatusFilter] = useState<BookingStatus | 'all'>(initialStatus);
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const fetchBookingDetails = useCallback(async (booking: BookingDto): Promise<EnrichedBooking> => {
@@ -121,7 +127,7 @@ const BookingPage: React.FC = () => {
     setError(null);
 
     try {
-      let queryParams = `PageIndex=${page}&PageSize=${PAGE_SIZE}`;
+      let queryParams = `PageIndex=${page}&PageSize=${PAGE_SIZE}`; 
       if (filter !== 'all') {
         queryParams += `&Status=${filter}`;
       }
@@ -136,6 +142,10 @@ const BookingPage: React.FC = () => {
       } else {
         setAllBookings([]);
         setTotalPages(0);
+
+        if (page > 1 && response.totalPages > 0 && page > response.totalPages) {
+            setCurrentPage(response.totalPages);
+        }
       }
 
     } catch (err) {
@@ -150,7 +160,22 @@ const BookingPage: React.FC = () => {
 
   useEffect(() => {
     fetchUserBookingsAndDetails(currentPage, statusFilter);
-  }, [user, fetchUserBookingsAndDetails, currentPage, statusFilter]);
+  }, [fetchUserBookingsAndDetails, currentPage, statusFilter]);
+  
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (currentPage > 1) {
+      params.set('page', currentPage.toString());
+    }
+    if (statusFilter !== 'all') {
+      params.set('status', statusFilter);
+    }
+    const searchString = params.toString();
+    if (location.search.substring(1) !== searchString) {
+        navigate(`${location.pathname}${searchString ? `?${searchString}` : ''}`, { replace: true });
+    }
+  }, [currentPage, statusFilter, navigate, location.pathname, location.search]);
+
 
   const handleStatusFilterChange = (event: SelectChangeEvent<BookingStatus | 'all'>) => {
     setStatusFilter(event.target.value as BookingStatus | 'all');
