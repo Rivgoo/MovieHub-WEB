@@ -13,7 +13,7 @@ export default (theme: Theme) => ({
   },
   toolbar: {
     width: '100%',
-    maxWidth: { lg: 'lg', md: 'md', sm: 'sm' },
+    maxWidth: { lg: 'lg', md: 'md'},
     margin: 'auto',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -85,6 +85,9 @@ export default (theme: Theme) => ({
     padding: '0.5rem 1.25rem',
     '&:hover': {
       bgcolor: theme.palette.primary.dark,
+    },
+    '& .MuiButton-startIcon': {
+      marginRight: theme.spacing(0.5),
     },
   },
 
