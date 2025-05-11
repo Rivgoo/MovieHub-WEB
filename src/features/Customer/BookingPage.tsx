@@ -11,7 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
-import Chip from '@mui/material/Chip';
+import Chip, { ChipProps } from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
 
@@ -33,7 +33,8 @@ import { ContentDto } from '../../core/api/types/types.content';
 import { getCinemaHallById } from '../../core/api/requests/request.cinemahall';
 import { CinemaHallDto } from '../../core/api/types/types.cinemahall';
 import { useAuth } from '../../core/auth/useAuth';
-import { useTheme } from '@mui/material/styles';
+import { useTheme, Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import StandardPagination from '../../shared/components/Pagination/StandardPagination';
 
@@ -51,10 +52,10 @@ const bookingStatusTranslations: Record<BookingStatus, string> = {
   Canceled: 'Скасовано',
 };
 
-const bookingStatusColors: Record<BookingStatus, "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning"> = {
-    Pending: 'warning',
-    Confirmed: 'success',
-    Canceled: 'error',
+const bookingStatusColors: Record<BookingStatus, string> = {
+    Pending: '#ae570f',
+    Confirmed: '#4b6436',
+    Canceled: '#60211d',
 };
 
 const bookingStatusIcons: Record<BookingStatus, React.ReactElement> = {
@@ -63,6 +64,15 @@ const bookingStatusIcons: Record<BookingStatus, React.ReactElement> = {
     Canceled: <CancelOutlinedIcon fontSize="small" />,
 };
 
+type MuiChipStandardColor = Exclude<ChipProps['color'], undefined>;
+
+
+function isMuiChipStandardColor(value: string): value is MuiChipStandardColor {
+    const muiStandardColors: MuiChipStandardColor[] = [
+        "default", "primary", "secondary", "error", "info", "success", "warning"
+    ];
+    return muiStandardColors.includes(value as MuiChipStandardColor);
+}
 
 const PAGE_SIZE = 5;
 
@@ -111,7 +121,7 @@ const BookingPage: React.FC = () => {
     setError(null);
 
     try {
-      let queryParams = `PageIndex=${page - 1}&PageSize=${PAGE_SIZE}`;
+      let queryParams = `PageIndex=${page}&PageSize=${PAGE_SIZE}`;
       if (filter !== 'all') {
         queryParams += `&Status=${filter}`;
       }
@@ -212,6 +222,35 @@ const BookingPage: React.FC = () => {
 
   const iconStyle = { mr: 0.75, color: 'text.primary', fontSize: '1.1rem', verticalAlign: 'middle' };
 
+  const getChipStyling = (status: BookingStatus): { color: ChipProps['color'], sx: SxProps<Theme> } => {
+    const colorString = bookingStatusColors[status];
+    const baseSx: SxProps<Theme> = {
+        p: '1rem', 
+        fontWeight: 'medium',
+        width: '100%',
+    };
+
+    if (isMuiChipStandardColor(colorString)) {
+        return {
+            color: colorString,
+            sx: baseSx,
+        };
+    } else {
+        return {
+            color: 'default',
+            sx: {
+                ...baseSx,
+                backgroundColor: colorString,
+                color: theme.palette.text.primary,
+                '& .MuiChip-icon': {
+                    color: theme.palette.text.primary,
+                },
+            },
+        };
+    }
+  };
+
+
   return (
     <Paper
       elevation={3}
@@ -287,6 +326,8 @@ const BookingPage: React.FC = () => {
               const showCancelButton = 
                 (booking.status === 'Confirmed' || booking.status === 'Pending') &&
                 canCancelBooking(session?.startTime);
+              
+              const chipStyling = getChipStyling(booking.status);
 
               return (
               <React.Fragment key={booking.id}>
@@ -300,10 +341,11 @@ const BookingPage: React.FC = () => {
                     boxShadow: 1,
                     textDecoration: 'none',
                     flexDirection: {xs: 'column', sm: 'row'},
-                    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+                    transition: 'all 0.15s ease-in-out',
+                    outline: `1px solid transparent`,
                     '&:hover': {
-                      transform: 'scale(1.01)',
-                      boxShadow: `0px 0px 10px ${theme.palette.primary.main}30`,
+                      outline: `1px solid ${theme.palette.primary.main}`,
+                      boxShadow: 3,
                     },
                   }}
                 >
@@ -324,6 +366,7 @@ const BookingPage: React.FC = () => {
                               border: 'none',
                               cursor: 'pointer',
                               textDecoration: 'none',
+                              transition: 'color 0.15s ease-in-out',
                               '&:hover': {
                                 color: theme.palette.primary.light,
                               },
@@ -391,9 +434,9 @@ const BookingPage: React.FC = () => {
                     <Chip
                       icon={bookingStatusIcons[booking.status]}
                       label={bookingStatusTranslations[booking.status] || booking.status}
-                      color={bookingStatusColors[booking.status] || 'default'}
+                      color={chipStyling.color}
                       size="small"
-                      sx={{ fontWeight: 'medium', mb: showCancelButton ? 1 : 0, width: '100%' }}
+                      sx={{...chipStyling.sx, mb: showCancelButton ? 1 : 0 }}
                     />
                        {showCancelButton && (
                       <Button
