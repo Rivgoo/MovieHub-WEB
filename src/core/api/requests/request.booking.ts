@@ -70,3 +70,8 @@ export const createBooking = async (
 export const deleteBooking = async (id: number): Promise<void> => {
   await apiClient.delete(`/bookings/${id}`);
 };
+
+// PUT /api/v1/bookings/{id}/cancel
+export const cancelBooking = async (bookingId: number): Promise<void> => {
+  await apiClient.put(`/bookings/${bookingId}/cancel`);
+};
