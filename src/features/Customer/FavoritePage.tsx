@@ -11,7 +11,6 @@ import Alert from '@mui/material/Alert';
 import StarIcon from '@mui/icons-material/Star';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import Pagination from '@mui/material/Pagination';
 import { useNavigate } from 'react-router-dom';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -20,6 +19,7 @@ import { searchContent, removeFromFavorites } from '../../core/api/requests/requ
 import { ContentDto } from '../../core/api/types/types.content';
 import { useAuth } from '../../core/auth/useAuth';
 import { useTheme } from '@mui/material/styles';
+import StandardPagination from '../../shared/components/Pagination/StandardPagination';
 
 const formatDuration = (totalMinutes: number | undefined): string => {
   if (totalMinutes === undefined || totalMinutes <= 0) return '';
@@ -35,7 +35,7 @@ const formatDuration = (totalMinutes: number | undefined): string => {
   return durationString.trim();
 };
 
-const PAGE_SIZE = 10; // Кількість елементів на сторінці
+const PAGE_SIZE = 8; // Кількість елементів на сторінці
 
 const FavoritePage: React.FC = () => {
   const [allFavoriteMovies, setAllFavoriteMovies] = useState<ContentDto[]>([]);
@@ -344,16 +344,10 @@ const FavoritePage: React.FC = () => {
           </Box>
           {totalPages > 0 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb:1 }}>
-              <Pagination
+              <StandardPagination
                 count={totalPages}
                 page={currentPage}
                 onChange={handlePageChange}
-                color="primary"
-                sx={{
-                    '& .MuiPaginationItem-root': {
-                        color: 'text.primary',
-                    },
-                }}
               />
             </Box>
           )}
