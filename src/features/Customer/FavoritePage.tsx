@@ -97,9 +97,9 @@ const FavoritePage: React.FC = () => {
   }, [filteredMoviesBySearchTerm]);
 
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
-    window.scrollTo(0, 0); // Прокрутка наверх при зміні сторінки
+    window.scrollTo(0, 0);
   };
   
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
