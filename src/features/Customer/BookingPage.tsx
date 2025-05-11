@@ -13,7 +13,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
-import Pagination from '@mui/material/Pagination';
 import Button from '@mui/material/Button';
 
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -36,6 +35,7 @@ import { CinemaHallDto } from '../../core/api/types/types.cinemahall';
 import { useAuth } from '../../core/auth/useAuth';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import StandardPagination from '../../shared/components/Pagination/StandardPagination';
 
 interface EnrichedBooking {
   booking: BookingDto;
@@ -422,16 +422,10 @@ const BookingPage: React.FC = () => {
           </List>
           {totalPages > 1 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 1 }}>
-              <Pagination
+              <StandardPagination
                 count={totalPages}
                 page={currentPage}
                 onChange={handlePageChange}
-                color="primary"
-                sx={{
-                    '& .MuiPaginationItem-root': {
-                        color: 'text.primary',
-                    },
-                }}
               />
             </Box>
           )}
