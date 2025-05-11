@@ -17,6 +17,10 @@ const FilmPage: React.FC = () => {
   const footerRef = useRef<HTMLElement | null>(null);
   const [showFloatingButton, setShowFloatingButton] = useState(true);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   const handleSelectSession = () => {
     console.log('Обрати сеанс для фільму ID:', id);
     if (id) navigate(`/session-search?ContentId=${id}`);
