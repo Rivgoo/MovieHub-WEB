@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -11,7 +11,7 @@ import Alert from '@mui/material/Alert';
 import StarIcon from '@mui/icons-material/Star';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
@@ -39,71 +39,167 @@ const formatDuration = (totalMinutes: number | undefined): string => {
 const PAGE_SIZE = 8;
 
 const FavoritePage: React.FC = () => {
-  const [allFavoriteMovies, setAllFavoriteMovies] = useState<ContentDto[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isRemoving, setIsRemoving] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const theme = useTheme();
+  
+  const isMounted = useRef(false);
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const getInitialStateFromUrl = useCallback(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const pageString = urlParams.get('page');
+    let pageNumber = 1;
+    if (pageString !== null) {
+      const parsedPage = parseInt(pageString, 10);
+      if (!isNaN(parsedPage)) pageNumber = parsedPage;
+    }
+    const search = urlParams.get('search') || '';
+    return { page: Math.max(1, pageNumber), search };
+  }, [location.search]);
 
-  const fetchAllFavoritesOnce = useCallback(async () => {
+  const [favoriteMovies, setFavoriteMovies] = useState<ContentDto[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isRemoving, setIsRemoving] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  
+  const [searchTerm, setSearchTerm] = useState<string>(getInitialStateFromUrl().search);
+  const [searchInput, setSearchInput] = useState<string>(getInitialStateFromUrl().search);
+  const [currentPage, setCurrentPage] = useState<number>(getInitialStateFromUrl().page);
+  const [totalPages, setTotalPages] = useState<number>(0);
+
+  useEffect(() => {
+    const { page: urlPage, search: urlSearch } = getInitialStateFromUrl();
+    if (urlPage !== currentPage) {
+      setCurrentPage(urlPage);
+    }
+    if (urlSearch !== searchTerm) {
+      setSearchTerm(urlSearch);
+      setSearchInput(urlSearch); 
+    }
+  }, [location.search, getInitialStateFromUrl]);
+
+
+  useEffect(() => {
+    if (!isMounted.current) return;
+
+    const params = new URLSearchParams();
+    if (currentPage > 1) {
+      params.set('page', currentPage.toString());
+    }
+    if (searchTerm.trim()) {
+      params.set('search', searchTerm.trim());
+    }
+    const newSearchString = params.toString();
+    const currentUrlParams = new URLSearchParams(location.search).toString();
+
+    if (newSearchString !== currentUrlParams) {
+      navigate(`${location.pathname}${newSearchString ? `?${newSearchString}` : ''}`, { replace: true });
+    }
+  }, [currentPage, searchTerm, navigate, location.pathname, location.search]);
+
+
+  const fetchFavoriteMovies = useCallback(async (pageToFetch: number, currentSearchTerm: string) => {
     if (!user) {
       setError("Будь ласка, увійдіть, щоб переглянути вподобані фільми.");
+      setFavoriteMovies([]);
+      setTotalPages(0);
       setIsLoading(false);
-      setAllFavoriteMovies([]);
       return;
     }
+    
+    console.log(`Fetching favorites: page=${pageToFetch}, search="${currentSearchTerm}"`);
     setIsLoading(true);
     setError(null);
+
     try {
-      const queryParams = `IsFavorited=true&PageIndex=0&PageSize=1000`; 
-      const response = await searchContent(queryParams);
-      setAllFavoriteMovies(response.items || []);
-    } catch (err) {
-      console.error("Error fetching all favorite movies:", err);
-      setError("Не вдалося завантажити список вподобаних фільмів. Спробуйте пізніше.");
-      setAllFavoriteMovies([]);
+      const params = new URLSearchParams();
+      params.set('IsFavorited', 'true');
+      params.set('PageIndex', (pageToFetch).toString());
+      params.set('PageSize', PAGE_SIZE.toString());
+      if (currentSearchTerm.trim()) {
+        params.set('SearchTerms', currentSearchTerm.trim());
+      }
+      
+      const response = await searchContent(params.toString());
+      
+      setFavoriteMovies(response.items || []);
+      const newTotalPages = response.totalPages || 0;
+      setTotalPages(newTotalPages);
+
+    } catch (err: any) {
+      console.error("Error fetching favorite movies:", err);
+      let errorMessage = "Не вдалося завантажити список вподобаних фільмів. Спробуйте пізніше.";
+      if (err.response && err.response.status === 400 && err.response.data?.errors?.PageIndex) {
+         errorMessage = `Помилка запиту: невірний номер сторінки (${pageToFetch}).`;
+      } else if (err.response && err.response.status === 404 && pageToFetch > 1) {
+        errorMessage = `Сторінка ${pageToFetch} для пошуку "${currentSearchTerm}" не знайдена.`;
+      }
+      setError(errorMessage);
+      setFavoriteMovies([]);
+      setTotalPages(0);
     } finally {
       setIsLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
-    fetchAllFavoritesOnce();
-  }, [user, fetchAllFavoritesOnce]);
-
-  const filteredMoviesBySearchTerm = useMemo(() => {
-    if (!searchTerm.trim()) {
-      return allFavoriteMovies;
+    if (isMounted.current) {
+        if (user) {
+            fetchFavoriteMovies(currentPage, searchTerm);
+        } else {
+            setFavoriteMovies([]);
+            setTotalPages(0);
+            setIsLoading(false);
+            setError("Будь ласка, увійдіть, щоб переглянути вподобані фільми.");
+        }
+    } else {
+        const { page: urlPage, search: urlSearch } = getInitialStateFromUrl();
+        if(currentPage === urlPage && searchTerm === urlSearch) {
+            isMounted.current = true;
+            if (user) fetchFavoriteMovies(currentPage, searchTerm);
+        }
     }
-    return allFavoriteMovies.filter(movie =>
-      movie.title.toLowerCase().includes(searchTerm.toLowerCase().trim())
-    );
-  }, [allFavoriteMovies, searchTerm]);
+  }, [user, currentPage, searchTerm, fetchFavoriteMovies, getInitialStateFromUrl]);
 
-  const paginatedAndFilteredMovies = useMemo(() => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    return filteredMoviesBySearchTerm.slice(startIndex, startIndex + PAGE_SIZE);
-  }, [filteredMoviesBySearchTerm, currentPage]);
 
-  const totalPages = useMemo(() => {
-    return Math.ceil(filteredMoviesBySearchTerm.length / PAGE_SIZE);
-  }, [filteredMoviesBySearchTerm]);
+  useEffect(() => {
+    if (!isLoading && isMounted.current) {
+      if (totalPages > 0 && currentPage > totalPages) {
+        console.log(`Correcting currentPage from ${currentPage} to ${totalPages}.`);
+        setCurrentPage(totalPages);
+      } else if (totalPages === 0 && currentPage !== 1) {
+        console.log(`Correcting currentPage to 1 as totalPages is 0.`);
+        setCurrentPage(1);
+      }
+    }
+  }, [totalPages, currentPage, isLoading]);
 
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
-    setCurrentPage(value);
-    window.scrollTo(0, 0);
+    if (value !== currentPage) {
+        setCurrentPage(value);
+        window.scrollTo(0, 0);
+    }
   };
   
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    setCurrentPage(1);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchInput !== searchTerm) {
+        setCurrentPage(1);
+        setSearchTerm(searchInput);
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchInput, searchTerm]);
+
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(event.target.value);
   };
+
 
   const handleMovieClick = (movieId: number) => {
     navigate(`/film/${movieId}`);
@@ -115,23 +211,8 @@ const FavoritePage: React.FC = () => {
     setIsRemoving(movie.id);
     try {
       await removeFromFavorites(movie.id);
-    
-      const updatedAllFavorites = allFavoriteMovies.filter(m => m.id !== movie.id);
-      setAllFavoriteMovies(updatedAllFavorites);
-      
-      const currentlyFilteredAfterRemoval = updatedAllFavorites.filter(m => m.title.toLowerCase().includes(searchTerm.toLowerCase().trim()));
-      const newTotalPages = Math.ceil(currentlyFilteredAfterRemoval.length / PAGE_SIZE);
-
-      if (currentPage > newTotalPages && newTotalPages > 0) {
-        setCurrentPage(newTotalPages);
-      } else if ((currentPage -1) * PAGE_SIZE >= currentlyFilteredAfterRemoval.length && currentPage > 1) {
-         setCurrentPage(prev => prev -1);
-      } else if (newTotalPages === 0 && currentPage > 1) {
-        setCurrentPage(1);
-      }
-
-    } catch (err)
-     {
+      fetchFavoriteMovies(currentPage, searchTerm); 
+    } catch (err) {
       console.error(`Error removing movie "${movie.title}" from favorites:`, err);
       setError(`Не вдалося видалити фільм "${movie.title}" з обраних.`);
       setTimeout(() => setError(null), 5000);
@@ -139,7 +220,7 @@ const FavoritePage: React.FC = () => {
       setIsRemoving(null);
     }
   };
-
+  
   const spacingValue = theme.spacing(2);
   const cardWidthXs = `calc(50% - (${spacingValue} / 2))`;
   const cardWidthSm = `calc(33.333% - (${spacingValue} * (2/3)))`;
@@ -173,8 +254,8 @@ const FavoritePage: React.FC = () => {
         fullWidth
         variant="outlined"
         placeholder="Пошук за назвою..."
-        value={searchTerm}
-        onChange={handleSearchChange}
+        value={searchInput} 
+        onChange={handleSearchInputChange}
         sx={{
           mb: 2,
           '& .MuiOutlinedInput-root': {
@@ -204,15 +285,15 @@ const FavoritePage: React.FC = () => {
         <Alert severity="error" sx={{ width: '100%', justifyContent: 'center', mt: 1, mb: 1 }}>{error}</Alert>
       )}
 
-      {!isLoading && !error && filteredMoviesBySearchTerm.length === 0 && (
+      {!isLoading && !error && favoriteMovies.length === 0 && (
         <Typography variant="body1" color="text.primary" sx={{ textAlign: 'center', py: 5 }}>
-          {allFavoriteMovies.length > 0 && searchTerm.trim() 
-            ? "За вашим запитом нічого не знайдено." 
+          {searchTerm.trim() 
+            ? "За вашим запитом нічого не знайдено серед вподобаних." 
             : "У вас ще немає вподобаних фільмів."}
         </Typography>
       )}
 
-      {!isLoading && !error && paginatedAndFilteredMovies.length > 0 && (
+      {!isLoading && !error && favoriteMovies.length > 0 && (
         <>
           <Box
             sx={{
@@ -222,7 +303,7 @@ const FavoritePage: React.FC = () => {
               mb: 2,
             }}
           >
-            {paginatedAndFilteredMovies.map((movie) => (
+            {favoriteMovies.map((movie) => (
               <Box
                 key={movie.id}
                 sx={{
