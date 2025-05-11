@@ -2,7 +2,7 @@
 //тип Response — успішну відповідь (наприклад, ContentDto або UploadPosterResponse).
 
 // Templates
-export type BookingStatus = 'Pending' | 'Confirmed' | 'Cancelled';
+export type BookingStatus = 'Pending' | 'Confirmed' | 'Canceled';
 
 export interface BookingDto {
   id: number;
