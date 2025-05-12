@@ -3,8 +3,19 @@ import {Box, Typography, Link} from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../assets/svg/Logo';
 
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+
 const Footer: React.FC = () => {
   const navigate = useNavigate();
+
+  const iconStyles = {
+    mr: 0.75,
+    fontSize: '1.1rem',
+    verticalAlign: 'middle',
+    color: "primary.light"
+  };
 
   return (
     <Box
@@ -16,8 +27,6 @@ const Footer: React.FC = () => {
         width: "100%",
       }}
     >
-      {/* Background */}
-
       <Box sx={{
         mx: "auto",
         width: "100%",
@@ -35,25 +44,26 @@ const Footer: React.FC = () => {
             gap: { xs: 3, sm: 2 },
           }}
         >
-          {/* Column 1 */}
           <Box
             sx={{
               textAlign: { xs: "center", sm: "left" },
               order: { xs: 2, sm: 1 },
             }}
           >
-            <Typography variant="body2" sx={{mb: 1}}>
+            <Typography variant="body2" sx={{mb: 1, display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', sm: 'flex-start'} }}>
+              <EmailOutlinedIcon sx={iconStyles} />
               Email: develop@gmail.com
             </Typography>
-            <Typography variant="body2" sx={{mb: 1}}>
+            <Typography variant="body2" sx={{mb: 1, display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', sm: 'flex-start'} }}>
+              <PhoneOutlinedIcon sx={iconStyles} />
               Phone number: +380 99 999 99 99
             </Typography>
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', sm: 'flex-start'} }}>
+              <LocationOnOutlinedIcon sx={iconStyles} />
               Address: Ukraine, Kyiv, 123456
             </Typography>
           </Box>
 
-          {/* Logo */}
           <Typography
             variant="h5"
             component="div"
@@ -72,7 +82,6 @@ const Footer: React.FC = () => {
             MovieHub
           </Typography>
 
-          {/* Column 2 */}
           <Box
             sx={{
               order: { xs: 3, sm: 3 },
@@ -134,7 +143,6 @@ const Footer: React.FC = () => {
           </Box>
         </Box>
 
-        {/* Bottom: copyright */}
         <Box
           sx={{
             textAlign: "center",
