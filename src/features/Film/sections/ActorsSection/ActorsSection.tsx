@@ -1,15 +1,14 @@
-// src/features/Film/sections/ActorsSection/ActorsSection.tsx
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Container from '@mui/material/Container';
-import HorizontalScroller from '../../../../shared/components/Scroller/HorizontalScroller'; // Перевірте шлях!
+import HorizontalScroller from '../../../../shared/components/Scroller/HorizontalScroller';
 import styles from './ActorsSection.module.css';
-import { ProcessedActor } from '../../../../core/api/types/types.film'; // Правильний шлях до типів
+import { ProcessedActor } from '../../../../core/api/types/types.film';
 
 interface ActorsSectionProps {
-  actors: ProcessedActor[] | null; // Приймаємо масив акторів
+  actors: ProcessedActor[] | null;
 }
 
 const ActorsSection: React.FC<ActorsSectionProps> = ({ actors }) => {
@@ -34,12 +33,12 @@ const ActorsSection: React.FC<ActorsSectionProps> = ({ actors }) => {
             <Typography variant="h4" className={styles.actorsSection_title}>
                 Актори та знімальна група
             </Typography>
-            <HorizontalScroller scrollAmount={300} >
+            <HorizontalScroller sx={{ '& .horizontal-scroller-content': { justifyContent: 'center' }}} scrollAmount={300} >
                 {actors.map((actor) => (
                     <Box key={actor.id} className={styles.actorsSection_card}>
                         <Avatar
                             className={styles.actorsSection_avatar}
-                            src={actor.imageUrl || undefined} // Використовуємо imageUrl
+                            src={actor.imageUrl || undefined}
                             alt={actor.name}
                         >
                             {!actor.imageUrl && actor.name ? actor.name.charAt(0).toUpperCase() : null}
