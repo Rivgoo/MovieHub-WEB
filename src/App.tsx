@@ -22,13 +22,15 @@ const FilmPage = React.lazy(() => import('./features/Film/FilmPage'));
 const FilmSearchPage = React.lazy(
   () => import('./features/Film/FilmSearchPage/FilmSearchPage')
 );
-const SessionPage = React.lazy(() => import('./features/Session/SessionPage'));
+// const SessionPage = React.lazy(() => import('./features/Session/SessionPage'));
 const SessionSearchPage = React.lazy(
   () => import('./features/Session/SessionSearchPage')
 );
 
 // Customer Pages and Layout
-const CustomerAccountLayout = React.lazy( () => import('./features/Customer/CustomerAccountLayout'));
+const CustomerAccountLayout = React.lazy(
+  () => import('./features/Customer/CustomerAccountLayout')
+);
 const CustomerAccountPage = React.lazy(
   () => import('./features/Customer/AccountPage')
 );
@@ -94,7 +96,7 @@ function App() {
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/film/:id" element={<FilmPage />} />
               <Route path="/film-search" element={<FilmSearchPage />} />
-              <Route path="/session/:id" element={<SessionPage />} />
+              {/* <Route path="/session/:id" element={<SessionPage />} /> */}
               <Route path="/session-search" element={<SessionSearchPage />} />
 
               {/* User Routes with CustomerAccountLayout */}
