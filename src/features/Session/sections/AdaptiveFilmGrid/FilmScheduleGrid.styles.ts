@@ -1,10 +1,16 @@
 import { Theme } from '@mui/material';
 
-const getSessionSearchDateFilterStyles = (theme: Theme) => ({
+const getFilmScheduleGridStyles = (theme: Theme) => ({
   dateFilterBox: {
-    border: `1px solid ${theme.palette.primary.dark}`,
-    minWidth: '146px',
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1.25),
+    // border: `1px solid ${theme.palette.primary.dark}`,
+    width: '100%',
     minHeight: '200px',
+
+    p: '15px 0px',
   },
   filmCardContainer: {
     display: 'flex',
@@ -19,18 +25,6 @@ const getSessionSearchDateFilterStyles = (theme: Theme) => ({
     flexGrow: 1,
     flexShrink: 1,
     maxWidth: '250px',
-    // flexBasis: `calc(50% - ${theme.spacing(2 / 2)})`,
-    // maxWidth: `calc(50% - ${theme.spacing(2 / 2)})`,
-
-    // [theme.breakpoints.up('md')]: {
-    //   flexBasis: `calc(33.333% - ${theme.spacing((2 * 2) / 3)})`,
-    //   maxWidth: `calc(33.333% - ${theme.spacing((2 * 2) / 3)})`,
-    // },
-
-    // [theme.breakpoints.up('lg')]: {
-    //   flexBasis: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
-    //   maxWidth: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
-    // },
     minWidth: '125px',
   },
   filmPoster: {
@@ -80,15 +74,13 @@ const getSessionSearchDateFilterStyles = (theme: Theme) => ({
     alignItems: 'center',
     paddingTop: theme.spacing(0.5),
   },
-  filmInfoContainerRows: {
-    display: 'flex',
-    flexDirection: {
-      xs: 'column',
-      md: 'row',
-    },
-    gap: theme.spacing(1.25),
+  filmPriceText: {
+    fontSize: '0.75rem',
+    color: theme.palette.text.primary,
+    opacity: 0.85,
+    whiteSpace: 'nowrap',
   },
-  filmInfoItem: {
+  sessionPriceInfo: {
     display: 'flex',
     alignItems: 'center',
     gap: {
@@ -97,47 +89,6 @@ const getSessionSearchDateFilterStyles = (theme: Theme) => ({
     },
     color: theme.palette.text.secondary,
   },
-  filmInfoIcon: {
-    fontSize: '0.9rem',
-    color: theme.palette.primary.main,
-  },
-  filmInfoText: {
-    fontSize: '0.75rem',
-    color: theme.palette.text.primary,
-    opacity: 0.85,
-    whiteSpace: 'nowrap',
-  },
-  filmPagesList: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: {
-      xs: 1,
-      sm: 1.5,
-      md: 2,
-    },
-    mt: 4,
-    p: 1,
-    ml: 'auto',
-    mr: 'auto',
-    boxSizing: 'border-box',
-  },
-  filmPageNavigationButton: {
-    height: 'auto',
-    p: 0,
-    minWidth: {
-      xs: '26px',
-      sm: '36px',
-      md: '48px',
-    },
-  },
-  filmPageNavigationButtonActive: {
-    color: theme.palette.secondary.contrastText,
-  },
-  filmPageNavigationButtonDisable: {
-    color: theme.palette.primary.light,
-    opacity: '0.3',
-  },
 });
 
-export default getSessionSearchDateFilterStyles;
+export default getFilmScheduleGridStyles;

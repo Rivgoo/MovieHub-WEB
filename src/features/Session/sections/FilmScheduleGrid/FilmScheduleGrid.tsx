@@ -1,12 +1,13 @@
 import {
   Box,
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
   Typography,
   useTheme,
 } from '@mui/material';
-import getSessionSearchDateFilterStyles from './DateFilter.styles';
+import getFilmScheduleGridStyles from './FilmScheduleGrid.styles';
 import { useState } from 'react';
 type Props = {};
 
@@ -28,9 +29,9 @@ interface FilmSession {
   genreIds: number[];
 }
 
-export default function DateFilter({}: Props) {
+export default function FilmScheduleGrid({}: Props) {
   const theme = useTheme();
-  const styles = getSessionSearchDateFilterStyles(theme);
+  const styles = getFilmScheduleGridStyles(theme);
 
   const [filmData, setFilmData] = useState<FilmSession[]>([
     {
@@ -234,24 +235,48 @@ export default function DateFilter({}: Props) {
   ]);
 
   return (
-    <Box sx={styles.dateFilterBox}>
+    <Box sx={styles.filmCardContainer}>
       {filmData.map((film) => (
         <Card key={film.id} sx={styles.filmCardItem}>
-          <CardMedia
-            component="img"
-            sx={styles.filmPoster}
-            image={film.posterUrl || '/placeholder-poster.jpg'}
-            alt={film.title}
-            onError={(e: any) => {
-              e.target.onerror = null;
-              e.target.src = '/placeholder-poster.jpg';
-            }}
-          />
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              sx={styles.filmPoster}
+              image={film.posterUrl || '/placeholder-poster.jpg'}
+              alt={film.title}
+              onError={(e: any) => {
+                e.target.onerror = null;
+                e.target.src = '/placeholder-poster.jpg';
+              }}
+            />
+          </CardActionArea>
           <CardContent sx={styles.filmCardContent}>
             <Typography variant="h6" component="div" sx={styles.filmTitle}>
               {film.title}
             </Typography>
-            <Box sx={styles.filmInfoContainer}></Box>
+
+            <Box sx={styles.filmInfoContainer}>
+              <Box sx={styles.sessionTimeBox}>
+                {Array.from({ length: 9 }).map((_, idx) => (
+                  <Typography
+                    key={idx}
+                    variant="body2"
+                    component="div"
+                    sx={styles.filmTimeText}>
+                    10:00
+                  </Typography>
+                ))}
+              </Box>
+              <Box sx={styles.sessionPriceBox}>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  sx={styles.sessionPriceText}>
+                  Від
+                  <br /> 120 грн
+                </Typography>
+              </Box>
+            </Box>
           </CardContent>
         </Card>
       ))}
