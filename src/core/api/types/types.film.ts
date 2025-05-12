@@ -15,6 +15,7 @@ export interface ProcessedFilmDetails {
   directorName: string;
   actors: ProcessedActor[];
   trailerUrl: string | null;
+  isFavorited: boolean; 
 }
 
 export interface ProcessedActor {

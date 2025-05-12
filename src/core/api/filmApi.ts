@@ -1,10 +1,8 @@
-
 import { getContentById} from './requests/request.content';
 import { ProcessedFilmDetails, ProcessedActor } from './types/types.film';
 import { getAllGenres } from './genreApi';
 import { GenreDto } from './types/types.genre';
-import { actorApi } from './actorApi'; 
-import { ActorDto } from './types/types.actor'; 
+
 
 const getAgeRatingText = (ageRating: number | undefined): string => {
   if (ageRating === undefined) return "N/A";
@@ -44,6 +42,7 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
       throw new Error("Некоректний ID фільму.");
     }
 
+ 
     const [apiData, allGenres] = await Promise.all([
         getContentById(numericId),
         fetchAndCacheGenres()
@@ -56,22 +55,11 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
 
     let processedActors: ProcessedActor[] = [];
     if (apiData.actorIds && apiData.actorIds.length > 0) {
-      try {
-     
-        const actorPromises = apiData.actorIds.slice(0, 6).map(id => actorApi.getById(id)); 
-        const actorsData: ActorDto[] = await Promise.all(actorPromises);
-
-        processedActors = actorsData.map(actorApiData => ({ 
-          id: String(actorApiData.id),
-          name: `${actorApiData.firstName} ${actorApiData.lastName}`,
-          imageUrl: actorApiData.photoUrl,
-        }));
-      } catch (actorError) {
-        console.error("Помилка під час завантаження даних акторів:", actorError);
-        processedActors = apiData.actorIds.slice(0, 6).map((id: number) => ({
-            id: String(id), name: `Актор ID: ${id}`, imageUrl: null
-        } as ProcessedActor));
-      }
+      processedActors = apiData.actorIds.slice(0, 6).map((id: number) => ({
+          id: String(id),
+          name: `Актор ID: ${id}`,
+          imageUrl: null
+      } as ProcessedActor));
     }
 
     const filmGenreNames = apiData.genreIds
@@ -86,7 +74,11 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
         if (isNaN(calculatedVoteAverage)) calculatedVoteAverage = 0;
     }
 
-    const processedData: ProcessedFilmDetails = {
+  
+    const isInitiallyFavorite = (apiData as any).isFavorited === true || false; 
+
+
+    const processedData: ProcessedFilmDetails = { 
       id: String(apiData.id),
       title: apiData.title,
       overview: apiData.description,
@@ -102,10 +94,12 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
       directorName: apiData.directorFullName,
       actors: processedActors,
       trailerUrl: apiData.trailerUrl,
+      isFavorited: isInitiallyFavorite, 
+     
     };
     return processedData;
   } catch (error: any) {
- 
+
     console.error(`Помилка під час отримання та обробки деталей фільму (ID: ${filmId}):`, error);
     if (error.response) {
       if (error.response.status === 401) {
