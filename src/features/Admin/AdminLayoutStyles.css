@@ -13,7 +13,7 @@
     --confirm-modal-bg: #fff;
     --confirm-modal-overlay: rgba(0, 0, 0, 0.5);
     --confirm-modal-focus-shadow: rgba(24, 21, 21, 0.5);
-    --admin-error-red: red;
+    --admin-error-red: #87251f;
     --admin-pagination-item-bg: #5e5959;
 }
 
