@@ -4,6 +4,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Slider,
   ToggleButton,
   useTheme,
 } from '@mui/material';
@@ -87,15 +88,23 @@ export default function ModalFilters({}: Props) {
 
   const isActive = (value: string) => activeMap[value] === true;
 
+  // const timeOptions = [
+  //   { value: '08:00', label: '8:00' },
+  //   { value: '10:00', label: '10:00' },
+  //   { value: '12:00', label: '12:00' },
+  //   { value: '14:00', label: '14:00' },
+  //   { value: '16:00', label: '16:00' },
+  //   { value: '18:00', label: '18:00' },
+  //   { value: '20:00', label: '20:00' },
+  //   { value: '22:00', label: '22:00' },
+  // ];
+
   const timeOptions = [
-    { value: '08:00', label: '8:00' },
-    { value: '10:00', label: '10:00' },
-    { value: '12:00', label: '12:00' },
-    { value: '14:00', label: '14:00' },
-    { value: '16:00', label: '16:00' },
-    { value: '18:00', label: '18:00' },
-    { value: '20:00', label: '20:00' },
-    { value: '22:00', label: '22:00' },
+    { value: 0, label: '08:00' },
+    { value: 1, label: '12:00' },
+    { value: 2, label: '16:00' },
+    { value: 3, label: '20:00' },
+    { value: 4, label: '00:00' },
   ];
 
   const hallOptions = [
@@ -123,6 +132,12 @@ export default function ModalFilters({}: Props) {
     { value: 'Ended', label: 'Закінчився' },
     { value: 'Scheduled', label: 'Відкладений' },
   ];
+
+  const [value, setValue] = useState<number[]>([0, 7]);
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
 
   return (
     <Box>
@@ -165,27 +180,21 @@ export default function ModalFilters({}: Props) {
           </Box>
 
           {/* Час: з / по */}
-          <Box sx={styles.boxRowContainerWrapper}>
-            {['Час, з', 'Час, по'].map((label, i) => (
-              <Box sx={styles.selectorWrapper} key={i}>
-                <Typography variant="caption" sx={styles.selectorLabelText}>
-                  {label}
-                </Typography>
-                <Select
-                  fullWidth
-                  value={selectedValue}
-                  onChange={handleChange}
-                  size="small"
-                  sx={styles.selectorSelector}>
-                  <MenuItem value="any">Всі</MenuItem>
-                  {timeOptions.map((opt) => (
-                    <MenuItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Box>
-            ))}
+          <Box sx={styles.boxSliderContainerWrapper}>
+            <Typography sx={styles.selectorLabelText}>Час</Typography>
+            <Box sx={styles.sliderWrapper}>
+              <Slider
+                getAriaLabel={() => 'Time range'}
+                value={value}
+                onChange={handleSliderChange}
+                valueLabelDisplay="off"
+                sx={styles.sliderSelector}
+                step={1}
+                min={0}
+                max={4}
+                marks={timeOptions}
+              />
+            </Box>
           </Box>
 
           {/* Формат / Зал */}

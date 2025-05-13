@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import getFilmAdaptiveScheduleGridItemStyles from './getFilmAdaptiveScheduleGridItemStyles.styles';
+import getFilmAdaptiveScheduleGridItemStyles from './FilmAdaptiveScheduleGridItem.styles';
 import { useState } from 'react';
 type Props = {};
 

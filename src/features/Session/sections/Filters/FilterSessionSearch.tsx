@@ -1,20 +1,16 @@
-import { Box, SelectChangeEvent, useTheme } from '@mui/material';
+import {
+  Box,
+  SelectChangeEvent,
+  Slider,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import FilterSessionSearchStyles from './FilterSessionSearch.styles';
 import SelectField from '../../../../shared/components/SelectFilter/SelectField';
 import { useState } from 'react';
-// import { getAllGenres } from '../../../../core/api/genreApi';
+import { PrimaryButton } from '../../../../shared/components/Buttons';
 
 type Props = {};
-
-// type FilterSessionFieldKeys = {
-//   MinStartTime: string;
-//   MaxStartTime: string;
-//   HasAvailableSeats: boolean;
-//   MinTicketPrice: number;
-//   MaxTicketPrice: number;
-//   CinemaHallId: number;
-//   Status: 'Ongoing' | 'Ended' | 'Scheduled';
-// };
 
 type FilterSessionFieldKeys = {
   MinStartTime: string;
@@ -50,34 +46,12 @@ export default function FilterSessionSearch({}: Props) {
     Status: '',
   });
 
-  // const fetchGenres = async () => {
-  //   const response = await getAllGenres();
-  //   return response.map((el) => {
-  //     return { value: el.id, label: el.name };
-  //   });
-  // };
-
-  // const genreOptions = fetchGenres();
-
-  // useEffect(() => {
-  //   const fetchGenres = async () => {
-  //     const response = await getAllGenres();
-  //     return response.map((el) => {
-  //       return { value: el.id, label: el.name };
-  //     });
-  //   };
-  //   fetchGenres();
-  // }, []);
-
   const timeOptions = [
-    { value: '08:00', label: '8:00' },
-    { value: '10:00', label: '10:00' },
-    { value: '12:00', label: '12:00' },
-    { value: '14:00', label: '14:00' },
-    { value: '16:00', label: '16:00' },
-    { value: '18:00', label: '18:00' },
-    { value: '20:00', label: '20:00' },
-    { value: '22:00', label: '22:00' },
+    { value: 0, label: '08:00' },
+    { value: 1, label: '12:00' },
+    { value: 2, label: '16:00' },
+    { value: 3, label: '20:00' },
+    { value: 4, label: '00:00' },
   ];
 
   const priceOptions = [
@@ -116,6 +90,12 @@ export default function FilterSessionSearch({}: Props) {
     console.log(e.target.value);
   };
 
+  const [value, setValue] = useState<number[]>([0, 7]);
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number[]);
+  };
+
   return (
     <Box
       sx={styles.filterSessionWrapper}
@@ -123,7 +103,7 @@ export default function FilterSessionSearch({}: Props) {
       onSubmit={(e) => {
         e.preventDefault();
       }}>
-      <SelectField
+      {/* <SelectField
         label="Час, з"
         name="timeAfter"
         value={filter.MinStartTime || 'any'}
@@ -136,7 +116,24 @@ export default function FilterSessionSearch({}: Props) {
         value={filter.MaxStartTime || 'any'}
         onChange={handleChange}
         options={timeOptions}
-      />
+      /> */}
+
+      <Box sx={styles.boxSliderContainerWrapper}>
+        <Typography sx={styles.selectorLabelText}>Час</Typography>
+        <Box sx={styles.sliderWrapper}>
+          <Slider
+            getAriaLabel={() => 'Time range'}
+            value={value}
+            onChange={handleSliderChange}
+            valueLabelDisplay="off"
+            sx={styles.sliderSelector}
+            step={1}
+            min={0}
+            max={4}
+            marks={timeOptions}
+          />
+        </Box>
+      </Box>
       <SelectField
         label="Місця"
         name="seats"
@@ -173,6 +170,12 @@ export default function FilterSessionSearch({}: Props) {
         onChange={handleChange}
         options={statusOptions}
       />
+      <Box sx={{ height: '100%' }}>
+        <Box sx={{ flex: 1 }}></Box>
+        <PrimaryButton type="submit">
+          <Typography>Шукати</Typography>
+        </PrimaryButton>
+      </Box>
     </Box>
   );
 }
