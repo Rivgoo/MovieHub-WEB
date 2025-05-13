@@ -1,5 +1,6 @@
 .user-manager-page {
   color: var(--admin-orange-button-text-color);
+  padding: 10px;
 }
 
 .user-manager-header {
