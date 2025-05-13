@@ -1,0 +1,26 @@
+.booking-manager-page {
+  padding: 10px;
+}
+
+.booking-status-chip.Pending {
+  background-color: #ae570f;
+  color: white !important;
+}
+.booking-status-chip.Confirmed {
+  background-color: #4b6436;
+  color: white !important;
+}
+.booking-status-chip.Canceled {
+  background-color: #60211d;
+  color: white !important;
+}
+
+.admin-details-link {
+  color: var(--primary-main);
+  text-decoration: none;
+  font-weight: 500;
+}
+.admin-details-link:hover {
+  text-decoration: underline;
+  color: var(--primary-dark);
+}
