@@ -7,7 +7,7 @@ const LightGray = '#F5F5F5'; // LightGray
 const DarkGray = '#1e1e1e'; // DarkGray
 const PaperBackground = '#242424';
 const AdminNavBackground = '#242424';
-const ErrorBackground = '#6b1f1a';
+const ErrorBackground = '#87251f';
 
 const theme = createTheme({
   palette: {
