@@ -40,6 +40,7 @@ const getSessionSearchHeroStyles = (theme: Theme) => ({
   },
   heroText: {
     color: theme.palette.common.white,
+    fontWeight: 600,
     zIndex: 2,
   },
 });

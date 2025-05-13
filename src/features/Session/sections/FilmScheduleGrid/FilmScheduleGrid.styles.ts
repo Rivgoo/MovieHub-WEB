@@ -2,12 +2,12 @@ import { Theme } from '@mui/material';
 
 const getFilmScheduleGridStyles = (theme: Theme) => ({
   filmCardContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    rowGap: '1px',
     columnGap: '10px',
-    rowGap: theme.spacing(2),
-    width: '100%',
-    maxWidth: '1920px',
+    padding: '6px',
+    justifyItems: 'center',
   },
   filmCardItem: {
     display: 'flex',
@@ -36,15 +36,13 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     color: theme.palette.text.primary,
   },
   filmCardContent: {
-    // padding: theme.spacing(1.5),
     p: '6px',
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     '&:last-child': {
-      pb: '6px', // shorthand for paddingBottom: 0
-      // or paddingBottom: 0
+      pb: '6px',
     },
   },
   filmTitle: {
@@ -62,29 +60,27 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
   },
   filmInfoContainer: {
     display: 'flex',
-    border: `1px solid ${theme.palette.primary.dark}`, // оранжевый контур
+    border: `1px solid ${theme.palette.primary.dark}`,
     borderRadius: '10px',
-    overflow: 'hidden', // чтобы границы скруглялись и не вылезали
+    overflow: 'hidden',
   },
 
-  // Левая часть — грид с сеансами
   sessionTimeBox: {
-    flex: 1, // занимает всё доступное место
+    flex: 1,
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', // 3 колонки одинаковой ширины
-    gap: theme.spacing(1), // расстояние между таймами
-    py: theme.spacing(1), // внутренний отступ
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+    gap: '2px',
+    py: '6px',
   },
 
   filmTimeText: {
     fontSize: '0.75rem',
-    color: theme.palette.primary.dark, // тот же оранжевый
+    color: theme.palette.primary.dark,
     textAlign: 'center',
   },
 
-  // Правая часть — фиксированный квадрат с ценой
   sessionPriceBox: {
-    bgcolor: theme.palette.primary.dark, // оранжевый фон
+    bgcolor: theme.palette.primary.dark,
     width: '60px',
     height: 'auto',
     display: 'flex',
@@ -95,7 +91,7 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
   sessionPriceText: {
     fontSize: '0.875rem',
     fontWeight: 600,
-    color: theme.palette.primary.light, // светлый (контрастный) текст
+    color: theme.palette.primary.light,
     textAlign: 'center',
   },
 });
