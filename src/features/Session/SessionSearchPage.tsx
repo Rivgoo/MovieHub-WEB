@@ -8,7 +8,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import FilmScheduleGrid from './sections/FilmScheduleGrid/FilmScheduleGrid';
 import theme from '../../theme/theme';
 import ModalFilters from './sections/ModalFiltersSection/ModalFilters';
-import FilmAdaptiveScheduleGridItem from './sections/AdaptiveFilmGrid/FilmAdaptiveScheduleGridItem';
+import FilmAdaptiveScheduleGridItem from './sections/AdaptiveFilmGrid/FilmScheduleGrid';
 
 const SessionSearchPage: React.FC = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
