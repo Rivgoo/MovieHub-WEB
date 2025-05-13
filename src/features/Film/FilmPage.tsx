@@ -78,11 +78,9 @@ const FilmPage: React.FC = () => {
       
         if (user && token && filmData && filmData.id) { 
           try {
-            console.log(`Checking favorite status for film ID: ${filmData.id}`);
             const favoriteStatus = await checkIfFavoriteAPI(filmData.id); 
             if (isMounted) {
               setIsCurrentlyFavorite(favoriteStatus);
-              console.log(`Film ID: ${filmData.id}, isFavorite status from API: ${favoriteStatus}`);
             }
           } catch (favStatusError) {
             console.error("Помилка отримання статусу обраного:", favStatusError);

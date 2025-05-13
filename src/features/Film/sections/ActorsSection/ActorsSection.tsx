@@ -6,12 +6,15 @@ import Container from '@mui/material/Container';
 import HorizontalScroller from '../../../../shared/components/Scroller/HorizontalScroller';
 import styles from './ActorsSection.module.css';
 import { ProcessedActor } from '../../../../core/api/types/types.film';
+import { useTheme } from '@mui/material/styles';
 
 interface ActorsSectionProps {
   actors: ProcessedActor[] | null;
 }
 
 const ActorsSection: React.FC<ActorsSectionProps> = ({ actors }) => {
+  const theme = useTheme();
+  
   if (!actors || actors.length === 0) {
     return (
       <Container maxWidth="lg" className={styles.actorsSection_wrapper}>
@@ -37,7 +40,11 @@ const ActorsSection: React.FC<ActorsSectionProps> = ({ actors }) => {
               sx={{
                 '& .horizontal-scroller-content': {
                   justifyContent: actors.length < 4 ? 'center' : 'flex-start',
-                  gap: { xs: theme => theme.spacing(1.5), sm: theme => theme.spacing(2), md: theme => theme.spacing(3) },
+                  gap: {
+                    xs: theme.spacing(1.5),
+                    sm: theme.spacing(2),
+                    md: theme.spacing(3),
+                  }
                 }
               }}
               scrollAmount={250}
