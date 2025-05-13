@@ -215,28 +215,38 @@ const FilmPage: React.FC = () => {
           </Button>
       </Fade>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={user ? 3000 : 7000}
-        onClose={handleCloseSnackbar}
-        message={snackbarMessage}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        action={
-          !user && snackbarMessage.includes("Будь ласка, увійдіть") ? (
-            <React.Fragment>
-              <Button sx={{ color: theme.palette.secondary.light }} size="small" onClick={handleLoginRedirect}>Увійти</Button>
-              <Button sx={{ color: theme.palette.secondary.light }} size="small" onClick={handleRegisterRedirect}>Реєстрація</Button>
-              <MuiIconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
-            X
-              </MuiIconButton>
-            </React.Fragment>
-          ) : (
-            <MuiIconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
-           X
-            </MuiIconButton>
-          )
-        }
-      />
+<Snackbar
+  open={snackbarOpen}
+  autoHideDuration={3000} 
+  onClose={handleCloseSnackbar}
+  message={snackbarMessage}
+  anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+  sx={{
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 1300,
+    maxWidth: '90%',
+    width: '100%',
+  }}
+  action={
+    !user && snackbarMessage.includes("Будь ласка, увійдіть") ? (
+      <React.Fragment>
+        <Button sx={{ color: theme.palette.secondary.light }} size="small" onClick={handleLoginRedirect}>Увійти</Button>
+        <Button sx={{ color: theme.palette.secondary.light }} size="small" onClick={handleRegisterRedirect}>Реєстрація</Button>
+        <MuiIconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
+          X
+        </MuiIconButton>
+      </React.Fragment>
+    ) : (
+      <MuiIconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
+        X
+      </MuiIconButton>
+    )
+  }
+/>
+
     </Layout>
   );
 };
