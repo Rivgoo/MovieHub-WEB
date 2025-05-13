@@ -33,7 +33,15 @@ const ActorsSection: React.FC<ActorsSectionProps> = ({ actors }) => {
             <Typography variant="h4" className={styles.actorsSection_title}>
                 Актори та знімальна група
             </Typography>
-            <HorizontalScroller sx={{ '& .horizontal-scroller-content': { justifyContent: 'center' }}} scrollAmount={300} >
+            <HorizontalScroller
+              sx={{
+                '& .horizontal-scroller-content': {
+                  justifyContent: actors.length < 4 ? 'center' : 'flex-start',
+                  gap: { xs: theme => theme.spacing(1.5), sm: theme => theme.spacing(2), md: theme => theme.spacing(3) },
+                }
+              }}
+              scrollAmount={250}
+            >
                 {actors.map((actor) => (
                     <Box key={actor.id} className={styles.actorsSection_card}>
                         <Avatar
@@ -50,6 +58,15 @@ const ActorsSection: React.FC<ActorsSectionProps> = ({ actors }) => {
                         >
                             {actor.name}
                         </Typography>
+                        {actor.role && (
+                            <Typography
+                                variant="caption"
+                                className={styles.actorsSection_role}
+                                title={actor.role}
+                            >
+                                {actor.role}
+                            </Typography>
+                        )}
                     </Box>
                 ))}
             </HorizontalScroller>

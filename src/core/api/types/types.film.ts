@@ -22,4 +22,5 @@ export interface ProcessedActor {
   id: string;
   name: string;
   imageUrl: string | null;
+  role?: string 
 }

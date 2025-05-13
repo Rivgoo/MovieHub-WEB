@@ -11,6 +11,10 @@ export interface ActorDto {
   updatedAt: string;
 }
 
+export interface ActorInContentResponse extends ActorDto {
+  roleName: string;
+}
+
 // GET /api/v1/actors/filter
 export interface ActorFilterResponse {
   items: ActorDto[];

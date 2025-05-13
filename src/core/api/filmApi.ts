@@ -2,6 +2,9 @@ import { getContentById} from './requests/request.content';
 import { ProcessedFilmDetails, ProcessedActor } from './types/types.film';
 import { getAllGenres } from './genreApi';
 import { GenreDto } from './types/types.genre';
+import { actorApi } from './actorApi';
+import { ActorInContentResponse } from './types/types.actor'
+
 
 
 const getAgeRatingText = (ageRating: number | undefined): string => {
@@ -37,14 +40,13 @@ const fetchAndCacheGenres = async (): Promise<GenreDto[]> => {
 
 export const getProcessedFilmDetailsById = async (filmId: string): Promise<ProcessedFilmDetails> => {
   try {
-    const numericId = parseInt(filmId, 10);
-    if (isNaN(numericId)) {
+    const numericFilmId = parseInt(filmId, 10); 
+    if (isNaN(numericFilmId)) {
       throw new Error("Некоректний ID фільму.");
     }
 
- 
     const [apiData, allGenres] = await Promise.all([
-        getContentById(numericId),
+        getContentById(numericFilmId),
         fetchAndCacheGenres()
     ]);
 
@@ -55,13 +57,31 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
 
     let processedActors: ProcessedActor[] = [];
     if (apiData.actorIds && apiData.actorIds.length > 0) {
-      processedActors = apiData.actorIds.slice(0, 6).map((id: number) => ({
-          id: String(id),
-          name: `Актор ID: ${id}`,
-          imageUrl: null
-      } as ProcessedActor));
-    }
+      try {
+        
+        const actorPromises = apiData.actorIds.slice(0, 6).map(actorId =>
+          actorApi.getInContent(actorId, numericFilmId)
+        );
+        const actorsData: ActorInContentResponse[] = await Promise.all(actorPromises);
 
+        processedActors = actorsData.map(actorInContentData => ({ 
+          id: String(actorInContentData.id),
+          name: `${actorInContentData.firstName} ${actorInContentData.lastName}`,
+          imageUrl: actorInContentData.photoUrl,
+          role: actorInContentData.roleName,
+        }));
+      } catch (actorError) {
+        console.error(`Помилка під час завантаження даних акторів для фільму ID ${numericFilmId}:`, actorError);
+       
+        processedActors = apiData.actorIds.slice(0, 6).map((id: number) => ({
+            id: String(id),
+            name: `Актор ID: ${id}`,
+            imageUrl: null,
+            role: 'Роль невідома' 
+        } as ProcessedActor)); 
+      }
+    }
+    
     const filmGenreNames = apiData.genreIds
       ? apiData.genreIds.map((id: number) => genresMap.get(id) || `ID:${id}`)
       : [];
@@ -74,11 +94,10 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
         if (isNaN(calculatedVoteAverage)) calculatedVoteAverage = 0;
     }
 
-  
-    const isInitiallyFavorite = (apiData as any).isFavorited === true || false; 
+    
+    const isInitiallyFavorite = (apiData as any).isFavorited === true || false;
 
-
-    const processedData: ProcessedFilmDetails = { 
+    const processedData: ProcessedFilmDetails = {
       id: String(apiData.id),
       title: apiData.title,
       overview: apiData.description,
@@ -92,26 +111,19 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
       vote_average: calculatedVoteAverage,
       ageRating: getAgeRatingText(apiData.ageRating),
       directorName: apiData.directorFullName,
-      actors: processedActors,
+      actors: processedActors, 
       trailerUrl: apiData.trailerUrl,
-      isFavorited: isInitiallyFavorite, 
-     
+      isFavorited: isInitiallyFavorite,
+    
     };
     return processedData;
   } catch (error: any) {
-
     console.error(`Помилка під час отримання та обробки деталей фільму (ID: ${filmId}):`, error);
     if (error.response) {
-      if (error.response.status === 401) {
-        throw new Error("Помилка автентифікації. Будь ласка, увійдіть в систему.");
-      }
-      if (error.response.status === 404) {
-        throw new Error(`Фільм з ID '${filmId}' не знайдено.`);
-      }
+      if (error.response.status === 401) { throw new Error("Помилка автентифікації. Будь ласка, увійдіть в систему."); }
+      if (error.response.status === 404) { throw new Error(`Фільм з ID '${filmId}' не знайдено.`); }
     }
-    if (error.message === "Некоректний ID фільму.") {
-        throw error;
-    }
+    if (error.message === "Некоректний ID фільму.") { throw error; }
     throw new Error("Не вдалося завантажити дані про фільм. Спробуйте пізніше.");
   }
 };
