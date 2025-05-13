@@ -4,12 +4,34 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Layout from '../../shared/components/Layout';
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles'; // alpha тут не потрібна, якщо не використовуємо прозорість для Divider
+import MovieFilterIcon from '@mui/icons-material/MovieFilter';
+import EventSeatIcon from '@mui/icons-material/EventSeat';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 const cinemaImageUrl = '/movie-cinema.jpg';
 
 const AboutPage: React.FC = () => {
   const theme = useTheme();
+
+  // Дані для переваг з іконками
+  const features = [
+    {
+      icon: <MovieFilterIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, // Додано колір та розмір
+      title: 'Відкриття стає пригодою',
+      description: 'Шукайте фільми за жанрами, роками, акторами або просто настроєм. Наші зручні фільтри та рекомендації допоможуть знайти саме те, що вам потрібно.',
+    },
+    {
+      icon: <EventSeatIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, // Додано колір та розмір
+      title: 'Кожен сеанс – подія',
+      description: 'Дізнавайтеся актуальний розклад сеансів у вашому місті, обирайте зручний час та місце.',
+    },
+    {
+      icon: <LightbulbIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, // Додано колір та розмір
+      title: 'Натхнення завжди поруч',
+      description: 'Ми постійно оновлюємо інформацію, додаємо трейлери, щоб ви завжди були в курсі найгарячіших прем\'єр та кінематографічних шедеврів.',
+    },
+  ];
 
   return (
     <Layout>
@@ -32,10 +54,8 @@ const AboutPage: React.FC = () => {
           maxWidth="md"
           sx={{
             backgroundColor: 'rgba(0, 0, 0, 0)',
-
           }}
         >
-          
           <Typography
             variant="h2"
             component="h1"
@@ -78,13 +98,12 @@ const AboutPage: React.FC = () => {
             borderRadius: '12px',
           }}
         >
-
           <Typography
             variant="body1"
             component="p"
             sx={{ lineHeight: 1.7, mb: 2, fontSize: '1.05rem' }}
           >
-            Ми створили MovieHub з однією простою метою: допомогти вам
+            <b>MovieHub створений з однією простою метою: </b> допомогти вам
             знаходити фільми, які ви полюбите, та ділитися враженнями з
             однодумцями. У сучасному потоці новинок та класики легко
             загубитися, але ми тут, щоб зробити ваш кінематографічний
@@ -112,22 +131,23 @@ const AboutPage: React.FC = () => {
           >
             Це не просто база даних фільмів. Це місце, де:
           </Typography>
-          <Box component="ul" sx={{ pl: 2.5, listStylePosition: 'outside' }}>
-            {[
-              '** - Відкриття стає пригодою:** Шукайте фільми за жанрами, роками, акторами або просто настроєм. Наші зручні фільтри та рекомендації допоможуть знайти саме те, що вам потрібно.',
-              '** - Кожен сеанс – подія:** Дізнавайтеся актуальний розклад сеансів у вашому місті, обирайте зручний час та місце.',
-              '** - Ваша думка важлива:** Читайте відгуки інших глядачів та діліться власними рецензіями. Створюйте колекції улюблених стрічок та обговорюйте їх з друзями.',
-              '** - Натхнення завжди поруч:** Ми постійно оновлюємо інформацію, додаємо трейлери, новини кіноіндустрії та цікаві факти, щоб ви завжди були в курсі найгарячіших прем\'єр та кінематографічних шедеврів.',
-            ].map((item, index) => (
-              <Typography
-                component="li"
-                key={index}
-                variant="body1"
-                sx={{ lineHeight: 1.7, mb: 1.5, '&::marker': { color: theme.palette.primary.main } }}
-                dangerouslySetInnerHTML={{ __html: item.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}
-              />
-            ))}
-          </Box>
+          
+          {/* Список переваг з іконками */}
+          {features.map((feature, index) => (
+            <Box key={index} sx={{ display: 'flex', alignItems: 'flex-start', my: 2.5 }}> {/* Змінено my для відступів */}
+              <Box sx={{ mr: 1.5, mt: '4px' }}> {/* Зменшено mr, додано mt для вирівнювання іконки */}
+                {feature.icon}
+              </Box>
+              <Box>
+                <Typography variant="h6" component="h3" sx={{ fontWeight: 500, mb: 0.25 }}> {/* Зменшено mb */}
+                  {feature.title.replace(/\*\*(.*?)\*\*/g, '$1')} {/* Прибираємо ** з заголовка */}
+                </Typography>
+                <Typography variant="body1" color="text.secondary.ContrastText" sx={{ lineHeight: 1.6 }}>
+                  {feature.description}
+                </Typography>
+              </Box>
+            </Box>
+          ))}
 
           <Typography
             variant="body1"
@@ -140,19 +160,6 @@ const AboutPage: React.FC = () => {
             насолоджуйтесь найкращими фільмами разом з нами!
           </Typography>
 
-          <Typography
-            variant="h6"
-            component="p"
-            align="center"
-            sx={{
-              fontWeight: 500,
-              mt: 4,
-              color: theme.palette.primary.light,
-              fontStyle: 'italic',
-            }}
-          >
-            Занурюйтесь у світ кіно з MovieHub!
-          </Typography>
         </Paper>
       </Container>
     </Layout>
