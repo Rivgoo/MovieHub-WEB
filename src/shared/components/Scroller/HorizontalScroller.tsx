@@ -3,18 +3,21 @@ import IconButton from '@mui/material/IconButton';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Box from '@mui/material/Box';
+import { SxProps, Theme } from '@mui/material/styles';
 import './HorizontalScroller.css';
 
 interface HorizontalScrollerProps {
   children: React.ReactNode;
   scrollAmount?: number;
   disableMouseDrag?: boolean;
+  sx?: SxProps<Theme>;
 }
 
 const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
   children,
   scrollAmount = 250,
   disableMouseDrag = false,
+  sx,
 }) => {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -45,7 +48,7 @@ const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
       let resizeTimeout: number;
       const handleResize = () => {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(checkForScrollability, 100);
+        resizeTimeout = window.setTimeout(checkForScrollability, 100);
       };
 
       el.addEventListener('scroll', checkForScrollability, { passive: true });
@@ -76,6 +79,7 @@ const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (disableMouseDrag || !scrollerRef.current) return;
+
     if (e.target !== scrollerRef.current && (e.target as HTMLElement).closest('button, a, input')) {
       return;
     }
@@ -97,15 +101,16 @@ const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
     if (disableMouseDrag || !isDragging || !scrollerRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollerRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
+    const walk = (x - startX) * 1.5; 
     scrollerRef.current.scrollLeft = scrollLeftStart - walk;
   };
 
   const onTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (scrollerRef.current) {
+     if (scrollerRef.current) {
+       
        if (e.target !== scrollerRef.current && (e.target as HTMLElement).closest('button, a, input')) {
-        return;
-      }
+         return;
+       }
       setIsDragging(true);
       setStartX(e.touches[0].pageX - scrollerRef.current.offsetLeft);
       setScrollLeftStart(scrollerRef.current.scrollLeft);
@@ -115,6 +120,7 @@ const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
 
   const onTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (!isDragging || !scrollerRef.current) return;
+
     const x = e.touches[0].pageX - scrollerRef.current.offsetLeft;
     const walk = (x - startX) * 1.5;
     scrollerRef.current.scrollLeft = scrollLeftStart - walk;
@@ -128,7 +134,7 @@ const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
   };
 
   return (
-    <Box className="horizontal-scroller-container">
+    <Box className="horizontal-scroller-container" sx={sx}>
       {canScrollLeft && (
         <IconButton
           className="scroll-button left"
@@ -136,19 +142,22 @@ const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
           aria-label="scroll left"
           size="small"
         >
-          <ArrowBackIosNewIcon fontSize="small" />
+          <ArrowBackIosNewIcon fontSize="inherit" />
         </IconButton>
       )}
       <div
         className="horizontal-scroller-content"
         ref={scrollerRef}
+
         onMouseDown={!disableMouseDrag ? onMouseDown : undefined}
         onMouseLeave={!disableMouseDrag ? onMouseLeaveOrUp : undefined}
         onMouseUp={!disableMouseDrag ? onMouseLeaveOrUp : undefined}
         onMouseMove={!disableMouseDrag ? onMouseMove : undefined}
+        
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+
         style={{ cursor: disableMouseDrag ? 'default' : 'grab' }}
       >
         {children}
@@ -160,7 +169,7 @@ const HorizontalScroller: React.FC<HorizontalScrollerProps> = ({
           aria-label="scroll right"
           size="small"
         >
-          <ArrowForwardIosIcon fontSize="small" />
+          <ArrowForwardIosIcon fontSize="inherit" />
         </IconButton>
       )}
     </Box>

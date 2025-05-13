@@ -2,9 +2,8 @@
 .heroSection_wrapper { 
   position: relative;
   width: 100%;
-  height: 90vh;
+  height: 55vh;
   background-color: var(--bg-placeholder);
-/*  background-image: url('/images/lifelist.jpg'); */
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -40,7 +39,7 @@
 
 .heroSection_title { 
   font-weight: 700 !important;
-  font-size: 2.2rem !important; 
+  font-size: 1.9rem !important; 
   text-shadow: var(--shadow-text) !important;
   margin-bottom: 1rem !important;
 }
