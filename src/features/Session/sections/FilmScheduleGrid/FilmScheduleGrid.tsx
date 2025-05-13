@@ -4,6 +4,7 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -41,7 +42,7 @@ export default function FilmScheduleGrid({}: Props) {
       status: 'Ongoing',
       ticketPrice: 0,
       contentId: 0,
-      title: 'Harry',
+      title: 'Гарря Шпротер і камені в нирках',
       description: 'string',
       rating: 0,
       releaseYear: 0,
@@ -258,13 +259,29 @@ export default function FilmScheduleGrid({}: Props) {
             <Box sx={styles.filmInfoContainer}>
               <Box sx={styles.sessionTimeBox}>
                 {Array.from({ length: 9 }).map((_, idx) => (
-                  <Typography
+                  <Tooltip
                     key={idx}
-                    variant="body2"
-                    component="div"
-                    sx={styles.filmTimeText}>
-                    10:00
-                  </Typography>
+                    title="Від 120 грн"
+                    placement="bottom"
+                    arrow
+                    enterDelay={50}
+                    leaveDelay={100}
+                    PopperProps={{
+                      modifiers: [
+                        {
+                          name: 'offset',
+                          options: {
+                            offset: [0, -10],
+                          },
+                        },
+                      ],
+                    }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ ...styles.filmTimeText, cursor: 'pointer' }}>
+                      10:00
+                    </Typography>
+                  </Tooltip>
                 ))}
               </Box>
               <Box sx={styles.sessionPriceBox}>
