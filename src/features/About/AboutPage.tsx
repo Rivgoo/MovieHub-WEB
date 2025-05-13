@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Layout from '../../shared/components/Layout';
-import { useTheme } from '@mui/material/styles'; // alpha тут не потрібна, якщо не використовуємо прозорість для Divider
+import { useTheme } from '@mui/material/styles';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
@@ -14,20 +14,19 @@ const cinemaImageUrl = '/movie-cinema.jpg';
 const AboutPage: React.FC = () => {
   const theme = useTheme();
 
-  // Дані для переваг з іконками
   const features = [
     {
-      icon: <MovieFilterIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, // Додано колір та розмір
+      icon: <MovieFilterIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, 
       title: 'Відкриття стає пригодою',
       description: 'Шукайте фільми за жанрами, роками, акторами або просто настроєм. Наші зручні фільтри та рекомендації допоможуть знайти саме те, що вам потрібно.',
     },
     {
-      icon: <EventSeatIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, // Додано колір та розмір
+      icon: <EventSeatIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, 
       title: 'Кожен сеанс – подія',
       description: 'Дізнавайтеся актуальний розклад сеансів у вашому місті, обирайте зручний час та місце.',
     },
     {
-      icon: <LightbulbIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, // Додано колір та розмір
+      icon: <LightbulbIcon sx={{ color: theme.palette.primary.main, fontSize: '1.8rem' }} />, 
       title: 'Натхнення завжди поруч',
       description: 'Ми постійно оновлюємо інформацію, додаємо трейлери, щоб ви завжди були в курсі найгарячіших прем\'єр та кінематографічних шедеврів.',
     },
@@ -132,15 +131,14 @@ const AboutPage: React.FC = () => {
             Це не просто база даних фільмів. Це місце, де:
           </Typography>
           
-          {/* Список переваг з іконками */}
           {features.map((feature, index) => (
-            <Box key={index} sx={{ display: 'flex', alignItems: 'flex-start', my: 2.5 }}> {/* Змінено my для відступів */}
-              <Box sx={{ mr: 1.5, mt: '4px' }}> {/* Зменшено mr, додано mt для вирівнювання іконки */}
+            <Box key={index} sx={{ display: 'flex', alignItems: 'flex-start', my: 2.5 }}> 
+              <Box sx={{ mr: 1.5, mt: '4px' }}> 
                 {feature.icon}
               </Box>
               <Box>
-                <Typography variant="h6" component="h3" sx={{ fontWeight: 500, mb: 0.25 }}> {/* Зменшено mb */}
-                  {feature.title.replace(/\*\*(.*?)\*\*/g, '$1')} {/* Прибираємо ** з заголовка */}
+                <Typography variant="h6" component="h3" sx={{ fontWeight: 500, mb: 0.25 }}> 
+                  {feature.title.replace(/\*\*(.*?)\*\*/g, '$1')} 
                 </Typography>
                 <Typography variant="body1" color="text.secondary.ContrastText" sx={{ lineHeight: 1.6 }}>
                   {feature.description}
