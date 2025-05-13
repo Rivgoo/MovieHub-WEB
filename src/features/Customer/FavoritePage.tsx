@@ -22,6 +22,8 @@ import { useAuth } from '../../core/auth/useAuth';
 import { useTheme } from '@mui/material/styles';
 import StandardPagination from '../../shared/components/Pagination/StandardPagination';
 
+const PLACEHOLDER_POSTER_URL = '/placeholder-poster.png';
+
 const formatDuration = (totalMinutes: number | undefined): string => {
   if (totalMinutes === undefined || totalMinutes <= 0) return '';
   const hours = Math.floor(totalMinutes / 60);
@@ -343,7 +345,7 @@ const FavoritePage: React.FC = () => {
                   >
                     <CardMedia
                       component="img"
-                      image={movie.posterUrl || "https://via.placeholder.com/300x450?text=No+Image"}
+                      image={movie.posterUrl || PLACEHOLDER_POSTER_URL}
                       alt={movie.title}
                       sx={{
                         aspectRatio: '2/3',
@@ -351,6 +353,11 @@ const FavoritePage: React.FC = () => {
                         borderTopLeftRadius: '7px',
                         borderTopRightRadius: '7px',
                       }}
+                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null; 
+                        target.src = PLACEHOLDER_POSTER_URL;
+                    }}
                     />
                     <CardContent sx={{ flexGrow: 1, color: 'text.primary', p: 1.5, display: 'flex', flexDirection: 'column' }}>
                       <Typography

@@ -23,6 +23,8 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
 // import StandardPagination from '../../../../../shared/components/Pagination/StandardPagination';
 
+const PLACEHOLDER_POSTER_URL = '/placeholder-poster.png';
+
 interface Props {
   searchQuery: string | undefined;
   currentPage: number;
@@ -146,11 +148,11 @@ const FilmGrid: React.FC<Props> = ({
               <CardMedia
                 component="img"
                 sx={styles.filmPoster}
-                image={film.posterUrl || '/placeholder-poster.jpg'}
+                image={film.posterUrl || PLACEHOLDER_POSTER_URL}
                 alt={film.title}
                 onError={(e: any) => {
                   e.target.onerror = null;
-                  e.target.src = '/placeholder-poster.jpg';
+                  e.target.src = PLACEHOLDER_POSTER_URL;
                 }}
               />
               <CardContent sx={styles.filmCardContent}>
