@@ -10,9 +10,13 @@ export interface ContentDto {
   releaseYear: number;
   trailerUrl: string;
   posterUrl: string;
+  bannerUrl: string;
   durationMinutes: number;
+  directorFullName: string;
   genreIds: number[];
-  actorIds: number[];
+  actorIds?: number[];
+  actors?: { id: number; RoleName?: string| null; fullName?: string; firstName?: string; lastName?: string }[];
+  ageRating: number; 
   createdAt: string;
   updatedAt: string;
 }
@@ -24,6 +28,8 @@ export interface BaseContentPayload {
   releaseYear: number;
   trailerUrl: string;
   durationMinutes: number;
+  directorFullName: string;
+  ageRating: number; 
   genreIds: number[];
   actorIds: number[];
 }
@@ -60,6 +66,7 @@ export type CreateContentRequest = BaseContentPayload;
 
 export interface CreateContentResponse {
   id: number;
+   RoleName: string;
 }
 //-----------------------------------------------------------
 
@@ -76,12 +83,15 @@ export interface AddGenreToContentResponse {
   id: number;
   genreId: number;
 }
+
+export interface AddGenreToContentRequest {
+  genreId: number;
+}
 //-----------------------------------------------------------
 
 // POST /api/v1/contents/{id}/actors
 export interface AddActorToContentRequest {
   actorId: number;
-  roleName: string;
 }
 //-----------------------------------------------------------
 
