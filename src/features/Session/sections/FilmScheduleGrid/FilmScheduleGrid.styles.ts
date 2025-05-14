@@ -9,6 +9,15 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     padding: '6px',
     justifyItems: 'center',
   },
+  nothingFound: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    minHeight: '400px',
+    textAlign: 'center',
+  },
   filmCardItem: {
     display: 'flex',
     flexDirection: 'column',

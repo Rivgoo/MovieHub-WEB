@@ -8,9 +8,9 @@ type DateFilterProps = {
 };
 
 type DateOption = {
-  value: string; // формат: 'YYYY-MM-DD'
-  label: string; // формат: '14 травня'
-  weekday: string; // формат: 'Вівторок'
+  value: string;
+  label: string;
+  weekday: string;
 };
 
 export default function DateFilter({ onChange }: DateFilterProps) {
@@ -68,8 +68,9 @@ export default function DateFilter({ onChange }: DateFilterProps) {
     const expectedMin = `${date}T08:00:00.923Z`;
     const expectedMax = `${date}T23:00:00.923Z`;
 
-    const minParam = searchParams.get('MinStartTime');
-    const maxParam = searchParams.get('MaxStartTime');
+    const minParam = searchParams.get('MinStartTime') + ':00.923Z';
+    const maxParam = searchParams.get('MaxStartTime') + ':00.923Z';
+
     if (minParam === expectedMin && maxParam === expectedMax) {
       setPickedIndex(0);
     }

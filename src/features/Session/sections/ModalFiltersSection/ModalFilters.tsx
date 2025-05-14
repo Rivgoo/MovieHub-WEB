@@ -1,142 +1,310 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  Box,
   Divider,
   MenuItem,
+  Modal,
   Select,
   SelectChangeEvent,
   Slider,
   ToggleButton,
+  Typography,
   useTheme,
 } from '@mui/material';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import getModalFiltersStyles from './ModalFilters.styles';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   GlowButton,
   PrimaryButton,
 } from '../../../../shared/components/Buttons';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import { getAllCinemaHalls } from '../../../../core/api/requests/request.cinemahall';
 
-type Props = {};
+// Типи
 
-type FilterModalFieldKeys = {
+type FilterSessionFieldKeys = {
   MinStartTime: string;
   MaxStartTime: string;
   HasAvailableSeats: string;
   MinTicketPrice: string;
-  MaxTicketPrice: string;
+  Format: '2D' | '3D' | '';
   CinemaHallId: string;
   Status: 'Ongoing' | 'Ended' | 'Scheduled' | '';
 };
 
-export default function ModalFilters({}: Props) {
+type DateOption = {
+  value: string;
+  label: string;
+  weekday: string;
+};
+
+const getDefaultQuery = (): FilterSessionFieldKeys => ({
+  MinStartTime: '',
+  MaxStartTime: '',
+  HasAvailableSeats: '',
+  MinTicketPrice: '',
+  Format: '',
+  CinemaHallId: '',
+  Status: '',
+});
+
+export default function ModalFilters() {
   const theme = useTheme();
   const styles = getModalFiltersStyles(theme);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [filter, setFilter] = useState<FilterModalFieldKeys>({
-    MinStartTime: '',
-    MaxStartTime: '',
-    HasAvailableSeats: '',
-    MinTicketPrice: '',
-    MaxTicketPrice: '',
-    CinemaHallId: '',
-    Status: '',
-  });
-
+  const [filter, setFilter] = useState<FilterSessionFieldKeys>(getDefaultQuery);
+  const [timeInterval, setTimeInterval] = useState<[number, number]>([0, 4]);
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<string>('any');
-  const [selected, setSelected] = useState<string[]>([]);
-  const [selectAll, setSelectAll] = useState(true);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const handleSubmit = () => {
-    console.log('sub');
-    handleClose();
-  };
-
-  const handleChange = (e: SelectChangeEvent<string>) => {
-    setSelectedValue(e.target.value);
-  };
-
-  const handleToggle = (value: string) => {
-    if (value === 'all') {
-      setSelectAll(true);
-      setSelected([]);
-    } else {
-      setSelectAll(false);
-      setSelected((prevSelected) => {
-        const isSelected = prevSelected.includes(value);
-        return isSelected
-          ? prevSelected.filter((v) => v !== value)
-          : [...prevSelected, value];
-      });
-    }
-  };
-
-  const activeMap = useMemo(() => {
-    if (selectAll) return { all: true };
-    return selected.reduce(
-      (acc, val) => {
-        acc[val] = true;
-        return acc;
-      },
-      {} as Record<string, boolean>
-    );
-  }, [selected, selectAll]);
-
-  const isActive = (value: string) => activeMap[value] === true;
-
-  // const timeOptions = [
-  //   { value: '08:00', label: '8:00' },
-  //   { value: '10:00', label: '10:00' },
-  //   { value: '12:00', label: '12:00' },
-  //   { value: '14:00', label: '14:00' },
-  //   { value: '16:00', label: '16:00' },
-  //   { value: '18:00', label: '18:00' },
-  //   { value: '20:00', label: '20:00' },
-  //   { value: '22:00', label: '22:00' },
-  // ];
+  const [isLoading, setIsLoading] = useState({
+    hallFilter: false,
+    firstLoadingPage: true,
+  });
+  const [dates, setDates] = useState<DateOption[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedHall, setSelectedHall] = useState<string>('any');
+  const [selectedSeats, setSelectedSeats] = useState<string>('all');
+  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
+  const [priceSelectAll, setPriceSelectAll] = useState(true);
+  const [hallOptions, setHallOptions] = useState<
+    { value: string; label: string }[]
+  >([]);
 
   const timeOptions = [
     { value: 0, label: '08:00' },
     { value: 1, label: '12:00' },
     { value: 2, label: '16:00' },
     { value: 3, label: '20:00' },
-    { value: 4, label: '00:00' },
+    { value: 4, label: '23:00' },
+  ];
+  const priceOptions = ['60', '120', '200', '600'].map((v) => ({
+    value: v,
+    label: v,
+  }));
+  const seatsOptions = [
+    { value: 'true', label: 'Є' },
+    { value: 'false', label: 'Немає' },
   ];
 
-  const hallOptions = [
-    { value: '1', label: '1' },
-    { value: '2', label: '2' },
-    { value: '3', label: '3' },
-    { value: '4', label: '4' },
-    { value: '5', label: '5 (VIP)' },
-  ];
+  useEffect(() => {
+    (async () => {
+      setIsLoading((p) => ({ ...p, hallFilter: true }));
+      try {
+        const halls = await getAllCinemaHalls();
+        setHallOptions(
+          halls.map((h) => ({
+            value: String(h.id),
+            label: h.name,
+          }))
+        );
+      } finally {
+        setIsLoading((p) => ({ ...p, hallFilter: false }));
+      }
+    })();
+  }, []);
 
-  const formatOptions = [
-    { value: '1', label: '2D' },
-    { value: '2', label: '3D' },
-  ];
+  useEffect(() => {
+    if (!isLoading.firstLoadingPage) return;
 
-  const priceOptions = [
-    { value: '60', label: '60' },
-    { value: '120', label: '120' },
-    { value: '200', label: '200' },
-    { value: '600', label: '600' },
-  ];
+    // 1) Згенерувати список дат
+    const genDates = Array.from({ length: 10 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
 
-  const statusOptions = [
-    { value: 'Ongoing', label: 'Поточний' },
-    { value: 'Ended', label: 'Закінчився' },
-    { value: 'Scheduled', label: 'Відкладений' },
-  ];
+      const value = d.toISOString().split('T')[0];
+      const weekday = new Intl.DateTimeFormat('uk-UA', {
+        weekday: 'long',
+      }).format(d);
+      const label = new Intl.DateTimeFormat('uk-UA', {
+        day: 'numeric',
+        month: 'long',
+      }).format(d);
+      const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+      return { value, label: cap(label), weekday: cap(weekday) };
+    });
+    setDates(genDates);
 
-  const [value, setValue] = useState<number[]>([0, 7]);
+    // 2) Витягнути з URL параметри
+    const params = new URLSearchParams(searchParams.toString());
+    let minRaw = params.get('MinStartTime');
+    let maxRaw = params.get('MaxStartTime');
+    const today = genDates[0].value;
 
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    setValue(newValue as number[]);
+    // Якщо в URL нема часу — встановлюємо дефолт
+    if (!minRaw || !maxRaw) {
+      minRaw = `${today}T08:00`;
+      maxRaw = `${today}T23:00`;
+      // І «запихаємо» їх у URL
+      navigate(
+        {
+          pathname: '/session-search',
+          search: `?MinStartTime=${minRaw}&MaxStartTime=${maxRaw}`,
+        },
+        { replace: true }
+      );
+    }
+
+    // Розбираємо дату та час
+    const [minDate, minTime] = minRaw.split('T');
+    const [maxDate, maxTime] = maxRaw.split('T');
+    setSelectedDate(minDate);
+    const minIdx = timeOptions.findIndex((o) => o.label === minTime);
+    const maxIdx = timeOptions.findIndex((o) => o.label === maxTime);
+    const safeMin = minIdx >= 0 ? minIdx : 0;
+    const safeMax = maxIdx >= 0 ? maxIdx : 4;
+    setTimeInterval([safeMin, safeMax]);
+
+    // 3) Ініціалізуємо filter
+    setFilter({
+      MinStartTime: String(safeMin),
+      MaxStartTime: String(safeMax),
+      HasAvailableSeats: params.get('HasAvailableSeats') ?? '',
+      MinTicketPrice: params.get('MinTicketPrice') ?? '',
+      Format: (params.get('Format') as '' | '2D' | '3D') ?? '',
+      CinemaHallId: params.get('CinemaHallId') ?? '',
+      Status:
+        (params.get('Status') as '' | 'Ongoing' | 'Ended' | 'Scheduled') ?? '',
+    });
+
+    // 4) Контролери кнопок/селектів
+    // setSelectedHall(params.get('CinemaHallId') ?? 'any');
+    // setSelectedSeats(params.get('Seats') ?? 'all');
+    // const prices = params.get('MinTicketPrice')?.split(',') ?? [];
+    // setSelectedPrices(prices);
+    // setPriceSelectAll(prices.length === 0);
+    setSelectedHall(params.get('CinemaHallId') ?? 'any');
+    const seatParam = params.get('HasAvailableSeats');
+    setSelectedSeats(
+      seatParam === 'true' || seatParam === 'false' ? seatParam : 'all'
+    );
+    // --- ініціалізація цін ---
+    const minPrice = params.get('MinTicketPrice');
+    const maxPrice = params.get('MaxTicketPrice');
+    if (!minPrice && !maxPrice) {
+      setSelectedPrices([]);
+      setPriceSelectAll(true);
+    } else if (minPrice && maxPrice && minPrice !== maxPrice) {
+      // два різні значення — підсвічуємо обидві кнопки
+      setSelectedPrices([minPrice, maxPrice]);
+      setPriceSelectAll(false);
+    } else {
+      // одне значення
+      const p = minPrice || maxPrice!;
+      setSelectedPrices([p]);
+      setPriceSelectAll(false);
+    }
+
+    // 5) більше сюди не повертатися
+    setIsLoading((p) => ({ ...p, firstLoadingPage: false }));
+  }, [searchParams, isLoading.firstLoadingPage]);
+
+  const handleDateChange = (e: SelectChangeEvent<string>) => {
+    setSelectedDate(e.target.value);
+  };
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleHallChange = (e: SelectChangeEvent<string>) => {
+    const value = e.target.value;
+    setSelectedHall(value);
+    setFilter((prev) => ({
+      ...prev,
+      CinemaHallId: value === 'any' ? '' : value,
+    }));
+  };
+
+  const handleSeatsToggle = (value: string) => {
+    setSelectedSeats(value);
+    setFilter((prev) => ({
+      ...prev,
+      HasAvailableSeats: value === 'all' ? '' : value,
+    }));
+  };
+
+  const handlePriceToggle = (value: string) => {
+    if (value === 'all') {
+      setPriceSelectAll(true);
+      setSelectedPrices([]);
+    } else {
+      setPriceSelectAll(false);
+      setSelectedPrices((prev) =>
+        prev.includes(value)
+          ? prev.filter((v) => v !== value)
+          : [...prev, value]
+      );
+    }
+  };
+
+  const isFormatActive = (value: string) => selectedSeats === value;
+  const isPriceActive = (value: string) =>
+    priceSelectAll ? value === 'all' : selectedPrices.includes(value);
+
+  const handleSliderChange = (_: Event, newVal: number[]) => {
+    setTimeInterval(newVal as [number, number]);
+    setFilter((f) => ({
+      ...f,
+      MinStartTime: String(newVal[0]),
+      MaxStartTime: String(newVal[1]),
+    }));
+  };
+
+  const handleSubmit = () => {
+    const baseDate = selectedDate || new Date().toISOString().split('T')[0];
+    const [minIdx, maxIdx] = timeInterval;
+    const qp = new URLSearchParams();
+
+    // qp.set('orderField', 'StartTime');
+    qp.set('MinStartTime', `${baseDate}T${timeOptions[minIdx].label}`);
+    qp.set('MaxStartTime', `${baseDate}T${timeOptions[maxIdx].label}`);
+
+    // кидаємо інші фільтри, включаючи HasAvailableSeats і CinemaHallId
+    Object.entries(filter).forEach(([k, v]) => {
+      if (v !== '' && k !== 'MinStartTime' && k !== 'MaxStartTime') {
+        qp.set(k, v);
+      }
+    });
+
+    // Логіка цін поверх фільтра:
+    if (!priceSelectAll) {
+      const ps = selectedPrices.map(Number).sort((a, b) => a - b);
+      if (ps.length === 1) {
+        qp.set('MinTicketPrice', String(ps[0]));
+        qp.set('MaxTicketPrice', String(ps[0]));
+      } else if (ps.length > 1) {
+        qp.set('MinTicketPrice', String(ps[0]));
+        qp.set('MaxTicketPrice', String(ps[ps.length - 1]));
+      }
+    }
+
+    navigate({
+      pathname: '/session-search',
+      search: `?${qp.toString()}`,
+    });
+    handleClose();
+  };
+
+  // 5. При скиданні теж відпрацьовуємо «Місця» та ціну
+  const handleReset = () => {
+    const today = new Date().toISOString().split('T')[0];
+    setFilter(getDefaultQuery());
+    setTimeInterval([0, 4]);
+    setSelectedDate(today);
+    setSelectedHall('any');
+    setSelectedSeats('all');
+    setSelectedPrices([]);
+    setPriceSelectAll(true);
+
+    const qp = new URLSearchParams();
+    qp.set('MinStartTime', `${today}T08:00`);
+    qp.set('MaxStartTime', `${today}T23:00`);
+
+    navigate({
+      pathname: '/session-search',
+      search: `?${qp.toString()}`,
+    });
+    handleClose();
   };
 
   return (
@@ -145,47 +313,38 @@ export default function ModalFilters({}: Props) {
         <FilterAltIcon sx={styles.openModalButtonIcon} />
       </PrimaryButton>
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-filter"
-        aria-describedby="modal-filter-adaptive"
-        sx={styles.modalContainer}>
+      <Modal open={open} onClose={handleClose} sx={styles.modalContainer}>
         <Box
-          sx={styles.modalFormBox}
           component="form"
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit();
-          }}>
-          {/* Дата */}
+          }}
+          sx={styles.modalFormBox}>
           <Box sx={styles.selectorWrapper}>
             <Typography variant="caption" sx={styles.selectorLabelText}>
               Дата
             </Typography>
             <Select
               fullWidth
-              name="format"
-              value={selectedValue}
-              onChange={handleChange}
+              value={selectedDate}
+              onChange={handleDateChange}
               size="small"
               sx={styles.selectorSelector}>
-              <MenuItem value="any">Всі</MenuItem>
-              {statusOptions.map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
+              {dates.map((date) => (
+                <MenuItem key={date.value} value={date.value}>
+                  {date.weekday}, {date.label}
                 </MenuItem>
               ))}
             </Select>
           </Box>
 
-          {/* Час: з / по */}
           <Box sx={styles.boxSliderContainerWrapper}>
             <Typography sx={styles.selectorLabelText}>Час</Typography>
             <Box sx={styles.sliderWrapper}>
               <Slider
                 getAriaLabel={() => 'Time range'}
-                value={value}
+                value={timeInterval}
                 onChange={handleSliderChange}
                 valueLabelDisplay="off"
                 sx={styles.sliderSelector}
@@ -197,22 +356,21 @@ export default function ModalFilters({}: Props) {
             </Box>
           </Box>
 
-          {/* Формат / Зал */}
           <Box sx={styles.boxRowContainerWrapper}>
             <Box sx={styles.selectorWrapper}>
               <Typography variant="caption" sx={styles.selectorLabelText}>
-                Формат
+                Місця
               </Typography>
               <Box sx={styles.buttonGroup}>
-                {['all', ...formatOptions.map((f) => f.value)].map((value) => (
+                {['all', ...seatsOptions.map((f) => f.value)].map((value) => (
                   <ToggleButton
                     key={value}
                     value={value}
-                    onClick={() => handleToggle(value)}
-                    sx={styles.toggleButton(isActive(value))}>
+                    onClick={() => handleSeatsToggle(value)}
+                    sx={styles.toggleButton(isFormatActive(value))}>
                     {value === 'all'
                       ? 'Всі'
-                      : formatOptions.find((f) => f.value === value)?.label}
+                      : seatsOptions.find((f) => f.value === value)?.label}
                   </ToggleButton>
                 ))}
               </Box>
@@ -224,8 +382,8 @@ export default function ModalFilters({}: Props) {
               </Typography>
               <Select
                 fullWidth
-                value={selectedValue}
-                onChange={handleChange}
+                value={selectedHall}
+                onChange={handleHallChange}
                 size="small"
                 sx={styles.selectorSelector}>
                 <MenuItem value="any">Всі</MenuItem>
@@ -238,18 +396,17 @@ export default function ModalFilters({}: Props) {
             </Box>
           </Box>
 
-          {/* Ціна */}
           <Box sx={styles.selectorWrapper}>
             <Typography variant="caption" sx={styles.selectorLabelText}>
-              Ціна
+              Ціна, грн
             </Typography>
             <Box sx={styles.buttonGroup}>
               {['all', ...priceOptions.map((p) => p.value)].map((value) => (
                 <ToggleButton
                   key={value}
                   value={value}
-                  onClick={() => handleToggle(value)}
-                  sx={styles.toggleButton(isActive(value))}>
+                  onClick={() => handlePriceToggle(value)}
+                  sx={styles.toggleButton(isPriceActive(value))}>
                   {value === 'all'
                     ? 'Всі'
                     : priceOptions.find((p) => p.value === value)?.label}
@@ -257,10 +414,11 @@ export default function ModalFilters({}: Props) {
               ))}
             </Box>
           </Box>
+
           <Divider sx={styles.divider} />
 
           <Box sx={styles.modalControlButtonBox}>
-            <GlowButton sx={styles.modalControlButton}>
+            <GlowButton onClick={handleReset} sx={styles.modalControlButton}>
               <Typography>Скинути</Typography>
             </GlowButton>
             <PrimaryButton type="submit" sx={{ width: '100%' }}>

@@ -4,95 +4,155 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  CircularProgress,
+  Tooltip,
   Typography,
   useTheme,
 } from '@mui/material';
 import getFilmAdaptiveScheduleGridItemStyles from './FilmAdaptiveScheduleGridItem.styles';
-import { useState } from 'react';
-type Props = {};
+import { useEffect, useState } from 'react';
+import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { SessionWithContentDto } from '../../../../core/api/types/types.session';
 
-interface FilmSession {
-  id: number;
-  startTime: string;
-  cinemaHallId: number;
-  status: string;
-  ticketPrice: number;
-  contentId: number;
-  title: string;
-  description: string;
-  rating: number;
-  releaseYear: number;
-  trailerUrl: string;
-  bannerUrl: string;
-  posterUrl: string;
-  durationMinutes: number;
-  genreIds: number[];
-}
+type Props = {};
 
 export default function FilmAdaptiveScheduleGridItem({}: Props) {
   const theme = useTheme();
   const styles = getFilmAdaptiveScheduleGridItemStyles(theme);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [filmData, setFilmData] = useState<FilmSession[]>([
-    {
-      id: 0,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Гарря Шпротер і камені в нирках',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({
+    moviesData: false,
+  });
+
+  const [filmData, setFilmData] = useState<SessionWithContentDto[]>([]);
+
+  useEffect(() => {
+    const fetchFilmData = async () => {
+      try {
+        setIsLoading((prev) => ({ ...prev, moviesData: true }));
+
+        const params = new URLSearchParams(searchParams.toString());
+
+        let minStartTime = params.get('MinStartTime');
+        let maxStartTime = params.get('MaxStartTime');
+
+        if (!minStartTime || !maxStartTime) {
+          const today = new Date().toISOString().split('T')[0];
+          minStartTime = `${today}T08:00`;
+          maxStartTime = `${today}T23:00`;
+        }
+
+        const queryParams = new URLSearchParams();
+        queryParams.set('PageSize', '300');
+        queryParams.set('orderField', 'StartTime');
+        queryParams.set('orderType', 'OrderBy');
+        queryParams.set('MinStartTime', minStartTime);
+        queryParams.set('MaxStartTime', maxStartTime);
+
+        const response = await searchSessionsWithContent(
+          `?${queryParams.toString()}`
+        );
+        setFilmData(response.items);
+      } catch (error) {
+        console.error('Fetch failed', error);
+      } finally {
+        setIsLoading((prev) => ({ ...prev, moviesData: false }));
+      }
+    };
+
+    fetchFilmData();
+  }, [searchParams.toString()]);
+
+  const groupByContentId = (sessions: SessionWithContentDto[]) => {
+    const grouped: Record<string, SessionWithContentDto[]> = {};
+    sessions.forEach((session) => {
+      const key = session.contentId.toString();
+      if (!grouped[key]) {
+        grouped[key] = [];
+      }
+      grouped[key].push(session);
+    });
+    return grouped;
+  };
+
+  const groupedFilms = groupByContentId(filmData);
 
   return (
-    <Box>
-      {filmData.map((film) => (
-        <Card key={film.id} sx={styles.filmCardItem}>
-          <CardActionArea sx={styles.filmPoster}>
-            <CardMedia
-              component="img"
-              sx={styles.filmPoster}
-              image={film.posterUrl || '/placeholder-poster.jpg'}
-              alt={film.title}
-              onError={(e: any) => {
-                e.target.onerror = null;
-                e.target.src = '/placeholder-poster.jpg';
-              }}
-            />
-          </CardActionArea>
-          <CardContent sx={styles.filmCardContent}>
-            <Typography variant="h6" component="div" sx={styles.filmTitle}>
-              {film.title}
-            </Typography>
-
-            <Box sx={styles.sessionPriceInfo}>
-              <Typography sx={styles.sessionPriceText}>Від 120 грн</Typography>
-            </Box>
-
-            <Box sx={styles.filmInfoContainer}>
-              {Array.from({ length: 9 }).map((_, idx) => (
-                <Typography
-                  key={idx}
-                  variant="body2"
-                  component="div"
-                  sx={styles.sessionPriceText}>
-                  10:00
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      {isLoading.moviesData ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <CircularProgress />
+        </Box>
+      ) : filmData.length === 0 ? (
+        <Typography variant="h6" sx={{ opacity: 0.7, textAlign: 'center' }}>
+          Нічого не знайдено
+        </Typography>
+      ) : (
+        Object.entries(groupedFilms).map(([contentId, sessions]) => {
+          const film = sessions[0];
+          return (
+            <Card key={contentId} sx={styles.filmCardItem}>
+              <CardActionArea sx={styles.filmPoster}>
+                <CardMedia
+                  component="img"
+                  sx={styles.filmPoster}
+                  image={film.posterUrl || '/placeholder-poster.jpg'}
+                  alt={film.title}
+                  onError={(e: any) => {
+                    e.target.onerror = null;
+                    e.target.src = '/placeholder-poster.jpg';
+                  }}
+                />
+              </CardActionArea>
+              <CardContent sx={styles.filmCardContent}>
+                <Typography variant="h6" component="div" sx={styles.filmTitle}>
+                  {film.title}
                 </Typography>
-              ))}
-            </Box>
-          </CardContent>
-        </Card>
-      ))}
+
+                <Box sx={styles.sessionPriceInfo}>
+                  <Typography sx={styles.sessionPriceText}>
+                    Від {Math.min(...sessions.map((s) => s.ticketPrice))} грн
+                  </Typography>
+                </Box>
+
+                <Box sx={styles.filmInfoContainer}>
+                  {sessions.map((s) => (
+                    <Tooltip
+                      key={s.id}
+                      title={`Від ${s.ticketPrice} грн`}
+                      placement="bottom"
+                      arrow
+                      enterDelay={50}
+                      leaveDelay={100}
+                      PopperProps={{
+                        modifiers: [
+                          {
+                            name: 'offset',
+                            options: {
+                              offset: [0, -10],
+                            },
+                          },
+                        ],
+                      }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ ...styles.sessionPriceText, cursor: 'pointer' }}>
+                        {new Date(s.startTime).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                      </Typography>
+                    </Tooltip>
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+          );
+        })
+      )}
     </Box>
   );
 }

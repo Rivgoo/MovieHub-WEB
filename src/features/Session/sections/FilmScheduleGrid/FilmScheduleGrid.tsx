@@ -4,6 +4,7 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  CircularProgress,
   Tooltip,
   Typography,
   useTheme,
@@ -19,18 +20,30 @@ export default function FilmScheduleGrid() {
   const styles = getFilmScheduleGridStyles(theme);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({
+    moviesData: false,
+  });
 
   const [filmData, setFilmData] = useState<SessionWithContentDto[]>([]);
 
   useEffect(() => {
     const fetchFilmsData = async () => {
       try {
+        setIsLoading((prev) => ({
+          ...prev,
+          moviesData: true,
+        }));
         const response = await searchSessionsWithContent(
           searchParams.toString()
         );
         setFilmData(response.items);
       } catch (error) {
         console.error('Failed to load film sessions:', error);
+      } finally {
+        setIsLoading((prev) => ({
+          ...prev,
+          moviesData: false,
+        }));
       }
     };
 
@@ -38,67 +51,80 @@ export default function FilmScheduleGrid() {
   }, [searchParams]);
 
   return (
-    <Box sx={styles.filmCardContainer}>
-      {filmData.map((film) => (
-        <Card key={film.id} sx={styles.filmCardItem}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              sx={styles.filmPoster}
-              image={film.posterUrl || '/placeholder-poster.jpg'}
-              alt={film.title}
-              onError={(e: any) => {
-                e.target.onerror = null;
-                e.target.src = '/placeholder-poster.jpg';
-              }}
-            />
-          </CardActionArea>
-          <CardContent sx={styles.filmCardContent}>
-            <Typography variant="h6" component="div" sx={styles.filmTitle}>
-              {film.title}
-            </Typography>
+    <Box
+      sx={{
+        ...(filmData.length === 0 || isLoading.moviesData
+          ? styles.nothingFound
+          : styles.filmCardContainer),
+      }}>
+      {isLoading.moviesData ? (
+        <CircularProgress />
+      ) : filmData.length === 0 ? (
+        <Typography variant="h6" sx={{ opacity: 0.7 }}>
+          Нічого не знайдено
+        </Typography>
+      ) : (
+        filmData.map((film) => (
+          <Card key={film.id} sx={styles.filmCardItem}>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                sx={styles.filmPoster}
+                image={film.posterUrl || '/placeholder-poster.jpg'}
+                alt={film.title}
+                onError={(e: any) => {
+                  e.target.onerror = null;
+                  e.target.src = '/placeholder-poster.jpg';
+                }}
+              />
+            </CardActionArea>
+            <CardContent sx={styles.filmCardContent}>
+              <Typography variant="h6" component="div" sx={styles.filmTitle}>
+                {film.title}
+              </Typography>
 
-            <Box sx={styles.filmInfoContainer}>
-              <Box sx={styles.sessionTimeBox}>
-                <Tooltip
-                  title={`Від ${film.ticketPrice} грн`}
-                  placement="bottom"
-                  arrow
-                  enterDelay={50}
-                  leaveDelay={100}
-                  PopperProps={{
-                    modifiers: [
-                      {
-                        name: 'offset',
-                        options: {
-                          offset: [0, -10],
+              <Box sx={styles.filmInfoContainer}>
+                <Box sx={styles.sessionTimeBox}>
+                  <Tooltip
+                    title={`Від ${film.ticketPrice} грн`}
+                    placement="bottom"
+                    arrow
+                    enterDelay={50}
+                    leaveDelay={100}
+                    PopperProps={{
+                      modifiers: [
+                        {
+                          name: 'offset',
+                          options: {
+                            offset: [0, -10],
+                          },
                         },
-                      },
-                    ],
-                  }}>
+                      ],
+                    }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ ...styles.filmTimeText, cursor: 'pointer' }}>
+                      {new Date(film.startTime).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </Typography>
+                  </Tooltip>
+                </Box>
+                <Box sx={styles.sessionPriceBox}>
                   <Typography
-                    variant="body2"
-                    sx={{ ...styles.filmTimeText, cursor: 'pointer' }}>
-                    {new Date(film.startTime).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
+                    variant="h6"
+                    component="div"
+                    sx={styles.sessionPriceText}>
+                    Від
+                    <br /> {film.ticketPrice} грн
                   </Typography>
-                </Tooltip>
+                </Box>
               </Box>
-              <Box sx={styles.sessionPriceBox}>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  sx={styles.sessionPriceText}>
-                  Від
-                  <br /> {film.ticketPrice} грн
-                </Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        ))
+      )}
     </Box>
   );
 }

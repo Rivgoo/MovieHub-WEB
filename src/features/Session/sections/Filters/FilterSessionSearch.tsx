@@ -9,6 +9,8 @@ import {
 import Slider from '@mui/material/Slider';
 import { getAllCinemaHalls } from '../../../../core/api/requests/request.cinemahall';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 
 type Props = {};
 
@@ -96,7 +98,6 @@ export default function FilterSessionSearch({}: Props) {
           hallFilter: true,
         }));
         const response = await getAllCinemaHalls();
-        console.log(response);
         const arr = response.map((el) => {
           return { value: el.id.toString(), label: el.id.toString() };
         });
@@ -156,32 +157,39 @@ export default function FilterSessionSearch({}: Props) {
 
   const handleSubmit = async () => {
     const queryParams = new URLSearchParams();
+    const minStart = searchParams.get('MinStartTime');
+    const baseDate = minStart
+      ? minStart.split('T')[0]
+      : new Date().toISOString().split('T')[0];
+
+    let hasFilter = false;
 
     Object.entries(filter).forEach(([key, value]) => {
       if (value !== '' && key !== 'Format') {
         switch (key) {
           case 'MinStartTime':
           case 'MaxStartTime': {
-            const existingParam = searchParams.get(key);
-            const baseDate = existingParam
-              ? existingParam.split('T')[0]
-              : new Date().toISOString().split('T')[0];
-
             const option = timeOptions.find(
               (el) => el.value.toString() === value
             );
             if (option) {
               const finalDateTime = `${baseDate}T${option.label}`;
               queryParams.set(key, finalDateTime);
+              hasFilter = true;
             }
-            return;
+            break;
           }
-
           default:
             queryParams.set(key, value);
+            hasFilter = true;
         }
       }
     });
+
+    if (!hasFilter) {
+      queryParams.set('MinStartTime', `${baseDate}T08:00`);
+      queryParams.set('MaxStartTime', `${baseDate}T23:00`);
+    }
 
     navigate({
       pathname: '/session-search',
@@ -269,7 +277,8 @@ export default function FilterSessionSearch({}: Props) {
               e.preventDefault();
               handelResetFilters();
             }}>
-            <Typography>Скинути</Typography>
+            {/* <Typography>Скинути</Typography> */}
+            <FilterAltOffIcon />
           </GlowButton>
         </Box>
       </Box>
@@ -277,7 +286,8 @@ export default function FilterSessionSearch({}: Props) {
         <br />
         <Box sx={styles.filterControlButton}>
           <PrimaryButton type="submit">
-            <Typography>Шукати</Typography>
+            {/* <Typography>Шукати</Typography> */}
+            <SearchIcon />
           </PrimaryButton>
         </Box>
       </Box>

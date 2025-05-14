@@ -1,6 +1,16 @@
 import { Theme } from '@mui/material';
 
 const getFilmAdaptiveScheduleGridItemStyles = (theme: Theme) => ({
+  // nothingFound: {
+  //   display: 'flex',
+  //   flexDirection: 'column',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   width: '100%',
+  //   minHeight: '400px',
+  //   textAlign: 'center',
+  // },
+  filmCardsWrapper: { display: 'flex', flexDirection: 'column', gap: '6px' },
   filmCardItem: {
     display: 'flex',
     flexGrow: 1,
@@ -64,6 +74,7 @@ const getFilmAdaptiveScheduleGridItemStyles = (theme: Theme) => ({
     borderRadius: '6px',
     padding: '6px',
     justifyItems: 'center',
+    height: '100%',
   },
 });
 
