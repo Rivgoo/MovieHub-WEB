@@ -16,6 +16,7 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     flexShrink: 1,
     maxWidth: '240px',
     minWidth: '125px',
+    maxHeight: '490px',
   },
   filmPoster: {
     width: '100%',

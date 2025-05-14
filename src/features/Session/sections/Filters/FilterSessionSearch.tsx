@@ -50,7 +50,7 @@ export default function FilterSessionSearch({}: Props) {
     { value: 1, label: '12:00' },
     { value: 2, label: '16:00' },
     { value: 3, label: '20:00' },
-    { value: 4, label: '00:00' },
+    { value: 4, label: '23:00' },
   ];
 
   //
@@ -159,9 +159,30 @@ export default function FilterSessionSearch({}: Props) {
 
     Object.entries(filter).forEach(([key, value]) => {
       if (value !== '' && key !== 'Format') {
-        queryParams.append(key, value);
+        switch (key) {
+          case 'MinStartTime':
+          case 'MaxStartTime': {
+            const existingParam = searchParams.get(key);
+            const baseDate = existingParam
+              ? existingParam.split('T')[0]
+              : new Date().toISOString().split('T')[0];
+
+            const option = timeOptions.find(
+              (el) => el.value.toString() === value
+            );
+            if (option) {
+              const finalDateTime = `${baseDate}T${option.label}`;
+              queryParams.set(key, finalDateTime);
+            }
+            return;
+          }
+
+          default:
+            queryParams.set(key, value);
+        }
       }
     });
+
     navigate({
       pathname: '/session-search',
       search: `?${queryParams.toString()}`,
@@ -169,10 +190,11 @@ export default function FilterSessionSearch({}: Props) {
   };
 
   const handelResetFilters = () => {
+    const date = new Date();
     setFilter(getDefaultQuery());
     navigate({
       pathname: '/session-search',
-      search: ``,
+      search: `?MinStartTime=${date.toISOString().split('T')[0]}T08:00&MaxStartTime=${date.toISOString().split('T')[0]}T23:00`,
     });
   };
 

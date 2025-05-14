@@ -9,231 +9,33 @@ import {
   useTheme,
 } from '@mui/material';
 import getFilmScheduleGridStyles from './FilmScheduleGrid.styles';
-import { useState } from 'react';
-type Props = {};
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
+import { SessionWithContentDto } from '../../../../core/api/types/types.session';
 
-interface FilmSession {
-  id: number;
-  startTime: string;
-  cinemaHallId: number;
-  status: string;
-  ticketPrice: number;
-  contentId: number;
-  title: string;
-  description: string;
-  rating: number;
-  releaseYear: number;
-  trailerUrl: string;
-  bannerUrl: string;
-  posterUrl: string;
-  durationMinutes: number;
-  genreIds: number[];
-}
-
-export default function FilmScheduleGrid({}: Props) {
+export default function FilmScheduleGrid() {
   const theme = useTheme();
   const styles = getFilmScheduleGridStyles(theme);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const [filmData, setFilmData] = useState<FilmSession[]>([
-    {
-      id: 0,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Гарря Шпротер і камені в нирках',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 1,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 2,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 3,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 4,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 5,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 6,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 7,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 8,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 9,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-    {
-      id: 10,
-      startTime: '2025-05-11T23:35:06.759Z',
-      cinemaHallId: 0,
-      status: 'Ongoing',
-      ticketPrice: 0,
-      contentId: 0,
-      title: 'Harry2',
-      description: 'string',
-      rating: 0,
-      releaseYear: 0,
-      trailerUrl: 'string',
-      bannerUrl: 'string',
-      posterUrl:
-        'https://movieposter.runasp.net/content/posters/106_poster_54ab740f4fec4f6281b8f41a6d562499.jpg',
-      durationMinutes: 0,
-      genreIds: [0],
-    },
-  ]);
+  const [filmData, setFilmData] = useState<SessionWithContentDto[]>([]);
+
+  useEffect(() => {
+    const fetchFilmsData = async () => {
+      try {
+        const response = await searchSessionsWithContent(
+          searchParams.toString()
+        );
+        setFilmData(response.items);
+      } catch (error) {
+        console.error('Failed to load film sessions:', error);
+      }
+    };
+
+    fetchFilmsData();
+  }, [searchParams]);
 
   return (
     <Box sx={styles.filmCardContainer}>
@@ -258,31 +60,31 @@ export default function FilmScheduleGrid({}: Props) {
 
             <Box sx={styles.filmInfoContainer}>
               <Box sx={styles.sessionTimeBox}>
-                {Array.from({ length: 9 }).map((_, idx) => (
-                  <Tooltip
-                    key={idx}
-                    title="Від 120 грн"
-                    placement="bottom"
-                    arrow
-                    enterDelay={50}
-                    leaveDelay={100}
-                    PopperProps={{
-                      modifiers: [
-                        {
-                          name: 'offset',
-                          options: {
-                            offset: [0, -10],
-                          },
+                <Tooltip
+                  title={`Від ${film.ticketPrice} грн`}
+                  placement="bottom"
+                  arrow
+                  enterDelay={50}
+                  leaveDelay={100}
+                  PopperProps={{
+                    modifiers: [
+                      {
+                        name: 'offset',
+                        options: {
+                          offset: [0, -10],
                         },
-                      ],
-                    }}>
-                    <Typography
-                      variant="body2"
-                      sx={{ ...styles.filmTimeText, cursor: 'pointer' }}>
-                      10:00
-                    </Typography>
-                  </Tooltip>
-                ))}
+                      },
+                    ],
+                  }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ ...styles.filmTimeText, cursor: 'pointer' }}>
+                    {new Date(film.startTime).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </Typography>
+                </Tooltip>
               </Box>
               <Box sx={styles.sessionPriceBox}>
                 <Typography
@@ -290,7 +92,7 @@ export default function FilmScheduleGrid({}: Props) {
                   component="div"
                   sx={styles.sessionPriceText}>
                   Від
-                  <br /> 120 грн
+                  <br /> {film.ticketPrice} грн
                 </Typography>
               </Box>
             </Box>

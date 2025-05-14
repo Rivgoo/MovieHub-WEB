@@ -7,6 +7,7 @@ import {
   CreateSessionRequest,
   CreateSessionResponse,
   UpdateSessionRequest,
+  SessionWithContentDto,
 } from '../types/types.session.ts';
 
 // GET /api/v1/sessions
@@ -39,6 +40,16 @@ export const searchSessions = async (
 ): Promise<SessionFilterResponse> => {
   const { data } = await apiClient.get<SessionFilterResponse>(
     `/sessions/filter${query.startsWith('?') ? query : `?${query}`}`
+  );
+  return data;
+};
+
+// GET /api/v1/sessions/filter-with-content?query
+export const searchSessionsWithContent = async (
+  query: string
+): Promise<SessionFilterResponse> => {
+  const { data } = await apiClient.get<SessionFilterResponse>(
+    `/sessions/filter-with-content${query.startsWith('?') ? query : `?${query}`}`
   );
   return data;
 };

@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import getSessionSearchDateFilterStyles from './DateFilter.styles';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 type DateFilterProps = {
   onChange?: (value: string) => void;
@@ -17,6 +17,7 @@ export default function DateFilter({ onChange }: DateFilterProps) {
   const theme = useTheme();
   const styles = getSessionSearchDateFilterStyles(theme);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const [dates, setDates] = useState<DateOption[]>([]);
   const [pickedIndex, setPickedIndex] = useState<number>(0);
@@ -54,20 +55,31 @@ export default function DateFilter({ onChange }: DateFilterProps) {
 
     navigate({
       pathname: '/session-search',
-      search: `?MinStartTime=${generatedDates[0].value}T08:00:24.923Z&MaxStartTime=${generatedDates[0].value}T08:00:24.923Z`,
+      search: `?MinStartTime=${generatedDates[0].value}T08:00&MaxStartTime=${generatedDates[0].value}T23:00`,
     });
 
-    // Передати першу дату одразу, якщо onChange переданий
     if (onChange) {
       onChange(generatedDates[0].value);
     }
   }, []);
 
+  useEffect(() => {
+    const date = new Date().toISOString().split('T')[0];
+    const expectedMin = `${date}T08:00:00.923Z`;
+    const expectedMax = `${date}T23:00:00.923Z`;
+
+    const minParam = searchParams.get('MinStartTime');
+    const maxParam = searchParams.get('MaxStartTime');
+    if (minParam === expectedMin && maxParam === expectedMax) {
+      setPickedIndex(0);
+    }
+  }, [searchParams]);
+
   const handleButtonClick = (idx: number) => {
     setPickedIndex(idx);
     navigate({
       pathname: '/session-search',
-      search: `?MinStartTime=${dates[idx].value}T08:00:24.923Z&MaxStartTime=${dates[idx].value}T08:00:24.923Z`,
+      search: `?MinStartTime=${dates[idx].value}T08:00&MaxStartTime=${dates[idx].value}T23:00`,
     });
   };
 
