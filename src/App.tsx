@@ -28,7 +28,9 @@ const SessionSearchPage = React.lazy(
 );
 
 // Customer Pages and Layout
-const CustomerAccountLayout = React.lazy( () => import('./features/Customer/CustomerAccountLayout'));
+const CustomerAccountLayout = React.lazy(
+  () => import('./features/Customer/CustomerAccountLayout')
+);
 const CustomerAccountPage = React.lazy(
   () => import('./features/Customer/AccountPage')
 );
@@ -69,6 +71,9 @@ const EditUserPage = React.lazy(
 );
 const BookingManagerPage = React.lazy(
   () => import('./features/Admin/Booking/BookingManagerPage')
+);
+const BookingSeatPage = React.lazy(
+  () => import('./features/Booking/BookingSeatPage')
 );
 
 const LoadingFallback = () => (
@@ -131,6 +136,14 @@ function App() {
                     <CustomerAccountLayout>
                       <BookingPage />
                     </CustomerAccountLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/booking/session/:sessionId"
+                element={
+                  <ProtectedRoute allowedRoles={[UserRole.Customer]}>
+                    <BookingSeatPage />
                   </ProtectedRoute>
                 }
               />
