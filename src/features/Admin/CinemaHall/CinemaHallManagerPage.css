@@ -1,0 +1,111 @@
+.cinema-container {
+  color: #fff;
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.cinema-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 3.5rem;
+}
+
+.cinema-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.add-button {
+  padding: 13px 20px;
+    background-color: var(--primary-light);
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1.0625em;
+    color: var(--admin-add-button-text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 235px;
+    text-transform: none;
+}
+
+.cinema-table .actions {
+    margin-right: auto;
+    max-width: 150px;
+    margin-left: auto;
+    padding: 10px 0;
+}
+
+.cinema-table tr {
+    padding: 10px 0;
+}
+ 
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.cinema-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--admin-list-item-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cinema-table th,
+.cinema-table td {
+  padding: 0.8rem;
+  text-align: center;
+  border-bottom: 1px solid #4b4b4b;
+}
+
+.cinema-table th {
+  background-color: var(--admin-navy);
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin: 0 5px;
+  transition: transform 0.2s;
+}
+
+.cinemahall-add-button-style {
+    margin-left: 8px;
+    margin-right: 3%;
+    width: 40%;
+}
+
+.actions button:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+  .cinema-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .cinema-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .add-button {
+    width: 100%;
+  }
+
+  .cinema-table th,
+  .cinema-table td {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+}
+
