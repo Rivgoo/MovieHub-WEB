@@ -20,8 +20,6 @@ import {
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { getAllCinemaHalls } from '../../../../core/api/requests/request.cinemahall';
 
-// Типи
-
 type FilterSessionFieldKeys = {
   MinStartTime: string;
   MaxStartTime: string;
@@ -107,7 +105,6 @@ export default function ModalFilters() {
   useEffect(() => {
     if (!isLoading.firstLoadingPage) return;
 
-    // 1) Згенерувати список дат
     const genDates = Array.from({ length: 10 }, (_, i) => {
       const d = new Date();
       d.setDate(d.getDate() + i);
@@ -125,17 +122,14 @@ export default function ModalFilters() {
     });
     setDates(genDates);
 
-    // 2) Витягнути з URL параметри
     const params = new URLSearchParams(searchParams.toString());
     let minRaw = params.get('MinStartTime');
     let maxRaw = params.get('MaxStartTime');
     const today = genDates[0].value;
 
-    // Якщо в URL нема часу — встановлюємо дефолт
     if (!minRaw || !maxRaw) {
       minRaw = `${today}T08:00`;
       maxRaw = `${today}T23:00`;
-      // І «запихаємо» їх у URL
       navigate(
         {
           pathname: '/session-search',
@@ -145,7 +139,6 @@ export default function ModalFilters() {
       );
     }
 
-    // Розбираємо дату та час
     const [minDate, minTime] = minRaw.split('T');
     const [maxDate, maxTime] = maxRaw.split('T');
     setSelectedDate(minDate);
@@ -155,7 +148,6 @@ export default function ModalFilters() {
     const safeMax = maxIdx >= 0 ? maxIdx : 4;
     setTimeInterval([safeMin, safeMax]);
 
-    // 3) Ініціалізуємо filter
     setFilter({
       MinStartTime: String(safeMin),
       MaxStartTime: String(safeMax),
@@ -167,35 +159,25 @@ export default function ModalFilters() {
         (params.get('Status') as '' | 'Ongoing' | 'Ended' | 'Scheduled') ?? '',
     });
 
-    // 4) Контролери кнопок/селектів
-    // setSelectedHall(params.get('CinemaHallId') ?? 'any');
-    // setSelectedSeats(params.get('Seats') ?? 'all');
-    // const prices = params.get('MinTicketPrice')?.split(',') ?? [];
-    // setSelectedPrices(prices);
-    // setPriceSelectAll(prices.length === 0);
     setSelectedHall(params.get('CinemaHallId') ?? 'any');
     const seatParam = params.get('HasAvailableSeats');
     setSelectedSeats(
       seatParam === 'true' || seatParam === 'false' ? seatParam : 'all'
     );
-    // --- ініціалізація цін ---
     const minPrice = params.get('MinTicketPrice');
     const maxPrice = params.get('MaxTicketPrice');
     if (!minPrice && !maxPrice) {
       setSelectedPrices([]);
       setPriceSelectAll(true);
     } else if (minPrice && maxPrice && minPrice !== maxPrice) {
-      // два різні значення — підсвічуємо обидві кнопки
       setSelectedPrices([minPrice, maxPrice]);
       setPriceSelectAll(false);
     } else {
-      // одне значення
       const p = minPrice || maxPrice!;
       setSelectedPrices([p]);
       setPriceSelectAll(false);
     }
 
-    // 5) більше сюди не повертатися
     setIsLoading((p) => ({ ...p, firstLoadingPage: false }));
   }, [searchParams, isLoading.firstLoadingPage]);
 
@@ -255,18 +237,15 @@ export default function ModalFilters() {
     const [minIdx, maxIdx] = timeInterval;
     const qp = new URLSearchParams();
 
-    // qp.set('orderField', 'StartTime');
     qp.set('MinStartTime', `${baseDate}T${timeOptions[minIdx].label}`);
     qp.set('MaxStartTime', `${baseDate}T${timeOptions[maxIdx].label}`);
 
-    // кидаємо інші фільтри, включаючи HasAvailableSeats і CinemaHallId
     Object.entries(filter).forEach(([k, v]) => {
       if (v !== '' && k !== 'MinStartTime' && k !== 'MaxStartTime') {
         qp.set(k, v);
       }
     });
 
-    // Логіка цін поверх фільтра:
     if (!priceSelectAll) {
       const ps = selectedPrices.map(Number).sort((a, b) => a - b);
       if (ps.length === 1) {
@@ -285,7 +264,6 @@ export default function ModalFilters() {
     handleClose();
   };
 
-  // 5. При скиданні теж відпрацьовуємо «Місця» та ціну
   const handleReset = () => {
     const today = new Date().toISOString().split('T')[0];
     setFilter(getDefaultQuery());
