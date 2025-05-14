@@ -42,19 +42,19 @@ const ErrorPage: React.FC = () => {
             variant="h3"
             component="h1"
             gutterBottom
-            color="text.secondary"
+            color="text.primary"
             sx={{ fontWeight: 700 }}>
             404
           </Typography>
           <Typography
             variant="h5"
             component="p"
-            color="text.secondary"
+            color="text.primary"
             sx={{ mb: 2 }}>
             Сторінку не знайдено
           </Typography>
 
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+          <Typography variant="body1" color="text.primary" sx={{ mb: 4 }}>
             На жаль, сторінка, яку ви шукаєте, не існує. Можливо, її було
             переміщено або видалено.
           </Typography>

@@ -123,3 +123,8 @@ export const deleteContentActor = async (
 ): Promise<void> => {
   await apiClient.delete<void>(`/contents/${id}/genres/${actorIds}`);
 };
+
+// DELETE /api/v1/users/favorites/{contentId}
+export const removeFromFavorites = async (contentId: number): Promise<void> => {
+  await apiClient.delete(`/users/favorites/${contentId}`);
+};

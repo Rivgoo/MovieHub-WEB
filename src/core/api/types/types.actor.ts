@@ -11,6 +11,12 @@ export interface ActorDto {
   updatedAt: string;
 }
 
+
+export interface DetailedActorInContentResponse extends ActorDto {
+  roleName?: string | null;
+}
+
+
 export interface ActorInContentDto {
   id: number;
   firstName: string;
@@ -91,5 +97,6 @@ export interface ActorInContentResponse {
   photoUrl?: string | null;
   roleName?: string | null;
 }
+
 
 export type UpdateActorResponse = void;

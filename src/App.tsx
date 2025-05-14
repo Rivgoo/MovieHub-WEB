@@ -20,7 +20,7 @@ const PrivacyPage = React.lazy(() => import('./features/Privacy/PrivacyPage'));
 const TermsPage = React.lazy(() => import('./features/Terms/TermsPage'));
 const FilmPage = React.lazy(() => import('./features/Film/FilmPage'));
 const FilmSearchPage = React.lazy(
-  () => import('./features/Film/FilmSearchPage')
+  () => import('./features/Film/FilmSearchPage/FilmSearchPage')
 );
 const SessionPage = React.lazy(() => import('./features/Session/SessionPage'));
 const SessionSearchPage = React.lazy(
@@ -60,6 +60,12 @@ const ActorManagerPage = React.lazy(
 );
 const UserManagerPage = React.lazy(
   () => import('./features/Admin/User/UserManagerPage')
+);
+const CreateUserPage = React.lazy(
+  () => import('./features/Admin/User/CreateUserPage')
+);
+const EditUserPage = React.lazy(
+  () => import('./features/Admin/User/EditUserPage')
 );
 const BookingManagerPage = React.lazy(
   () => import('./features/Admin/Booking/BookingManagerPage')
@@ -175,6 +181,22 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={[UserRole.Admin]}>
                     <ActorManagerPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/user-manager/create"
+                element={
+                  <ProtectedRoute allowedRoles={[UserRole.Admin]}>
+                    <CreateUserPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/user-manager/edit/:userId"
+                element={
+                  <ProtectedRoute allowedRoles={[UserRole.Admin]}>
+                    <EditUserPage />
                   </ProtectedRoute>
                 }
               />

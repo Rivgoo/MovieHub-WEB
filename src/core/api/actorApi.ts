@@ -1,4 +1,5 @@
 import apiClient from "./client";  
+import { ActorInContentResponse } from './types/types.actor';
 import {
   ActorDto,
   ActorFilterResponse,
@@ -24,6 +25,18 @@ export const actorApi = {
     const response = await apiClient.get<ActorDto>(`/actors/${id}`);
     return response.data;
   },
+
+
+  getInContent: async (actorId: number, contentId: number | string): Promise<ActorInContentResponse> => {
+    try {
+      const response = await apiClient.get<ActorInContentResponse>(`/actors/${actorId}/in-content/${contentId}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Помилка завантаження даних актора ${actorId} для контенту ${contentId}:`, error);
+      throw error;
+    }
+  },
+
 
   create: async (data: CreateActorRequest): Promise<CreateActorResponse> => {
     const response = await apiClient.post<CreateActorResponse>(`/actors`, data);

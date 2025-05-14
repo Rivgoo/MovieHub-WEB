@@ -1,0 +1,40 @@
+
+:root {
+
+    --primary-main: #da621c;           
+    --primary-dark: #c35013;          
+    --primary-light: #F8FCF8;         
+  
+
+    --text-light: #F8FCF8;            
+    --text-semi-transparent: rgba(255, 255, 255, 0.85); 
+    --text-very-semi-transparent: rgba(255, 255, 255, 0.7); 
+  
+    
+    --bg-default: #1e1e1e;           
+    --bg-placeholder: #303030;         
+    --bg-avatar-placeholder: #424242; 
+    --bg-hover-light: rgba(255, 255, 255, 0.08); 
+    --bg-hover-dark: rgba(255, 255, 255, 0.1);  
+  
+    
+    --border-semi-transparent: rgba(255, 255, 255, 0.5); 
+  
+
+    --shadow-text: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    --shadow-text-light: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    --shadow-button: 0px 8px 15px rgba(218, 98, 28, 0.3); 
+    --shadow-button-hover: 0px 10px 20px rgba(218, 98, 28, 0.4);
+    --shadow-avatar: 0px 4px 10px rgba(0, 0, 0, 0.25);
+  
+    --hero-favorite-glow-color: #ff8c00; 
+    --scroller-bg-color: #1e1e1e;
+    --scroller-button-bg: rgba(40, 40, 40, 0.7);
+    --scroller-button-bg-hover: rgba(20, 20, 20, 0.9);
+    --scroller-button-color: white;
+    --scroller-gradient-start: var(--scroller-bg-color);
+  
+  
+  }
+  
+
