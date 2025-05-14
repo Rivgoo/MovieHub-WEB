@@ -85,4 +85,14 @@ export const contentApi = {
     await apiClient.delete(`/contents/${id}/actors/${actorId}`);
   },
 
+   getAllGenres: async (contentId: number,genreId: number ) => {
+    const response = await apiClient.get(`/contents/${contentId}/genres/${genreId}`);
+    return response.data; 
+},
+
+   getGenres: async (contentId: number) => {
+    const response = await apiClient.get(`/contents/${contentId}`);
+    return response.data;
+}
+
 };

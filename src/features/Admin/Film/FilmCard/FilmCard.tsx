@@ -9,6 +9,7 @@ type FilmCardProps = {
   imageUrl?: string;
   onEdit: ()=> void;
   onDelete?: () => void;
+  onClick: ()=> void;
 };
 
 const FilmCard = ({ 
@@ -17,13 +18,14 @@ const FilmCard = ({
   rating = 0,  
   imageUrl = "",
   onEdit,
-  onDelete
+  onDelete,
+  onClick,
 }: FilmCardProps) => {
-  const ratingInStars = Math.round(rating / 2); 
+  const ratingInStars = Math.round(rating / 20); 
 
-  return (
-    <div className="film-card">
-      <img src={imageUrl} alt={title} className="film-image" />
+   return (
+    <div className="film-card"> 
+      <img src={imageUrl} alt={title} className="film-image" onClick={onClick} />
       <div className="film-content">
         <h3 className="film-title">{title}</h3>
         <div className="film-rating">
@@ -34,13 +36,17 @@ const FilmCard = ({
         <div className="film-footer">
           <span className="film-duration"><FaClock /> {duration}</span>
           <AdminActions
-           onEdit={onEdit}
-           onDelete={onDelete ?? (() => {})}
+            onEdit={onEdit}
+            onDelete={onDelete ?? (() => {})}
           />
         </div>
       </div>
-    </div>
+    </div>  
   );
 };
 
 export default FilmCard;
+
+
+
+

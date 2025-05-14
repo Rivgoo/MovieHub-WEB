@@ -72,6 +72,7 @@ const FilmManagerPage = () => {
 
 };
 
+
 useEffect(() => {
   loadFilms();
 }, [currentPage, searchTerm, filterValues]);
@@ -146,7 +147,10 @@ const handleFilmFormSubmit = async (data: FilmData) => {
   try {
     const isEditMode = !!editingFilm;
     let contentId = editingFilm?.id; 
+      console.log("Рейтинг фільму, що передається на бекенд:", data.rating);
     if (isEditMode && contentId) {
+        console.log("Жанри1");
+        console.log(data.rating);
       await contentApi.update(contentId, {
         title: data.title,
         description: data.description,
@@ -159,6 +163,79 @@ const handleFilmFormSubmit = async (data: FilmData) => {
         genreIds: data.genres.map(g => g.id),
         actorIds: data.actors.map(a => a.id),
       });
+
+
+const content = await contentApi.getGenres(contentId); // або getContent(contentId)
+const existingGenres: number[] = content.genreIds;
+const existingActorIds: number[] = content.actorIds; 
+     
+// 2. Визначаємо жанри, які потрібно видалити
+const genreIdsToKeep = data.genres.map(g => g.id); 
+
+// Визначаємо жанри, які потрібно видалити (їх немає у списку genreIdsToKeep)
+const genreIdsToRemove = existingGenres.filter(existing => !genreIdsToKeep.includes(existing));
+// 3. Видаляємо жанри, які прибрані у формі
+for (const genreId of genreIdsToRemove) {
+  try {
+    await contentApi.removeGenre(contentId, genreId);
+    console.info(`Жанр ${genreId} видалено`);
+  } catch (error) {
+    console.error(`Не вдалося видалити жанр ${genreId}`, error);
+  }
+}
+
+// 4. Додаємо/оновлюємо нові жанри
+for (const genre of data.genres) {
+  try {
+    await contentApi.addGenre(contentId, genre.id);
+  } catch (error: any) {
+    if (error?.response?.data?.code === "ContentGenre.AlreadyExists") {
+      console.warn(`Жанр ${genre.id} вже прив'язаний, видаляємо...`);
+      try {
+        await contentApi.removeGenre(contentId, genre.id);
+        await contentApi.addGenre(contentId, genre.id);
+        console.info(`Жанр ${genre.id} переприв'язаний`);
+      } catch (removeError) {
+        console.error(`Не вдалося переприв'язати жанр ${genre.id}`, removeError);
+      }
+    } else {
+      throw error;
+    }
+  }
+}
+
+const actorIdsToKeep = data.actors.map(a => a.id); 
+const actorIdsToRemove = existingActorIds.filter(existing => !actorIdsToKeep.includes(existing));
+
+// 6. Видаляємо акторів, яких немає у формі
+for (const actorId of actorIdsToRemove) {
+  try {
+    await contentApi.removeActor(contentId, actorId);
+    console.info(`Актор ${actorId} видалено`);
+  } catch (error) {
+    console.error(`Не вдалося видалити актора ${actorId}`, error);
+  }
+}
+
+// 7. Додаємо/оновлюємо нових акторів
+for (const actor of data.actors) {
+  try {
+    await contentApi.addActor(contentId, actor.id, actor.RoleName || '');
+  } catch (error: any) {
+    if (error?.response?.data?.code === "ContentActor.AlreadyExists") {
+      console.warn(`Актор ${actor.id} вже прив'язаний, видаляємо...`);
+      try {
+        await contentApi.removeActor(contentId, actor.id);
+        await contentApi.addActor(contentId, actor.id, actor.RoleName || '');
+        console.info(`Актор ${actor.id} переприв'язаний`);
+      } catch (removeError) {
+        console.error(`Не вдалося переприв'язати актора ${actor.id}`, removeError);
+      }
+    } else {
+      throw error;
+    }
+  }
+}
 
        if (data.poster && typeof data.poster === 'string' && data.poster.startsWith('data:')) {
         const cleanedBase64Poster = data.poster.replace(/^data:image\/\w+;base64,/, '');
@@ -270,6 +347,7 @@ const handleFilmFormSubmit = async (data: FilmData) => {
             handleEditFilm(film);
           }}
           onDelete={() => handleDeleteFilm(film.id)}
+        onClick={() => handleEditFilm(film)}
         />
       ))}
     </Box>

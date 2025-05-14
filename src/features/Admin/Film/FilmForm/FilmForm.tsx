@@ -42,6 +42,7 @@ export type FilmData = {
 };
 
 const FilmForm = ({ initialData = {}, onSubmit, onCancel, mode = 'add' }: FilmFormProps) => {
+    const initialRatingForDisplay = initialData.rating !== undefined ? initialData.rating / 10 : undefined;
   const [formData, setFormData] = useState<FilmData>({
     title: initialData.title || '',
     description: initialData.description || '',
@@ -59,12 +60,12 @@ const FilmForm = ({ initialData = {}, onSubmit, onCancel, mode = 'add' }: FilmFo
 
   const [genres, setGenres] = useState<GenreDto[]>([]);
   const [actors, setActors] = useState<ActorWithFullName[]>([]);
+  const [displayRating, setDisplayRating] = useState<number | undefined>(initialRatingForDisplay);
   const [selectedGenres, setSelectedGenres] = useState<GenreDto[]>([]);
   const [selectedActors, setSelectedActors] = useState<ActorWithFullName[]>([]);
   const [bannerPreviewUrl, setBannerPreviewUrl] = useState<string | null>(initialData.banner || null);
   const [posterPreviewUrl, setPosterPreviewUrl] = useState<string | null>(initialData.poster || null);
   
-
 useEffect(() => {
   const fetchInitialData = async () => {
     if (initialData.genreIds?.length) {
@@ -75,33 +76,30 @@ useEffect(() => {
       } catch (e) {
       }
     }
-
     if (initialData.actorIds?.length) {
-      try {
-        const response = await getActorById.filter({ pageIndex: 1, pageSize: 1000 });
-        const allActors = (response.items || []).map(actor => ({
-          ...actor,
-          fullName: `${actor.firstName} ${actor.lastName}`,
-        }));
+  try {
+    const response = await getActorById.filter({ pageIndex: 1, pageSize: 1000 });
+    const allActors = (response.items || []).map(actor => ({
+      ...actor,
+      fullName: `${actor.firstName} ${actor.lastName}`,
+    }));
+    const selected = initialData.actorIds.map(actorId => {
+      const actorFromAll = allActors.find(a => a.id === actorId);
+      const actorFromInitial = (initialData.actors || []).find(a => a.id === actorId);
+      return {
+        ...actorFromAll,
+        RoleName: actorFromInitial?.RoleName || '',
+      } as ActorWithFullName;
+    });
+    setActors(allActors);
+    setSelectedActors(selected);
+  } catch (e) { 
+  }
+}};
 
-        const selected = initialData.actorIds.map(actorId => {
-          const actorFromAll = allActors.find(a => a.id === actorId);
-          const actorFromInitial = (initialData.actors || []).find(a => a.id === actorId);
-          return {
-            ...actorFromAll,
-            RoleName: actorFromInitial?.RoleName || '', 
-          } as ActorWithFullName;
-        });
-
-        setActors(allActors); 
-        setSelectedActors(selected);
-      } catch (e) {
-      }
-    }
-  };
-
+ 
   fetchInitialData();
-}, [initialData]);
+}, [initialData.genreIds, initialData.actorIds, initialData.actors]);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -132,9 +130,19 @@ useEffect(() => {
 
 const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const { name, value } = e.target;
-
   setFormData((prev) => ({ ...prev, [name]: value }));
 };
+
+const handleRatingChange = (newValue: number | null) => {
+        setDisplayRating(newValue !== null ? newValue : undefined);
+        setFormData((prev) => ({ ...prev, rating: newValue !== null ? newValue * 10 : undefined }));
+    };
+
+    const handleRatingInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = parseFloat(e.target.value);
+        setDisplayRating(isNaN(value) ? undefined : Math.max(1, Math.min(10, value)));
+        setFormData((prev) => ({ ...prev, rating: isNaN(value) ? undefined : Math.max(1, Math.min(10, value)) * 10 }));
+    };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
@@ -156,18 +164,19 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
- const handleSubmit = (e: React.FormEvent) => {
+const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
+  const formattedActors = selectedActors.map(actor => ({
+    id: actor.id,
+    fullName: actor.fullName,
+    RoleName: actor.RoleName,
+    firstName: actor.firstName,
+    lastName: actor.lastName,
+  }));
   onSubmit({
     ...formData,
     genres: selectedGenres,
-    actors: selectedActors.map(actor => ({
-      id: actor.id,
-      fullName: actor.fullName,
-      RoleName: actor.RoleName,
-      firstName: actor.firstName,
-      lastName: actor.lastName,
-    })),
+    actors: formattedActors,
     rating: formData.rating !== undefined ? formData.rating : 0,
   });
 };
@@ -181,15 +190,12 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
-  
-
 return (
 
   <Box component="form" onSubmit={handleSubmit} className="film-form">
   <Typography variant="h5" className="form-title">
     {mode === 'edit' ? 'Редагувати фільм' : 'Додати новий фільм'}
   </Typography>
-
   <div className="form-grid">
     <div className="form-col">
       <TextField
@@ -201,7 +207,6 @@ return (
        required
       />
     </div>
-
     <div className="form-col">
       <TextField
         label="Рік випуску"
@@ -213,37 +218,27 @@ return (
       />
     </div>
 
-    <div className="form-col wide">
-      <Typography>Рейтинг</Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+      <div className="form-col wide">
+    <Typography>Рейтинг (1-10)</Typography>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
         <Rating
-          name="rating"
-          value={formData.rating !== undefined ? formData.rating : 0}
-          max={10}
-          precision={0.5}
-          onChange={(_, newValue) => {
-          setFormData((prev) => ({
-            ...prev,
-            rating: newValue !== null ? Math.max(1, Math.min(10, newValue)) : 0,
-        }));
-    }}
-          emptyIcon={<StarBorderIcon style={{ color: 'white' }} />}
+            name="rating"
+            value={displayRating !== undefined ? displayRating : 0}
+            max={10}
+            precision={0.5}
+            onChange={(_, newValue) => {
+                handleRatingChange(newValue);
+            }}
+            emptyIcon={<StarBorderIcon style={{ color: 'white' }} />}
         />
         <TextField
-          type="number"
-          inputProps={{ min: 1, max: 10, step: 0.5 }}
-          value={formData.rating}
-          onChange={(e) => {
-            const value = parseFloat(e.target.value);
-            if (!isNaN(value)) {
-              setFormData((prev) => ({ ...prev, rating: Math.max(1, Math.min(10, value)) }));
-            } else if (e.target.value === '') {
-              setFormData((prev) => ({ ...prev, rating: undefined }));
-            }
-          }}
-          sx={{ width: '100px' }}
+            type="number"
+            inputProps={{ min: 1, max: 10, step: 0.5 }}
+            value={displayRating}
+            onChange={handleRatingInputChange}
+            sx={{ width: '100px' }}
         />
-      </Box>
+    </Box>
 
       <div className="form-col">
         <Autocomplete
@@ -294,7 +289,6 @@ return (
           const updatedActorsWithRole = newValue.map((item) => {
             const original = actors.find((a) => a.id === item.id);
             const existing = selectedActors.find((a) => a.id === item.id);
-
             return {
               id: item.id,
               fullName: item.fullName,
@@ -303,6 +297,7 @@ return (
               lastName: original?.lastName || '',
             };
           });
+           console.log("🆕 Оновлений список акторів:", updatedActorsWithRole);
 
           setSelectedActors(updatedActorsWithRole);
           setFormData((prev) => ({
