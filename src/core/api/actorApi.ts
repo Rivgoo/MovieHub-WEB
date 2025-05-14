@@ -1,5 +1,4 @@
 import apiClient from "./client";  
-import { ActorInContentResponse } from './types/types.actor';
 import {
   ActorDto,
   ActorFilterResponse,

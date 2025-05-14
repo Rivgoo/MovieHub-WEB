@@ -7,15 +7,12 @@ export interface ContentDto {
   title: string;
   description: string;
   rating: number;
-  ageRating: number;
   directorFullName: string;
   releaseYear: number;
   trailerUrl: string;
   bannerUrl: string;
   posterUrl: string;
-  bannerUrl: string;
   durationMinutes: number;
-  directorFullName: string;
   genreIds: number[];
   actorIds?: number[];
   actors?: { id: number; RoleName?: string| null; fullName?: string; firstName?: string; lastName?: string }[];
