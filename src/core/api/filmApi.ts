@@ -5,8 +5,6 @@ import { GenreDto } from './types/types.genre';
 import { actorApi } from './actorApi';
 import { ActorInContentResponse } from './types/types.actor'
 
-
-
 const getAgeRatingText = (ageRating: number | undefined): string => {
   if (ageRating === undefined) return "N/A";
   if (ageRating === 0) return "0+";
@@ -67,8 +65,8 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
         processedActors = actorsData.map(actorInContentData => ({ 
           id: String(actorInContentData.id),
           name: `${actorInContentData.firstName} ${actorInContentData.lastName}`,
-          imageUrl: actorInContentData.photoUrl,
-          role: actorInContentData.roleName,
+          imageUrl: actorInContentData.photoUrl ?? null,
+          role: actorInContentData.roleName ?? undefined,
         }));
       } catch (actorError) {
         console.error(`Помилка під час завантаження даних акторів для фільму ID ${numericFilmId}:`, actorError);
@@ -93,7 +91,6 @@ export const getProcessedFilmDetailsById = async (filmId: string): Promise<Proce
         calculatedVoteAverage = parseFloat(ratingValue.toFixed(1));
         if (isNaN(calculatedVoteAverage)) calculatedVoteAverage = 0;
     }
-
     
     const isInitiallyFavorite = (apiData as any).isFavorited === true || false;
 

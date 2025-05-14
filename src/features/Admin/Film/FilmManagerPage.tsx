@@ -10,6 +10,7 @@ import { actorApi } from '../../../core/api/actorApi';
 import { ContentDto } from '../../../core/api/types/types.content';
 import ConfirmModal from '../../ConfirmModal/ConfirmModal';
 import StandardPagination from '../../../shared/components/Pagination/StandardPagination';
+import { useNavigate } from 'react-router-dom';
 
 const FilmManagerPage = () => {
   const [films, setFilms] = useState<ContentDto[]>([]);
@@ -22,7 +23,9 @@ const FilmManagerPage = () => {
   const [filmIdToDelete, setFilmIdToDelete] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
-  const pageSize = 12;
+  const navigate = useNavigate();
+
+  const pageSize = 8;
 
   const loadFilms = async (page: number = currentPage) => {
     try {
@@ -51,10 +54,6 @@ const FilmManagerPage = () => {
         params.MinRating = parseFloat(filterValues['MinРейтинг']);
       }
 
-      if (filterValues['MaxРейтинг']) {
-        params.MaxRating = parseFloat(filterValues['MaxРейтинг']);
-      }
-
       if (filterValues['MinТривалість']) {
         params.MinDurationMinutes = parseInt(filterValues['MinТривалість']);
       }
@@ -67,7 +66,9 @@ const FilmManagerPage = () => {
       setFilms(response.items || []);
       setTotalPages(Math.ceil((response.totalCount || 0) / pageSize));
     } catch (error) {
+      console.error('Помилка завантаження фільмів:', error);
       setFilms([]);
+      setTotalPages(0);
     }
   };
 
@@ -79,6 +80,7 @@ const FilmManagerPage = () => {
     setEditingFilm(null);
     setIsAddingFilm(true);
     setIsFormOpen(true);
+    window.scrollTo(0, 0);
   };
 
   const handleSearch = (value: string) => {
@@ -101,8 +103,13 @@ const FilmManagerPage = () => {
     if (filmIdToDelete !== null) {
       try {
         await contentApi.delete(filmIdToDelete);
-        await loadFilms();
+        if (films.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        } else {
+          await loadFilms(currentPage);
+        }
       } catch (error) {
+        console.error('Помилка видалення фільму:', error);
       } finally {
         setFilmIdToDelete(null);
         setIsConfirmModalOpen(false);
@@ -136,6 +143,7 @@ const FilmManagerPage = () => {
       setEditingFilm(enrichedFilm);
       setIsAddingFilm(true);
       setIsFormOpen(true);
+      window.scrollTo(0, 0);
     } catch (error) {
       console.error(
         'Помилка при отриманні повної інформації про акторів:',
@@ -336,7 +344,10 @@ const FilmManagerPage = () => {
             <Header
               filters={['Рейтинг', 'Рік випуску', 'Тривалість']}
               onSearch={handleSearch}
-              onApplyFilters={(filters) => setFilterValues(filters)}
+              onApplyFilters={(newFilters) => {
+                setFilterValues(newFilters);
+                setCurrentPage(1);
+              }}
               onReset={handleResetFilters}
               onAdd={handleAddFilm}
             />
@@ -389,13 +400,17 @@ const FilmManagerPage = () => {
                       handleEditFilm(film);
                     }}
                     onDelete={() => handleDeleteFilm(film.id)}
-                    onClick={() => handleEditFilm(film)}
+                    onClick={() => navigate(`/film/${film.id}`)}
                   />
                 ))}
               </Box>
 
               <StandardPagination
-                sx={{ marginTop: '1em' }}
+                sx={{
+                  marginTop: '1em',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
                 count={totalPages}
                 page={currentPage}
                 onChange={(_event, page) => setCurrentPage(page)}
