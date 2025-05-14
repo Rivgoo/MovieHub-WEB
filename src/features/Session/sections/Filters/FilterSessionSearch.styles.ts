@@ -5,37 +5,21 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'nowrap',
-    gap: theme.spacing(1.5),
-    px: theme.spacing(2),
-    justifyContent: {
-      md: 'center',
-    },
-    overflowX: {
-      xs: 'auto',
-      md: 'visible',
-    },
-    minWidth: 0,
-
+    justifyContent: 'space-between',
     width: '100%',
-    WebkitOverflowScrolling: 'touch',
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
-    scrollbarWidth: 'none',
   },
   boxSliderContainerWrapper: {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    overflow: 'hidden', // важливо!
-    position: 'relative',
     maxWidth: '200px',
     boxSizing: 'border-box',
+    flexGrow: 1,
   },
   sliderWrapper: {
     width: '100%',
     maxWidth: '200px',
-    overflow: 'hidden',
+    height: '40px',
     position: 'relative',
     px: 2,
   },
@@ -46,10 +30,10 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
   },
   sliderSelector: {
     width: '100%',
+    maxWidth: '100%',
+    maxHeight: '40px',
+
     '& .MuiSlider-markLabel': {
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
       fontSize: '12px',
       maxWidth: 40,
       textAlign: 'center',
@@ -58,9 +42,18 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
       backgroundColor: 'rgba(0,0,0,0.8)',
       color: '#fff',
       borderRadius: '4px',
-      fontSize: '12px',
-      whiteSpace: 'nowrap',
+      fontSize: '120x',
     },
+  },
+  modalControlButtonBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
+  filterControlButton: {
+    display: 'flex',
+    height: '40px',
+    gap: '6px',
   },
 });
 

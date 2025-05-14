@@ -33,6 +33,9 @@ const SelectField: React.FC<SelectFieldProps> = ({
   const theme = useTheme();
   const styles = getSelectorFieldStyles(theme);
 
+  const isIdNameOption = (opt: Option): opt is IdNameOption =>
+    (opt as IdNameOption).id !== undefined;
+
   return (
     <Box sx={styles.selectorWrapper}>
       <Typography variant="caption" sx={styles.selectorLabelText}>
@@ -42,13 +45,14 @@ const SelectField: React.FC<SelectFieldProps> = ({
       <Select
         aria-label={label}
         name={name}
-        value={value || 'any'}
+        value={value}
         onChange={onChange}
         disabled={isLoading}
+        displayEmpty
         size="small"
-        sx={styles.selectorSelector}
+        sx={styles.selectField}
         MenuProps={{ PaperProps: {} }}>
-        <MenuItem value="any" sx={styles.selectorSelectorItem}>
+        <MenuItem value="" sx={styles.selectorSelectorItem}>
           Всі
         </MenuItem>
 
@@ -60,7 +64,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
 
         {!isLoading &&
           options.map((opt) =>
-            'id' in opt ? (
+            isIdNameOption(opt) ? (
               <MenuItem
                 key={opt.id}
                 value={opt.id.toString()}

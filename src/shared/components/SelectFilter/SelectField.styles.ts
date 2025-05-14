@@ -15,7 +15,7 @@ const getSelectorFieldStyles = (theme: Theme) => ({
     fontWeight: 500,
     pl: theme.spacing(1),
   },
-  selectorSelector: {
+  selectField: {
     width: '100%',
     maxWidth: '200px',
     borderRadius: '0.5rem',
