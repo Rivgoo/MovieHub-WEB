@@ -2,6 +2,7 @@ import apiClient from "./client";
 import {
   ActorDto,
   ActorFilterResponse,
+  ActorInContentResponse,
   ActorExistenceResponse,
   CreateActorRequest,
   CreateActorResponse,
@@ -44,4 +45,9 @@ export const actorApi = {
   deletePhoto: async (id: number): Promise<void> => {
     await apiClient.delete(`/actors/${id}/photo`);
   },
+
+  getActorInContent: async (actorId: number, contentId: number): Promise<ActorInContentResponse> => {
+    const response = await apiClient.get<ActorInContentResponse>(`/actors/${actorId}/in-content/${contentId}`);
+    return response.data;
+  }
 };

@@ -1,6 +1,7 @@
 import apiClient from "./client";
 import {
   CreateGenreRequest,
+  GenreDto,
   CreateGenreResponse,
   UpdateGenreRequest,
   GetAllGenresResponse,
@@ -26,4 +27,13 @@ export const updateGenre = async (id: number, data: UpdateGenreRequest): Promise
 export const deleteGenre = async (id: number): Promise<DeleteGenreResponse> => {
   const response = await apiClient.delete<DeleteGenreResponse>(`/genres/${id}`);
   return response.data;
+};
+
+export const getGenreById = async (id: number): Promise<GenreDto | null> => {
+  try {
+    const response = await apiClient.get<GenreDto>(`/genres/${id}`);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
 };
