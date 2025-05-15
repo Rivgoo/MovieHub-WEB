@@ -1,0 +1,195 @@
+.session-page {
+  min-height: 100vh;
+  padding: 16px;
+  color: var(--text-primary);
+}
+
+.session-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.session-page-header h2 {
+  font-weight: 500;
+  font-size: 1.8rem;
+}
+
+.session-add-button {
+  padding: 13px 20px;
+    background-color: var(--primary-light);
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1.0625em;
+    color: var(--admin-add-button-text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 235px;
+    text-transform: none;
+}
+
+.add-button:hover {
+  background-color: #e44a0d;
+}
+
+.session-table-container {
+  background-color: var(--admin-navy);
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.session-table-header,
+.session-table-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 16px;
+  border-bottom: 2px solid var(--admin-list-item-color);
+  align-items: center;
+}
+
+.session-table-header {
+  font-weight: bold;
+  background-color: var(--admin-list-item-color);
+  color: #ddd;
+  padding: 30px;
+}
+
+.session-table-header span {
+  text-transform: uppercase;
+}
+
+.session-table-row:hover {
+  background-color: var(--admin-list-item-hover-color);
+}
+
+.session-actions-wrapper {
+    display: flex;
+}
+
+.session-actions {
+    width: 150px;
+}
+
+.session-actions-header {
+    margin-left: auto;
+    margin-right: 54%;
+}
+
+@media (max-width: 768px) {
+  .session-table-header,
+  .session-table-row {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "film hall"
+      "date time"
+      "price actions";
+  }
+
+  .session-page-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .session-table-row span,
+  .session-table-header span {
+    padding: 6px 0;
+  }
+
+  .session-table-row {
+    border-bottom: 1px solid var(--admin-list-item-color);
+    padding: 12px;
+    gap: 15px;
+  }
+
+  .session-actions button:hover {
+  transform: scale(1.2);
+}
+
+  .session-table-header {
+    display: none;
+  }
+
+  .session-table-row {
+    display: grid;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+}
+.session-add-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.session-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: var(--admin-list-item-hover-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 55px;
+  margin-top: 40px;
+}
+
+.session-filters select {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #8c8c8c;
+  color: rgb(205, 205, 205);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: var(--admin-list-item-hover-color);
+}
+
+.session-filters input::placeholder {
+  color: rgb(205, 205, 205);
+}
+
+.session-filters input:focus,
+.session-filters select:focus {
+  outline: none;
+  border-color: var(--primary-dark);
+}
+
+.session-filters button {
+    padding: 13px 30px;
+    background-color: var(--primary-light);
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1.0625em;
+    color: var(--admin-add-button-text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 235px;
+    text-transform: none;
+    margin-right: 1%;
+    margin-left: auto;
+}
+
+.session-filters button:hover {
+  background-color:  var(--primary-light);
+}
+
+.sessions-actions-wrapper {
+    margin-left: auto;
+    margin-right: 54%;
+}
+
+.session-search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem 0.7rem 0.5rem 2.5rem;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23aaa" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 20l-5.586-5.586A7.954 7.954 0 0018 10a8 8 0 10-8 8 7.954 7.954 0 004.414-1.586L20 21l1-1zM4 10a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 16px 16px;
+  color: white;
+  border: 1px solid #8c8c8c;
+  color: rgb(205, 205, 205);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  background-color: var(--admin-list-item-hover-color);
+}
