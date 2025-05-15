@@ -7,7 +7,9 @@ import ActorModal from "./ActorModal/ActorModal";
 import { actorApi } from "../../../core/api/actorApi";
 import { ActorDto } from "../../../core/api/types/types.actor";
 import ConfirmModal from '../../ConfirmModal/ConfirmModal';
+import { useLocation, useNavigate } from "react-router-dom";
 import StandardPagination from "../../../shared/components/Pagination/StandardPagination";
+import { debounce } from "lodash";
 
 const ActorManagerPage: React.FC = () => {
   const [actors, setActors] = useState<ActorDto[]>([]);
@@ -25,15 +27,72 @@ useEffect(() => {
   window.scrollTo({ top: 0, behavior: "auto" });
 }, [currentPage]);
 
-  const loadActors = async (page: number = currentPage) => {
-    try {
-      const response = await actorApi.filter({ pageIndex: page, pageSize });
-      setActors(response.items || []);
-      setTotalPages(Math.ceil((response.totalCount || 0) / pageSize));
-    } catch (error) {
-      setActors([]);
+
+const buildUrlQuery = (params: Record<string, any>): string => {
+  const query = new URLSearchParams();
+  for (const key in params) {
+    if (
+      params[key] !== undefined &&
+      params[key] !== null &&
+      String(params[key]).trim() !== '' &&
+      params[key] !== 'all'
+    ) {
+      query.append(key, String(params[key]));
     }
-  };
+  }
+  return query.toString();
+};
+
+const parseUrlQuery = (search: string): Record<string, any> => {
+  const params = new URLSearchParams(search);
+  const result: Record<string, any> = {};
+  params.forEach((value, key) => {
+    if (key === 'PageIndex') result[key] = parseInt(value, 10) || 1;
+    else result[key] = value;
+  });
+  return result;
+};
+
+const location = useLocation();
+const navigate = useNavigate();
+
+const [searchTerm, setSearchTerm] = useState('');
+
+const debouncedSearch = React.useRef(
+  debounce((search: string) => {
+    const query = buildUrlQuery({ PageIndex: 1, SearchTerms: search });
+    navigate(`${location.pathname}?${query}`);
+  }, 400)
+).current;
+
+useEffect(() => {
+  debouncedSearch(searchTerm);
+}, [searchTerm]);
+
+useEffect(() => {
+  const params = parseUrlQuery(location.search);
+  const page = params.PageIndex || 1;
+  const search = params.SearchTerms || '';
+  setSearchTerm(search);
+  setCurrentPage(page);
+  loadActors(page, search);
+  window.scrollTo({ top: 0, behavior: "auto" });
+}, [location.search]);
+
+
+ const loadActors = async (page: number = 1, search: string = '') => {
+  try {
+    const response = await actorApi.filter({ 
+      pageIndex: page, 
+      pageSize, 
+      searchTerms: search 
+    });
+    setActors(response.items || []);
+    setTotalPages(Math.ceil((response.totalCount || 0) / pageSize));
+  } catch (error) {
+    setActors([]);
+  }
+};
 
   const handleEdit = (id: number) => {
     const actorToEdit = actors.find((actor) => actor.id === id);
@@ -44,12 +103,12 @@ useEffect(() => {
     }
   };
 
-  const handleDelete = (id: number) => {
+const handleDelete = (id: number) => {
     setActorIdToDelete(id);
     setIsConfirmModalOpen(true);
-  };
+};
 
-  const confirmDelete = async () => {
+const confirmDelete = async () => {
     if (actorIdToDelete !== null) {
       try {
         await actorApi.delete(actorIdToDelete);
@@ -60,32 +119,32 @@ useEffect(() => {
         setIsConfirmModalOpen(false);
       }
     }
-  };
+};
   
-  const cancelDelete = () => {
+const cancelDelete = () => {
     setActorIdToDelete(null);
     setIsConfirmModalOpen(false);
-  };
+};
 
-  const handleAddActor = async (newActor: { name: string; surname: string }) => {
+const handleAddActor = async (newActor: { name: string; surname: string }) => {
   try {
     const createRequest = {
       firstName: newActor.name,
       lastName: newActor.surname,
-    };
+};
 
-    const created = await actorApi.create(createRequest);
+const created = await actorApi.create(createRequest);
 
-    setCurrentPage(1); 
-    await loadActors(1); 
-    const tempActor: ActorDto = {
+setCurrentPage(1); 
+await loadActors(1); 
+const tempActor: ActorDto = {
       id: created.id,
       firstName: newActor.name,
       lastName: newActor.surname,
       photoUrl: "",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    };
+};
     setCurrentActor(tempActor);
     setIsPhotoStep(true);
   } catch (error) {}
@@ -162,6 +221,15 @@ useEffect(() => {
               Додати нового актора 
             </button>
           </div>
+          <div className="actors-page-search-input-wrapper" style={{ marginBottom: '1rem' }}>
+            <input
+            type="text"
+            placeholder="Пошук актора..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="actors-page-search-input"
+            />
+    </div>
           <div className="actors-grid">
           {[...actors]
  .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
@@ -175,14 +243,19 @@ useEffect(() => {
     />
 ))}
           </div>
-          
           <StandardPagination
-          sx={{ marginTop: "1rem" }}
-          count={totalPages} 
-          page={currentPage} 
-          onChange={(_event, page) => setCurrentPage(page)}/>
+            sx={{ marginTop: "1rem" }}
+            count={totalPages}
+            page={currentPage}
+            onChange={(_event, page) => {
+                const query = buildUrlQuery({
+                PageIndex: page,
+                SearchTerms: searchTerm,
+                });
+                navigate(`${location.pathname}?${query}`);
+            }}
+              />
         </div>
-
         <ActorModal
           isOpen={isModalOpen}
           onClose={() => {
