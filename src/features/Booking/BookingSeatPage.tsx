@@ -17,6 +17,7 @@ import {
   DialogActions,
   Snackbar,
   Tooltip,
+  IconButton as MuiIconButton,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
@@ -31,6 +32,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ChairIcon from '@mui/icons-material/Chair';
 import InfoIcon from '@mui/icons-material/Info';
+import CloseIcon from '@mui/icons-material/Close';
 
 import Layout from '../../shared/components/Layout';
 import { PrimaryButton, BorderButton } from '../../shared/components/Buttons';
@@ -56,6 +58,9 @@ import {
   getSeatDynamicStyles,
   getLegendColorBoxStyles,
 } from './BookingSeatPage.styles';
+
+import { format, parseISO } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
 const PLACEHOLDER_POSTER_URL = '/placeholder-poster.png';
 
@@ -100,6 +105,19 @@ const BookingSeatPage: React.FC = () => {
     () => (sessionId ? parseInt(sessionId, 10) : null),
     [sessionId]
   );
+
+  const formatDate = (dateStr?: string | null): string => {
+    if (!dateStr) return 'N/A';
+    try {
+      const hasTimeZoneInfo = /Z|[+-]\d{2}:\d{2}$/.test(dateStr);
+      const stringToParse = hasTimeZoneInfo ? dateStr : `${dateStr}Z`;
+      const dateObject = parseISO(stringToParse);
+      return format(dateObject, 'dd MMMM yyyy, HH:mm', { locale: uk });
+    } catch (e) {
+      console.error('Error formatting date:', e, 'Original string:', dateStr);
+      return dateStr;
+    }
+  };
 
   const fetchAllData = useCallback(async () => {
     if (!numericSessionId) {
@@ -274,24 +292,21 @@ const BookingSeatPage: React.FC = () => {
     else if (content?.id) navigate(`/film/${content.id}`);
     else navigate(-1);
   };
-  const handleCloseSnackbar = () =>
+  const handleCloseSnackbar = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
     setSnackbar((prev) => ({ ...prev, open: false }));
+  };
 
   const formatDuration = (mins?: number) =>
     !mins || mins <= 0
       ? 'N/A'
       : `${Math.floor(mins / 60) > 0 ? `${Math.floor(mins / 60)} год ` : ''}${mins % 60 > 0 ? `${mins % 60} хв` : ''}`.trim() ||
         'N/A';
-  const formatDate = (dateStr?: string) =>
-    !dateStr
-      ? 'N/A'
-      : new Date(dateStr).toLocaleString('uk-UA', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        });
 
   if (isLoading)
     return (
@@ -341,7 +356,7 @@ const BookingSeatPage: React.FC = () => {
             component="h1"
             gutterBottom
             sx={styles.pageTitle}>
-            <AssignmentAddIcon/> Бронювання квитків
+            <AssignmentAddIcon /> Бронювання квитків
           </Typography>
           {error && !isBooking && (
             <Alert
@@ -353,6 +368,7 @@ const BookingSeatPage: React.FC = () => {
           )}
           <Grid container spacing={{ xs: 1, md: 2 }} sx={styles.gridContainer}>
             <Grid size={{ xs: 12, md: 4 }} sx={styles.infoPanelGridItem}>
+              {' '}
               <Box sx={styles.infoPanelPaper}>
                 <Box sx={styles.posterBox}>
                   <img
@@ -376,25 +392,25 @@ const BookingSeatPage: React.FC = () => {
                   />
                   <Typography component="div">
                     <MovieIcon fontSize="small" sx={styles.detailIcon} />
-                    <strong>Тривалість: </strong> &#8203;{' '}
+                    <strong>Тривалість: </strong> ​{' '}
                     {formatDuration(content.durationMinutes)}
                   </Typography>
                   <Typography component="div">
                     <TheatersIcon fontSize="small" sx={styles.detailIcon} />
-                    <strong>Кінозал: </strong> &#8203; {cinemaHall.name}
+                    <strong>Кінозал: </strong> ​ {cinemaHall.name}
                   </Typography>
                   <Typography component="div">
                     <AccessTimeIcon fontSize="small" sx={styles.detailIcon} />
-                    <strong>Час: </strong> &#8203;{' '}
-                    {formatDate(session.startTime)}
+                    <strong>Час: </strong> ​{' '}
+                    {formatDate(session.startTime)}{' '}
                   </Typography>
                   <Typography component="div">
                     <ConfirmationNumberIcon
                       fontSize="small"
                       sx={styles.detailIcon}
                     />
-                    <strong>Ціна: </strong> &#8203;{' '}
-                    {session.ticketPrice.toFixed(2)} грн
+                    <strong>Ціна: </strong> ​ {session.ticketPrice.toFixed(2)}{' '}
+                    грн
                   </Typography>
                 </Box>
               </Box>
@@ -476,28 +492,30 @@ const BookingSeatPage: React.FC = () => {
                       <BookOnlineIcon /> Ваше замовлення:
                     </Typography>
                     <Typography sx={styles.selectedSeatDetail}>
-                      Фільм &#11208;{' '}
+                      Фільм ⯈{' '}
                       <Box component="span" sx={styles.selectedSeatDetailValue}>
                         {content.title}
                       </Box>
                     </Typography>
                     <Typography sx={styles.selectedSeatDetail}>
-                      Сеанс &#11208;{' '}
+                      Сеанс ⯈{' '}
                       <Box component="span" sx={styles.selectedSeatDetailValue}>
                         {formatDate(session.startTime)}
                       </Box>
                     </Typography>
                     <Typography sx={styles.selectedSeatDetail}>
-                      Кінозал &#11208; {' '}
+                      Кінозал ⯈{' '}
                       <Box component="span" sx={styles.selectedSeatDetailValue}>
                         {cinemaHall.name}
                       </Box>
                     </Typography>
                     <Typography sx={{ ...styles.selectedSeatHighlight, mt: 1 }}>
-                      <ChairIcon/> Ряд: {selectedSeat.row}, Місце: {selectedSeat.seat}
+                      <ChairIcon /> Ряд: {selectedSeat.row}, Місце:{' '}
+                      {selectedSeat.seat}
                     </Typography>
                     <Typography sx={styles.selectedSeatHighlight}>
-                    <LocalOfferIcon/>Ціна: {session.ticketPrice.toFixed(2)} грн
+                      <LocalOfferIcon />
+                      Ціна: {session.ticketPrice.toFixed(2)} грн
                     </Typography>
                   </Paper>
                 )}
@@ -569,7 +587,16 @@ const BookingSeatPage: React.FC = () => {
             error: <ErrorOutlineIcon fontSize="inherit" />,
             info: <InfoIcon fontSize="inherit" />,
             warning: <ErrorOutlineIcon fontSize="inherit" />,
-          }}>
+          }}
+          action={
+            <MuiIconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={handleCloseSnackbar}>
+              <CloseIcon fontSize="small" />
+            </MuiIconButton>
+          }>
           {snackbar.message}
         </Alert>
       </Snackbar>
