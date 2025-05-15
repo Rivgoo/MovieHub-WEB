@@ -44,7 +44,7 @@ const FilmSearchPage: React.FC = () => {
   >(undefined);
 
   const isInitialLoadDone = useRef(false);
-  const currentGeneratedUrl = useRef<string>(location.search);
+  const lastProcessedUrl = useRef<string>('');
 
   const mapApiFiltersToFilterBar = useCallback(
     (currentApiFilters: ApiStateFiltersType): Record<string, string> => {
@@ -104,29 +104,25 @@ const FilmSearchPage: React.FC = () => {
     setSearchTerm(newSearchTermFromURL);
     setCurrentPage(newCurrentPageFromURL);
 
-    const initialGridQuery = buildContentQuery(
+    const gridQuery = buildContentQuery(
       newApiFiltersFromURL,
       newSearchTermFromURL,
       newCurrentPageFromURL
     );
-    setSearchQueryForGrid(initialGridQuery);
+    setSearchQueryForGrid(gridQuery);
 
-    currentGeneratedUrl.current = urlSearchString;
-    isInitialLoadDone.current = true;
-  }, []);
+    lastProcessedUrl.current = urlSearchString;
+    if (!isInitialLoadDone.current) {
+        isInitialLoadDone.current = true;
+    }
+  }, [urlSearchString]); 
 
   useEffect(() => {
     if (!isInitialLoadDone.current) {
       return;
     }
 
-    const newGridQuery = buildContentQuery(apiFilters, searchTerm, currentPage);
-    if (searchQueryForGrid !== newGridQuery) {
-      setSearchQueryForGrid(newGridQuery);
-    }
-
     const orderedParams: Array<{ key: string; value: string }> = [];
-    // orderedParams.push({ key: 'pageSize', value: '10' });
 
     const normalizedSearchVal = normalizeFilterValueForStateAndUrl(searchTerm);
     if (normalizedSearchVal)
@@ -171,8 +167,8 @@ const FilmSearchPage: React.FC = () => {
     if (maxAgeRating)
       orderedParams.push({ key: 'MaxAgeRating', value: maxAgeRating });
 
-    const hasMeaningfulParams = orderedParams.some((p) => p.key !== 'pageSize');
-    if (currentPage > 1 || hasMeaningfulParams) {
+    const hasMeaningfulParams = orderedParams.length > 0;
+    if (currentPage > 1 || (hasMeaningfulParams && currentPage === 1) ) {
       orderedParams.push({ key: 'PageIndex', value: currentPage.toString() });
     }
 
@@ -182,29 +178,24 @@ const FilmSearchPage: React.FC = () => {
     const targetPath = location.pathname;
     if (newUrlString) newUrlString = `?${newUrlString}`;
 
-    if (currentGeneratedUrl.current !== newUrlString) {
-      currentGeneratedUrl.current = newUrlString;
-      if (newUrlString === '' && location.search !== '') {
-        navigate(targetPath, { replace: true });
-      } else if (newUrlString !== '' && location.search !== newUrlString) {
-        navigate(`${targetPath}${newUrlString}`, { replace: true });
-      }
+    if (lastProcessedUrl.current !== newUrlString) {
+      lastProcessedUrl.current = newUrlString;
+      navigate(`${targetPath}${newUrlString}`, { replace: true });
     }
   }, [
     apiFilters,
     searchTerm,
     currentPage,
     navigate,
-    location,
-    searchQueryForGrid,
-    normalizeFilterValueForStateAndUrl,
+    location.pathname
   ]);
 
   const handleActualSearch = useCallback((newSearchQuery: string) => {
-    setApiFilters((prev) => ({ ...prev }));
-    setSearchTerm(newSearchQuery);
-    setCurrentPage(1);
-  }, []);
+    if (searchTerm !== newSearchQuery || currentPage !== 1) {
+        setSearchTerm(newSearchQuery);
+        setCurrentPage(1);
+    }
+  }, [searchTerm, currentPage]);
 
   const handleFilterChange = useCallback(
     (filterBarKey: FilterBarInputKeys, filterValueFromBar: string) => {
@@ -255,21 +246,26 @@ const FilmSearchPage: React.FC = () => {
         }
         return updatedApiFilters;
       });
-      setCurrentPage(1);
+      if (currentPage !== 1) {
+         setCurrentPage(1);
+      }
     },
-    []
+    [currentPage]
   );
 
   const handleResetFilters = useCallback(() => {
-    setApiFilters({});
-    setSearchTerm('');
-    setCurrentPage(1);
-  }, []);
+    if (Object.keys(apiFilters).length > 0 || searchTerm !== '' || currentPage !== 1) {
+        setApiFilters({});
+        setSearchTerm('');
+        setCurrentPage(1);
+    }
+  }, [apiFilters, searchTerm, currentPage]);
 
   const handlePageChange = useCallback((newPage: number) => {
-    setApiFilters((prev) => ({ ...prev }));
-    setCurrentPage(newPage);
-  }, []);
+    if (currentPage !== newPage) {
+       setCurrentPage(newPage);
+    }
+  }, [currentPage]);
 
   if (!isInitialLoadDone.current && urlSearchString !== '') {
     return null;

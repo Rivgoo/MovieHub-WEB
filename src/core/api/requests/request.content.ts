@@ -7,7 +7,7 @@ import {
   ExistsResponse,
   UploadPosterResponse,
   AddActorToContentRequest,
-  AddGenreToContentResponse,
+  AddGenreToContentRequest,
   UpdateContentRequest,
   GetAllContentsResponse,
 } from '../types/types.content.ts';
@@ -74,15 +74,12 @@ export const uploadPoster = async (
   return data;
 };
 
-// POST /api/v1/contents/{id}/genres/{genreId}
+// POST /api/v1/contents/{contentId}/genres
 export const addGenreToContent = async (
   contentId: number,
-  genreId: number
-): Promise<AddGenreToContentResponse> => {
-  const { data } = await apiClient.post<AddGenreToContentResponse>(
-    `/contents/${contentId}/genres/${genreId}`
-  );
-  return data;
+  genreData: AddGenreToContentRequest
+): Promise<void> => {
+  await apiClient.post(`/contents/${contentId}/genres`, genreData);
 };
 
 // POST /api/v1/contents/{id}/actors
@@ -125,4 +122,9 @@ export const deleteContentActor = async (
   actorIds: number
 ): Promise<void> => {
   await apiClient.delete<void>(`/contents/${id}/genres/${actorIds}`);
+};
+
+// DELETE /api/v1/users/favorites/{contentId}
+export const removeFromFavorites = async (contentId: number): Promise<void> => {
+  await apiClient.delete(`/users/favorites/${contentId}`);
 };

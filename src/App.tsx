@@ -63,8 +63,17 @@ const ActorManagerPage = React.lazy(
 const UserManagerPage = React.lazy(
   () => import('./features/Admin/User/UserManagerPage')
 );
+const CreateUserPage = React.lazy(
+  () => import('./features/Admin/User/CreateUserPage')
+);
+const EditUserPage = React.lazy(
+  () => import('./features/Admin/User/EditUserPage')
+);
 const BookingManagerPage = React.lazy(
   () => import('./features/Admin/Booking/BookingManagerPage')
+);
+const BookingSeatPage = React.lazy(
+  () => import('./features/Booking/BookingSeatPage')
 );
 
 const LoadingFallback = () => (
@@ -130,6 +139,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/booking/session/:sessionId"
+                element={
+                  <ProtectedRoute allowedRoles={[UserRole.Customer]}>
+                    <BookingSeatPage />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Admin Routes */}
               <Route
@@ -177,6 +194,22 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={[UserRole.Admin]}>
                     <ActorManagerPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/user-manager/create"
+                element={
+                  <ProtectedRoute allowedRoles={[UserRole.Admin]}>
+                    <CreateUserPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/user-manager/edit/:userId"
+                element={
+                  <ProtectedRoute allowedRoles={[UserRole.Admin]}>
+                    <EditUserPage />
                   </ProtectedRoute>
                 }
               />

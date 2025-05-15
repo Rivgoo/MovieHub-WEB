@@ -49,13 +49,6 @@
   
 .modal-actions button {
     padding: 8px;
-    background-color: var(--primary-light);
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    font-size: 1em;
-    color: var(--admin-orange-button-text-color);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
     flex: 1;
     min-width: 100px;
 }

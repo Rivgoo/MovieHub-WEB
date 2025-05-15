@@ -5,9 +5,16 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon'; // Імпортовано
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+
+// Імпортуємо іконки
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Для кнопки "Вийти"
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../core/auth/useAuth';
@@ -20,9 +27,9 @@ interface CustomerAccountLayoutProps {
 }
 
 const sidebarNavItems = [
-  { label: 'Про Вас', path: '/account' },
-  { label: 'Вподобані фільми', path: '/account/favorite' },
-  { label: 'Ваші бронювання', path: '/account/booking' },
+  { label: 'Про Вас', path: '/account', icon: <ManageAccountsIcon /> },
+  { label: 'Вподобані фільми', path: '/account/favorite', icon: <FavoriteBorderIcon /> },
+  { label: 'Ваші бронювання', path: '/account/booking', icon: <BookOnlineIcon /> },
 ];
 
 const CustomerAccountLayout: React.FC<CustomerAccountLayoutProps> = ({ children }) => {
@@ -76,25 +83,32 @@ const CustomerAccountLayout: React.FC<CustomerAccountLayoutProps> = ({ children 
                   selected={location.pathname === item.path}
                   sx={{
                     borderRadius: '8px',
+                    color: location.pathname === item.path ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                    '& .MuiListItemIcon-root': { // Стилі для іконки за замовчуванням та при виборі
+                        color: location.pathname === item.path ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                    },
+                    '& .MuiListItemText-primary': { // Стилі для тексту за замовчуванням та при виборі
+                        color: location.pathname === item.path ? theme.palette.primary.contrastText : theme.palette.text.primary,
+                    },
                     '&.Mui-selected': {
-                      backgroundColor: 'primary.main',
-                      color: 'primary.contrastText',
+                      backgroundColor: theme.palette.primary.main,
+                      // Колір тексту та іконки вже встановлено вище через color: та '& .MuiListItemIcon-root'
                       '&:hover': {
-                        backgroundColor: 'primary.dark',
+                        backgroundColor: theme.palette.primary.dark,
                       },
-                      '& .MuiListItemText-primary': {
-                          color: 'primary.contrastText',
-                      }
                     },
                     '&:hover': {
-                      backgroundColor: 'action.hover',
+                      backgroundColor: theme.palette.action.hover,
+                       // Можна додати зміну кольору тексту/іконки при наведенні, якщо потрібно
+                       // color: theme.palette.text.primary, // приклад
+                       // '& .MuiListItemIcon-root': { color: theme.palette.text.primary }, // приклад
                     },
                     py: 1.25,
-                     '& .MuiListItemText-primary': {
-                          color: location.pathname === item.path ? 'primary.contrastText': 'text.primary',
-                      }
                   }}
                 >
+                  <ListItemIcon sx={{ minWidth: '40px' }}>
+                    {item.icon}
+                  </ListItemIcon>
                   <ListItemText primary={item.label} />
                 </ListItemButton>
               </ListItem>
@@ -102,7 +116,11 @@ const CustomerAccountLayout: React.FC<CustomerAccountLayoutProps> = ({ children 
           </List>
           {user && (
             <Box sx={{ marginTop: 'auto', pt: 2 }}>
-              <PrimaryButton onClick={handleLogout} fullWidth>
+              <PrimaryButton 
+                onClick={handleLogout} 
+                fullWidth
+                startIcon={<ExitToAppIcon />}
+              >
                 Вийти
               </PrimaryButton>
             </Box>
