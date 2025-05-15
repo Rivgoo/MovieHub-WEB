@@ -1,8 +1,4 @@
-//тип Request описує body (наприклад, CreateContentRequest).
-//тип Response — успішну відповідь (наприклад, ContentDto або UploadPosterResponse).
-
-// Templates
-export type SessionStatus = 'Upcoming' | 'Ongoing' | 'Completed' | 'Canceled';
+export type SessionStatus = 'Ongoing' | 'Scheduled' | 'Ended';
 
 export interface SessionDto {
   id: number;
@@ -41,7 +37,7 @@ export interface SessionExistenceResponse {
 
 // 📘 POST /api/v1/sessions
 export interface CreateSessionRequest {
-  startTime: string;
+  startTime: string; // ISO string
   contentId: number;
   cinemaHallId: number;
   ticketPrice: number;
@@ -53,7 +49,7 @@ export interface CreateSessionResponse {
 
 // 📘 PUT /api/v1/sessions/{id}
 export interface UpdateSessionRequest {
-  startTime: string;
+  startTime: string; // ISO string
   contentId: number;
   cinemaHallId: number;
   ticketPrice: number;
@@ -63,3 +59,34 @@ export type UpdateSessionResponse = void;
 
 // 📘 DELETE /api/v1/sessions/{id}
 export type DeleteSessionResponse = void;
+
+
+// NEW TYPES for filter-with-content
+export interface SessionContentDto {
+  id: number;
+  startTime: string;
+  cinemaHallId: number;
+  status: SessionStatus;
+  ticketPrice: number;
+  contentId: number;
+  title?: string;
+  description?: string;
+  rating?: number;
+  releaseYear?: number;
+  trailerUrl?: string;
+  bannerUrl?: string;
+  posterUrl?: string;
+  durationMinutes?: number;
+  genreIds?: number[];
+  ageRating?: number;
+}
+
+export interface SessionContentDtoPaginatedList {
+  items: SessionContentDto[];
+  pageIndex: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
