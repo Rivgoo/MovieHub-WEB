@@ -24,7 +24,7 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     flexShrink: 1,
     maxWidth: '240px',
     minWidth: '125px',
-    maxHeight: '490px',
+    maxHeight: 'fit-content',
   },
   filmPoster: {
     width: '100%',
@@ -49,14 +49,13 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     '&:last-child': {
       pb: '6px',
     },
   },
   filmTitle: {
     color: theme.palette.text.primary,
-    // whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     display: '-webkit-box',
@@ -66,7 +65,14 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     fontSize: '1rem',
     marginBottom: theme.spacing(1),
     lineHeight: 1.2,
+    cursor: 'pointer',
+    width: 'fit-content',
     maxWidth: '228px',
+    transiton: 'color 0.4s ease',
+    '&:hover': {
+      color: theme.palette.primary.dark,
+      transition: 'color 0.4s ease',
+    },
   },
   filmInfoContainer: {
     display: 'flex',
@@ -85,8 +91,14 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
 
   filmTimeText: {
     fontSize: '0.75rem',
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.light,
     textAlign: 'center',
+    transiton: 'color 0.4s ease',
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.primary.dark,
+      transition: 'color 0.4s ease',
+    },
   },
 
   sessionPriceBox: {

@@ -30,22 +30,6 @@ export default function DateFilter({ onChange }: DateFilterProps) {
     return `${year}-${month}-${day}`;
   };
 
-  // const genDates = Array.from({ length: 10 }, (_, i) => {
-  //   const d = new Date();
-  //   d.setDate(d.getDate() + i);
-  //   const value = toLocalYMD(d);
-  //   const weekday = new Intl.DateTimeFormat('uk-UA', {
-  //     weekday: 'long',
-  //   }).format(d);
-  //   const label = new Intl.DateTimeFormat('uk-UA', {
-  //     day: 'numeric',
-  //     month: 'long',
-  //   }).format(d);
-  //   const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-  //   return { value, label: cap(label), weekday: cap(weekday) };
-  // });
-  // setDates(genDates);
-
   const generateUkrainianDates = (): DateOption[] =>
     Array.from({ length: 10 }, (_, i) => {
       const date = new Date();
@@ -72,29 +56,39 @@ export default function DateFilter({ onChange }: DateFilterProps) {
     });
 
   useEffect(() => {
-    const generatedDates = generateUkrainianDates();
-    setDates(generatedDates);
+    const params = new URLSearchParams(searchParams.toString());
+    const initialDates = generateUkrainianDates();
+    setDates(initialDates);
 
-    navigate({
-      pathname: '/session-search',
-      search: `?MinStartTime=${generatedDates[0].value}T08:00&MaxStartTime=${generatedDates[0].value}T23:00`,
-    });
+    if (!params.toString()) {
+      const first = initialDates[0].value;
+      navigate({
+        pathname: '/session-search',
+        search: `?MinStartTime=${first}T08:00&MaxStartTime=${first}T23:00`,
+      });
+      debugger;
+    }
 
     if (onChange) {
-      onChange(generatedDates[0].value);
+      onChange(initialDates[0].value);
     }
   }, []);
 
   useEffect(() => {
-    const date = toLocalYMD(new Date());
-    const expectedMin = `${date}T08:00:00.923Z`;
-    const expectedMax = `${date}T23:00:00.923Z`;
+    for (let i = 0; i < 10; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() + i);
+      const expectedDate = toLocalYMD(d);
 
-    const minParam = searchParams.get('MinStartTime') + ':00.923Z';
-    const maxParam = searchParams.get('MaxStartTime') + ':00.923Z';
+      const ParamDate = searchParams
+        .get('MinStartTime')
+        ?.toString()
+        .split('T')[0];
 
-    if (minParam === expectedMin && maxParam === expectedMax) {
-      setPickedIndex(0);
+      if (ParamDate === expectedDate) {
+        setPickedIndex(i);
+        return;
+      }
     }
   }, [searchParams]);
 

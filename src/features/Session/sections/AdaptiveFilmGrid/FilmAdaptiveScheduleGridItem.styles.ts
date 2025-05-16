@@ -1,15 +1,6 @@
 import { Theme } from '@mui/material';
 
 const getFilmAdaptiveScheduleGridItemStyles = (theme: Theme) => ({
-  // nothingFound: {
-  //   display: 'flex',
-  //   flexDirection: 'column',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   width: '100%',
-  //   minHeight: '400px',
-  //   textAlign: 'center',
-  // },
   filmCardsWrapper: { display: 'flex', flexDirection: 'column', gap: '6px' },
   filmCardItem: {
     display: 'flex',
@@ -51,8 +42,17 @@ const getFilmAdaptiveScheduleGridItemStyles = (theme: Theme) => ({
     WebkitBoxOrient: 'vertical',
     fontWeight: 600,
     fontSize: '1rem',
-    minHeight: '2.4em',
+    minHeight: 'fit-content',
     lineHeight: 1.2,
+    marginBottom: theme.spacing(1),
+    cursor: 'pointer',
+    width: 'fit-content',
+    maxWidth: '228px',
+    transiton: 'color 0.4s ease',
+    '&:hover': {
+      color: theme.palette.primary.dark,
+      transition: 'color 0.4s ease',
+    },
   },
   sessionPriceInfo: {
     backgroundColor: theme.palette.primary.dark,
@@ -64,6 +64,17 @@ const getFilmAdaptiveScheduleGridItemStyles = (theme: Theme) => ({
     fontSize: '0.75rem',
     color: theme.palette.primary.light,
     whiteSpace: 'nowrap',
+  },
+  filmTimeText: {
+    fontSize: '0.75rem',
+    color: theme.palette.primary.light,
+    textAlign: 'center',
+    transiton: 'color 0.4s ease',
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.primary.dark,
+      transition: 'color 0.4s ease',
+    },
   },
   filmInfoContainer: {
     display: 'grid',

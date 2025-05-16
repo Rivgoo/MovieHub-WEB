@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   MenuItem,
   Select,
@@ -9,6 +12,7 @@ import {
 import FilterSessionSearchStyles from './FilterSessionSearch.styles';
 import { useEffect, useState } from 'react';
 import {
+  FillBorderButton,
   GlowButton,
   PrimaryButton,
 } from '../../../../shared/components/Buttons';
@@ -297,6 +301,13 @@ export default function FilterSessionSearch({}: Props) {
     setSearchParams(qp, { replace: true });
   };
 
+  const [expanded, setExpanded] = useState(false);
+
+  const handleToggle = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setExpanded((prev) => !prev);
+  };
+
   return (
     <Box
       sx={styles.filterSessionWrapper}
@@ -305,7 +316,164 @@ export default function FilterSessionSearch({}: Props) {
         e.preventDefault();
         handleSubmit();
       }}>
-      <Box sx={styles.boxSliderContainerWrapper}>
+      <Accordion expanded={expanded}>
+        <AccordionSummary
+          onClick={(e) => e.stopPropagation()}
+          expandIcon={null}
+          sx={styles.boxSliderContainerWrapper}>
+          <Box sx={styles.selectorWrapper}>
+            <Typography sx={styles.selectorLabelText}>
+              <br />
+            </Typography>
+            <FillBorderButton
+              size="small"
+              onClick={handleToggle}
+              sx={{
+                maxHeight: '42px',
+                border: `1px solid ${theme.palette.primary.dark}`,
+              }}>
+              Час
+            </FillBorderButton>
+          </Box>
+
+          <Box sx={styles.selectorWrapper}>
+            <Typography variant="caption" sx={styles.selectorLabelText}>
+              Місця
+            </Typography>
+            <Select
+              name="HasAvailableSeats"
+              fullWidth
+              value={selectedSeats}
+              onChange={handleSeatsChange}
+              displayEmpty
+              size="small"
+              sx={styles.selectorSelector}>
+              <MenuItem value="">Всі</MenuItem>
+              {seatsOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          <Box sx={styles.selectorWrapper}>
+            <Typography variant="caption" sx={styles.selectorLabelText}>
+              Ціна
+            </Typography>
+            <Select<string[]>
+              fullWidth
+              multiple
+              value={selectedPrices}
+              onChange={handleMultiplePriceChange}
+              displayEmpty={selectedPrices.length === 0}
+              renderValue={(selected) => {
+                if (selected.length === 0) {
+                  return <em>Всі</em>;
+                }
+                return selected.join(', ');
+              }}
+              size="small"
+              sx={styles.selectorSelector}>
+              <MenuItem value="">
+                <em>Всі</em>
+              </MenuItem>
+              {priceOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          <Box sx={styles.selectorWrapper}>
+            <Typography variant="caption" sx={styles.selectorLabelText}>
+              Зал
+            </Typography>
+            <Select
+              name="CinemaHallId"
+              fullWidth
+              value={selectedHall}
+              onChange={handleHallChange}
+              displayEmpty
+              size="small"
+              sx={styles.selectorSelector}>
+              <MenuItem value="">Всі</MenuItem>
+              {hallOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          <Box sx={styles.selectorWrapper}>
+            <Typography variant="caption" sx={styles.selectorLabelText}>
+              Статус
+            </Typography>
+            <Select
+              name="Status"
+              fullWidth
+              value={selectedStatus}
+              onChange={handleStatusChange}
+              displayEmpty
+              size="small"
+              sx={styles.selectorSelector}>
+              <MenuItem value="">Всі</MenuItem>
+              {statusOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          <Box sx={styles.formControlButtonBox}>
+            <Typography sx={styles.selectorLabelText}>
+              <br />
+            </Typography>
+            <Box sx={styles.formControlButton}>
+              <GlowButton
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleReset();
+                }}>
+                <FilterAltOffIcon />
+              </GlowButton>
+            </Box>
+          </Box>
+
+          <Box sx={styles.formControlButtonBox}>
+            <Typography sx={styles.selectorLabelText}>
+              <br />
+            </Typography>
+            <Box sx={styles.formControlButton}>
+              <PrimaryButton type="submit">
+                <SearchIcon />
+              </PrimaryButton>
+            </Box>
+          </Box>
+        </AccordionSummary>
+        <AccordionDetails
+          sx={{
+            backgroundColor: theme.palette.secondary.main,
+            px: '26px',
+          }}>
+          <Slider
+            getAriaLabel={() => 'Time range'}
+            value={timeInterval}
+            onChange={handleSliderChange}
+            valueLabelDisplay="off"
+            sx={styles.sliderSelector}
+            step={1}
+            min={0}
+            max={4}
+            marks={timeOptions}
+          />
+        </AccordionDetails>
+      </Accordion>
+
+      {/* <Box sx={styles.boxSliderContainerWrapper}>
         <Typography sx={styles.selectorLabelText}>Час</Typography>
         <Box sx={styles.sliderWrapper}>
           <Slider
@@ -434,7 +602,7 @@ export default function FilterSessionSearch({}: Props) {
             <SearchIcon />
           </PrimaryButton>
         </Box>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

@@ -11,13 +11,14 @@ import {
 } from '@mui/material';
 import getFilmScheduleGridStyles from './FilmScheduleGrid.styles';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
 import { SessionWithContentDto } from '../../../../core/api/types/types.session';
 
 export default function FilmScheduleGrid() {
   const theme = useTheme();
   const styles = getFilmScheduleGridStyles(theme);
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [filmData, setFilmData] = useState<SessionWithContentDto[]>([]);
@@ -41,7 +42,6 @@ export default function FilmScheduleGrid() {
         let MinTicketPrice = params.get('MinTicketPrice') ?? '';
         let MaxTicketPrice = params.get('MaxTicketPrice') ?? '';
 
-        debugger;
         if (!minStartTime || !maxStartTime) {
           const today = new Date().toISOString().split('T')[0];
           minStartTime = `${today}T08:00`;
@@ -64,8 +64,7 @@ export default function FilmScheduleGrid() {
         const response = await searchSessionsWithContent(
           `?${queryParams.toString()}`
         );
-        console.log(queryParams.toString());
-        debugger;
+
         setFilmData(response.items);
       } catch (error) {
         console.error('Fetch failed', error);
@@ -109,7 +108,7 @@ export default function FilmScheduleGrid() {
           const film = sessions[0];
           return (
             <Card key={contentId} sx={styles.filmCardItem}>
-              <CardActionArea>
+              <CardActionArea onClick={() => navigate(`/film/${contentId}`)}>
                 <CardMedia
                   component="img"
                   sx={styles.filmPoster}
@@ -145,8 +144,9 @@ export default function FilmScheduleGrid() {
                         ],
                       }}>
                       <Typography
+                        onClick={() => navigate(`/booking/session/${film.id}`)}
                         variant="body2"
-                        sx={{ ...styles.filmTimeText, cursor: 'pointer' }}>
+                        sx={styles.filmTimeText}>
                         {new Date(film.startTime).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',

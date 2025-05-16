@@ -6,16 +6,23 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
     alignItems: 'center',
     flexWrap: 'nowrap',
     justifyContent: 'center',
-    gap: '6px',
+    // gap: '6px',
     width: '100%',
   },
   boxSliderContainerWrapper: {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    maxWidth: '200px',
+    maxWidth: 'fit-content',
     boxSizing: 'border-box',
+    cursor: 'default !important',
+    backgroundColor: theme.palette.secondary.main,
     flexGrow: 1,
+    '& .MuiAccordionSummary-content': {
+      gap: '6px',
+      cursor: 'default !important',
+      backgroundColor: theme.palette.secondary.main,
+    },
   },
   sliderWrapper: {
     width: '100%',
@@ -62,6 +69,7 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
   selectorLabelText: {
     fontSize: '0.85rem',
     fontWeight: 500,
+    lineHeight: '1.66',
     pl: theme.spacing(1),
   },
   selectorSelector: {
@@ -90,6 +98,7 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    gap: '6px',
   },
   formControlButton: {
     display: 'flex',

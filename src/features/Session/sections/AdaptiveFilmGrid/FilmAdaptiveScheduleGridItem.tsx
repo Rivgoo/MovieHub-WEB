@@ -12,7 +12,7 @@ import {
 import getFilmAdaptiveScheduleGridItemStyles from './FilmAdaptiveScheduleGridItem.styles';
 import { useEffect, useState } from 'react';
 import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SessionWithContentDto } from '../../../../core/api/types/types.session';
 
 type Props = {};
@@ -20,6 +20,7 @@ type Props = {};
 export default function FilmAdaptiveScheduleGridItem({}: Props) {
   const theme = useTheme();
   const styles = getFilmAdaptiveScheduleGridItemStyles(theme);
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({
@@ -94,7 +95,9 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
           const film = sessions[0];
           return (
             <Card key={contentId} sx={styles.filmCardItem}>
-              <CardActionArea sx={styles.filmPoster}>
+              <CardActionArea
+                sx={styles.filmPoster}
+                onClick={() => navigate(`/film/${contentId}`)}>
                 <CardMedia
                   component="img"
                   sx={styles.filmPoster}
@@ -137,8 +140,9 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
                         ],
                       }}>
                       <Typography
+                        onClick={() => navigate(`/booking/session/${film.id}`)}
                         variant="body2"
-                        sx={{ ...styles.sessionPriceText, cursor: 'pointer' }}>
+                        sx={styles.filmTimeText}>
                         {new Date(s.startTime).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',
