@@ -4,12 +4,17 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Layout from '../../shared/components/Layout';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const FilmPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
     <Layout>
+      <MetaTags  
+        title="Інформація про сеанс | MovieHub" 
+        description="Детальна інформація про обраний кіносеанс. Час, місце та фільм." 
+      />
       <Container
         maxWidth="sm"
         sx={{

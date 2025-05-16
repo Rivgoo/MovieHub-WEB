@@ -21,6 +21,7 @@ import { useAuth } from '../../core/auth/useAuth';
 import { PrimaryButton } from '../../shared/components/Buttons';
 import Layout from '../../shared/components/Layout';
 import { useTheme } from '@mui/material/styles';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 interface CustomerAccountLayoutProps {
   children: ReactNode;
@@ -47,6 +48,10 @@ const CustomerAccountLayout: React.FC<CustomerAccountLayoutProps> = ({ children 
 
   return (
     <Layout>
+      <MetaTags 
+        title="Мій Кабінет | MovieHub" 
+        description="Ваш особистий кабінет на MovieHub..." 
+      />
       <Container
         maxWidth="lg"
         sx={{
@@ -84,24 +89,20 @@ const CustomerAccountLayout: React.FC<CustomerAccountLayoutProps> = ({ children 
                   sx={{
                     borderRadius: '8px',
                     color: location.pathname === item.path ? theme.palette.primary.contrastText : theme.palette.text.primary,
-                    '& .MuiListItemIcon-root': { // Стилі для іконки за замовчуванням та при виборі
+                    '& .MuiListItemIcon-root': {
                         color: location.pathname === item.path ? theme.palette.primary.contrastText : theme.palette.text.primary,
                     },
-                    '& .MuiListItemText-primary': { // Стилі для тексту за замовчуванням та при виборі
+                    '& .MuiListItemText-primary': {
                         color: location.pathname === item.path ? theme.palette.primary.contrastText : theme.palette.text.primary,
                     },
                     '&.Mui-selected': {
                       backgroundColor: theme.palette.primary.main,
-                      // Колір тексту та іконки вже встановлено вище через color: та '& .MuiListItemIcon-root'
                       '&:hover': {
                         backgroundColor: theme.palette.primary.dark,
                       },
                     },
                     '&:hover': {
                       backgroundColor: theme.palette.action.hover,
-                       // Можна додати зміну кольору тексту/іконки при наведенні, якщо потрібно
-                       // color: theme.palette.text.primary, // приклад
-                       // '& .MuiListItemIcon-root': { color: theme.palette.text.primary }, // приклад
                     },
                     py: 1.25,
                   }}

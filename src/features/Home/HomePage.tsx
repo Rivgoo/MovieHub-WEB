@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import { PrimaryButton } from '../../shared/components/Buttons';
 import Layout from '../../shared/components/Layout';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const HomePageContent: React.FC = () => {
   const { user, logout } = useAuth();
@@ -104,6 +105,11 @@ const HomePageContent: React.FC = () => {
 const HomePage: React.FC = () => {
   return (
     <Layout>
+       <MetaTags
+        title="MovieHub - Головна | Ваш гід у світі кіно"
+        description="MovieHub: Знаходьте фільми, дивіться трейлери, бронюйте квитки та будьте в курсі останніх новинок кіно. Ваш персональний кіногід."
+        robots="index, follow"
+      />
       <HomePageContent />
     </Layout>
   );

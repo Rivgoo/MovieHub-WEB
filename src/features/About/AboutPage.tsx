@@ -8,6 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const cinemaImageUrl = '/movie-cinema.jpg';
 
@@ -34,6 +35,10 @@ const AboutPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Про MovieHub | Наша місія та можливості"
+        description="Дізнайтеся більше про MovieHub, платформу для пошуку фільмів, сеансів та бронювання квитків. Відкрийте світ кіно разом з нами!"
+      />
       <Box
         sx={{
           width: '100%',

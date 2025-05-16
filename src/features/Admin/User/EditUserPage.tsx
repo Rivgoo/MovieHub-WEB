@@ -68,7 +68,7 @@ const EditUserPage: React.FC = () => {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Редагування користувача">
       <Paper className="user-form-container">
         <Typography variant="h5" component="h2">
           Редагувати користувача

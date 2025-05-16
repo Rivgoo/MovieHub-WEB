@@ -30,6 +30,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import Layout from '../../shared/components/Layout';
 import { loginUser } from '../../core/api/loginApi.ts';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const LoginPage: React.FC = () => {
   const theme = useTheme();
@@ -130,6 +131,10 @@ const LoginPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Вхід - MovieHub | Авторизація"
+        description="Увійдіть до свого облікового запису MovieHub, щоб отримати доступ до обраних фільмів, бронювань та інших персоналізованих функцій."
+      />
       <Box sx={styles.wrapper}>
         <Container component={Paper} maxWidth="xs" sx={styles.container}>
           <Typography component="h1" variant="h5" sx={styles.title}>

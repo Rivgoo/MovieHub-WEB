@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import { PrimaryButton } from '../../shared/components/Buttons';
 import Layout from '../../shared/components/Layout';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const ErrorPage: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +16,10 @@ const ErrorPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags 
+        title="Сторінку не знайдено (404) | MovieHub" 
+        description="На жаль, сторінка, яку ви шукаєте на MovieHub, не існує..." 
+      />
       <Container
         maxWidth="sm"
         sx={{
