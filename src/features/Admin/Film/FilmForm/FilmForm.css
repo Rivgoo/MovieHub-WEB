@@ -1,0 +1,380 @@
+body {
+    overflow-x: hidden;
+}
+
+.mainContent {
+    padding: 0;
+}
+
+.film-form {
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 1500px;
+  margin: 20px auto;
+  box-sizing: border-box;
+  color: #C9D1D9;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.form-title {
+  color: #FFFFFF;
+  margin-bottom: 24px;
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+
+.trailer-box,
+.poster-box,
+.banner-box {
+  background-color: #d6d6d6;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  max-width: 500px;
+  width: 100%;
+}
+
+.poster-box {
+  max-width: 300px;
+  height: 460px;
+}
+
+.form-grid > div:nth-child(7) {
+        gap: 40px;
+}
+
+.film-form .MuiFormControl-root {
+    margin-bottom: 0 !important;
+}
+
+.film-form .MuiInputBase-root {
+    height: 100%;
+}
+
+.trailer-placeholder,
+.poster-placeholder,
+.banner-placeholder {
+  font-size: 2em;
+  color: #6E7681;
+  cursor: pointer;
+}
+
+.hidden-input {
+  display: none;
+}
+
+.css-16gpks2-MuiTypography-root {
+    font-size: 1.3rem;
+}
+
+.film-submit-btn {
+    text-transform: none;
+}
+
+.film-submit-btn.cancel {
+    padding: 10px 8px;
+    background-color: #7f7f7f;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 1.2em;
+    color: var(--admin-add-button-text-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 260px;
+    text-transform: none;
+}
+
+.form-grid {
+  margin-top: 30px;
+  margin-bottom: 50px;
+  display: grid;
+  gap: 76px;
+  color: #C9D1D9;
+  width: 90%;
+}
+
+.form-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-col.wide {
+  grid-column: span 2;
+}
+
+.film-form .MuiInputBase-input {
+    padding: 15px 12px !important;
+    font-size: 1.5rem;
+}
+
+.upload-label {
+    font-size: 1.2rem;
+}
+
+.trailer-placeholder, .poster-placeholder, .banner-placeholder {
+    font-size: 5em;
+    border-radius: 20px;
+}
+
+.banner-placeholder svg, .poster-placeholder svg {
+    font-size: 5.5rem;
+}
+
+.css-rizt0-MuiTypography-root {
+    font-size: 1rem;
+}
+
+.film-form .MuiFormControl-root {
+  margin-bottom: 12px;
+}
+
+.film-form .MuiFormLabel-root {
+  color: #C9D1D9;
+  font-size: 1.1rem !important;
+  margin-bottom: 4px;
+}
+
+.film-form .MuiInputBase-input {
+  padding: 10px 12px;
+  font-size: 1rem;
+}
+
+.film-form .MuiSelect-select {
+  padding-right: 24px !important;
+}
+
+.film-form .MuiMenuItem-root {
+  color: #C9D1D9;
+}
+
+.film-form .MuiRating-root {
+  color: var(--primary-dark);
+}
+
+.film-form .MuiTypography-root {
+  color: #C9D1D9;
+}
+
+.form-col.wide-on-desktop {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.description-container, .wide-on-desktop {
+  height: 100%;
+}
+
+.film-form .MuiInputBase-root {
+  height: 100%;
+  background-color: var(--admin-list-item-color);
+  color: #C9D1D9;
+  border-radius: 6px;
+}
+
+.banner-placeholder,
+.poster-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; 
+  height: 100%; 
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+.trailer-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  color: #777;
+}
+
+.video-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.actors-add-film-field {
+    padding: 30px;
+}
+
+.form-col.wide-on-desktop {
+    gap: 58px;
+}
+
+.css-16yuusk {
+    gap: 46px;
+}
+
+ .form-grid > div:nth-child(3) {
+    gap: 40px;
+}
+
+@media (min-width: 1200px) {
+  .description-container {
+    height: 200px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+  }
+
+  .description-container .MuiInputBase-root {
+    height: 100%; 
+  }
+
+  .description-container .MuiInputBase-input {
+    height: 100%; 
+    box-sizing: border-box; 
+  }
+   .form-grid {
+    grid-template-columns: repeat(2, minmax(350px, 1fr)); 
+  }
+
+  .form-grid > div:nth-child(3) { 
+    grid-column: 1 / 2;
+    max-width: 700px;
+    height: 100%;
+    gap: 40px;
+  }
+
+  .form-grid > div:nth-child(4) { 
+    grid-column: 2 / 3;
+    height: 100%;
+        align-items: center;
+  }
+  
+  .form-grid > div:nth-child(7) { 
+    grid-column: 1 / 2;
+    gap: 40px;
+  }
+
+  .form-grid > div:nth-child(8) { 
+    grid-column: 2 / 3;
+   align-items: center;
+   width: 100%;
+  }
+
+  .form-grid > div:nth-child(9) { 
+    grid-column: 1 / 2;
+    gap: 40px;
+  }
+
+  .form-grid > div:nth-child(10) { 
+    grid-column: 2 / 3;
+            align-items: center;
+  }
+
+  .form-grid > div:nth-child(11) { 
+    grid-column: 1 / 2;
+    align-self: center; 
+  }
+
+  .form-grid > div:nth-child(12) { 
+    grid-column: 2 / 3;
+  }
+
+}
+
+@media (max-width: 1200px) {
+  .form-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .form-col.wide-on-desktop {
+    grid-column: 1 / -1; 
+  }
+
+  .form-col.fixed-width {
+    grid-column: 1 / -1; 
+  }
+
+  .form-col.wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .film-form {
+    padding: 16px;
+    margin: 10px auto;
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-col.wide-on-desktop {
+    grid-column: 1 / -1;
+  }
+
+  .form-col.fixed-width {
+    grid-column: 1 / -1;
+  }
+
+  .form-col.wide {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1199px) {
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-col.wide {
+    grid-column: 1 / -1 !important; 
+  }
+}
+
+@media (max-width: 740px) {
+    .add-film-button-container {
+        flex-direction: column;
+    }
+}
+
+@media(min-width: 500px) {
+    .form-grid {
+       padding: 30px 30px 60px 30px;
+       background-color: var(--admin-navy);;
+    }
+
+    .mainContent {
+        padding: 24px;
+    }
+}
+
+  @media (max-width: 500px) {  
+    .form-col {
+       width: 255px;
+  }
+}
+
+
+
+

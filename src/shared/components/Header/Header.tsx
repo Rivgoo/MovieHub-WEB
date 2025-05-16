@@ -22,6 +22,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import MovieIcon from '@mui/icons-material/Movie';
 import TheatersIcon from '@mui/icons-material/Theaters';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -244,6 +245,7 @@ export default function Header() {
               {user ? (
                 <PrimaryButton
                   sx={styles.accountButton}
+                  startIcon={<PersonIcon />}
                   onClick={() =>
                     navigate(
                       user.role === UserRole.Customer

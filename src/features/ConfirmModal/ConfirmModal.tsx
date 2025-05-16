@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './ConfirmModal.css';
+import { PrimaryButton } from '../../shared/components/Buttons';
 
 interface ConfirmModalProps {
   message: string;
@@ -27,8 +28,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ message, onConfirm, onCance
         <button className="modal-close" onClick={onCancel}>×</button>
         <p>{message}</p>
         <div className="modal-actions">
-          <button onClick={onConfirm}>Так</button>
-          <button onClick={onCancel}>Ні</button>
+          <PrimaryButton onClick={onConfirm} sx={{minWidth: '80px'}}>Так</PrimaryButton>
+          <PrimaryButton onClick={onCancel} sx={{minWidth: '80px'}}>Ні</PrimaryButton>
         </div>
       </div>
     </div>

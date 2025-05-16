@@ -1,0 +1,261 @@
+.film-advanced-header-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  padding-bottom: 24px;
+}
+
+.film-advanced-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.film-advanced-header-title {
+  font-size: 1.5625em !important;
+  font-weight: 500;
+  color: rgb(222, 222, 222);
+}
+
+.film-advanced-header-add-button {
+  padding: 10px 8px;
+  background-color: var(--primary-light);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 1em;
+  color: var(--admin-add-button-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 220px;
+  text-transform: none;
+}
+
+.film-search-bar {
+  display: flex;
+  align-items: center;
+  background-color: var(--admin-list-item-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.film-search-input {
+  margin-left: 12px;
+  color: white;
+  width: 100%;
+}
+
+.film-filters-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-radius: 8px;
+  padding: 6px 24px;
+  background-color: var(--admin-list-item-color);
+  margin-bottom: 0;
+}
+
+.film-filters-bar-header {
+  display: flex;
+  align-items: center;
+}
+
+.film-filter-icon {
+  color: white;
+  max-width: 60px;
+}
+
+.film-filter-label {
+  color: white;
+  margin-right: 8px;
+  font-size: 1em;
+}
+
+.film-filter-select {
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-right: 1px solid rgba(133, 133, 133, 0.758) !important;
+  border-radius: 0;
+  padding: 5px 7px;
+  min-width: 140px;
+  text-transform: none;
+}
+
+.film-filter-select:first-of-type {
+  border-left: 1px solid rgba(133, 133, 133, 0.758) !important;
+}
+
+.film-filter-select .MuiOutlinedInput-notchedOutline {
+  border: none;
+}
+
+.film-filter-select svg {
+  color: white;
+}
+
+.film-filter-buttons-row {
+  display: flex;
+  gap: 20px;
+  width: 400px;
+  margin: 0 0 25px auto;
+}
+
+.film-apply-button {
+  padding: 10px 8px;
+  background-color: var(--primary-light);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 1em;
+  color: var(--admin-add-button-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 220px;
+  text-transform: none;
+}
+
+.film-reset-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  width: 280px;
+  max-width: 200px !important;
+  padding: 10px 8px;
+  background-color: var(--primary-light);
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 0.9em;
+  color: var(--admin-add-button-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: auto;
+  text-transform: none;
+  gap: 4px;
+}
+
+.film-reset-box svg {
+  color: white;
+}
+
+.film-reset-text {
+  color: white;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.MuiDialogTitle-root + .css-17dbtv-MuiDialogContent-root {
+  padding-top: 20px;
+}
+
+
+@media (max-width: 1240px) {
+  .film-filters-bar {
+    align-items: stretch;
+    padding: 30px 16px;
+    gap: 0;
+  }
+
+  .film-filters-bar-header {
+    width: 100%;
+    justify-content: space-between;
+    text-align: right;
+  }
+
+  .film-filter-label {
+    order: 1;
+    margin: 0 auto 0 0;
+    font-size: 1.125em;
+  }
+
+  .film-filter-icon {
+    order: 2;
+  }
+
+  .film-filter-select,
+  .film-filters-bar > .film-filter-select:first-of-type {
+    width: 100%;
+    border: none !important;
+    border-bottom: 1px solid rgba(133, 133, 133, 0.6);
+    margin-bottom: 0;
+    padding: 12px 0;
+    border-radius: 0;
+  }
+
+  .film-filters-bar > .film-filter-select:first-of-type {
+    margin-top: 25px;
+  }
+
+  .film-reset-box {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+    padding: 12px 0;
+  }
+
+  .film-reset-text {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 1024px) {
+  .film-filters-bar {
+    padding: 10px 16px;
+    gap: 10px;
+  }
+
+  .film-filter-label {
+    font-size: 0.9375em;
+  }
+
+  .film-filter-select {
+    min-width: 90px;
+  }
+
+  .film-reset-text {
+    font-size: 0.9375em;
+  }
+}
+
+@media (max-width: 480px) {
+  .film-advanced-header-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .film-search-bar {
+    margin-bottom: 10px;
+  }
+
+  .film-filter-label {
+    font-size: 1em;
+    margin-bottom: 10px;
+  }
+
+  .film-filter-select,
+  .film-filters-bar > .filter-select:first-of-type {
+    padding: 10px 0;
+    font-size: 0.875em;
+  }
+
+  .film-filter-select .MuiSelect-select {
+    font-size: 0.875em;
+  }
+
+  .film-reset-box {
+    padding: 10px 0;
+  }
+
+  .film-filter-buttons-row {
+    flex-direction: column;
+  }
+
+  .film-reset-text {
+    font-size: 0.9375em;
+  }
+}

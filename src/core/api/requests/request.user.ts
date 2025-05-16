@@ -4,6 +4,10 @@ import {
   UserInfoResponse,
   RegisterUserRequest,
   RegisterUserResponse,
+  UserFilterResponse,
+  UpdateUserRequest,
+  UserDto,
+  GetAllRolesResponse
 } from '../types/types.user.ts';
 
 // GET /api/v1/users/{id}/exists
@@ -39,5 +43,39 @@ export const registerAdmin = async (
     '/users/admins/register',
     payload
   );
+  return data;
+};
+
+// GET /api/v1/users/filter
+export const filterUsers = async (
+  queryParams?: string
+): Promise<UserFilterResponse> => {
+  const endpoint = queryParams ? `/users/filter?${queryParams}` : '/users/filter';
+  const { data } = await apiClient.get<UserFilterResponse>(endpoint);
+  return data;
+};
+
+// GET /api/v1/users/{id}
+export const getUserById = async (id: string): Promise<UserDto | null> => {
+  const { data } = await apiClient.get<UserDto>(`/users/${id}`);
+  return data;
+};
+
+// PUT /api/v1/users/{id}
+export const updateUser = async (
+  id: string,
+  payload: UpdateUserRequest
+): Promise<void> => {
+  await apiClient.put(`/users/${id}`, payload);
+};
+
+// DELETE /api/v1/users/{id}
+export const deleteUser = async (id: string): Promise<void> => {
+  await apiClient.delete(`/users/${id}`);
+};
+
+// GET /api/v1/users/roles
+export const getAllRoles = async (): Promise<GetAllRolesResponse> => {
+  const { data } = await apiClient.get<GetAllRolesResponse>('/users/roles');
   return data;
 };

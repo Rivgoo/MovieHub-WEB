@@ -19,10 +19,11 @@ const ActorManagerPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 30;
-
-  useEffect(() => {
-    loadActors(currentPage);
-  }, [currentPage]);
+  
+useEffect(() => {
+  loadActors(currentPage);
+  window.scrollTo({ top: 0, behavior: "auto" });
+}, [currentPage]);
 
   const loadActors = async (page: number = currentPage) => {
     try {
@@ -67,28 +68,28 @@ const ActorManagerPage: React.FC = () => {
   };
 
   const handleAddActor = async (newActor: { name: string; surname: string }) => {
-    try {
-      const createRequest = {
-        firstName: newActor.name,
-        lastName: newActor.surname,
-      };
+  try {
+    const createRequest = {
+      firstName: newActor.name,
+      lastName: newActor.surname,
+    };
 
-      const created = await actorApi.create(createRequest);
+    const created = await actorApi.create(createRequest);
 
-      const tempActor: ActorDto = {
-        id: created.id,
-        firstName: newActor.name,
-        lastName: newActor.surname,
-        photoUrl: "",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setActors((prev) => [...prev, tempActor]);
-      setCurrentActor(tempActor);
-      setIsPhotoStep(true); 
-    } catch (error) {
-    }
-  };
+    setCurrentPage(1); 
+    await loadActors(1); 
+    const tempActor: ActorDto = {
+      id: created.id,
+      firstName: newActor.name,
+      lastName: newActor.surname,
+      photoUrl: "",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    setCurrentActor(tempActor);
+    setIsPhotoStep(true);
+  } catch (error) {}
+};
 
   const handleActorPhotoSubmit = async (base64Image: string | undefined) => {
     try {
