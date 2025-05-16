@@ -11,14 +11,13 @@ import {
 } from '@mui/material';
 import getFilmScheduleGridStyles from './FilmScheduleGrid.styles';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
 import { SessionWithContentDto } from '../../../../core/api/types/types.session';
 
 export default function FilmScheduleGrid() {
   const theme = useTheme();
   const styles = getFilmScheduleGridStyles(theme);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [filmData, setFilmData] = useState<SessionWithContentDto[]>([]);

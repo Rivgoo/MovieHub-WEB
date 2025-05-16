@@ -7,7 +7,6 @@ import {
   CreateSessionRequest,
   CreateSessionResponse,
   UpdateSessionRequest,
-  SessionWithContentDto,
 } from '../types/types.session.ts';
 
 // GET /api/v1/sessions

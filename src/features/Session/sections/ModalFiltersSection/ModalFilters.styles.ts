@@ -39,7 +39,7 @@ const getModalFiltersStyles = (theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    overflow: 'hidden', // важливо!
+    overflow: 'hidden',
     position: 'relative',
     maxWidth: '100%',
     boxSizing: 'border-box',

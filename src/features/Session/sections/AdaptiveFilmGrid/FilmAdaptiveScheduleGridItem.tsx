@@ -12,7 +12,7 @@ import {
 import getFilmAdaptiveScheduleGridItemStyles from './FilmAdaptiveScheduleGridItem.styles';
 import { useEffect, useState } from 'react';
 import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { SessionWithContentDto } from '../../../../core/api/types/types.session';
 
 type Props = {};
@@ -20,7 +20,6 @@ type Props = {};
 export default function FilmAdaptiveScheduleGridItem({}: Props) {
   const theme = useTheme();
   const styles = getFilmAdaptiveScheduleGridItemStyles(theme);
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({

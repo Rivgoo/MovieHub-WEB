@@ -14,7 +14,7 @@ import {
 } from '../../../../shared/components/Buttons';
 import Slider from '@mui/material/Slider';
 import { getAllCinemaHalls } from '../../../../core/api/requests/request.cinemahall';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 
@@ -43,7 +43,6 @@ const getDefaultQuery = (): FilterSessionFieldKeys => ({
 });
 
 export default function FilterSessionSearch({}: Props) {
-  const navigate = useNavigate();
   const theme = useTheme();
   const styles = FilterSessionSearchStyles(theme);
   const [searchParams, setSearchParams] = useSearchParams();
