@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import getSessionSearchDateFilterStyles from './DateFilter.styles';
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 type DateFilterProps = {
   onChange?: (value: string) => void;
@@ -17,10 +17,34 @@ export default function DateFilter({ onChange }: DateFilterProps) {
   const theme = useTheme();
   const styles = getSessionSearchDateFilterStyles(theme);
   const navigate = useNavigate();
+  const loc = useLocation();
   const [searchParams] = useSearchParams();
 
   const [dates, setDates] = useState<DateOption[]>([]);
   const [pickedIndex, setPickedIndex] = useState<number>(0);
+
+  const toLocalYMD = (d: Date): string => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // const genDates = Array.from({ length: 10 }, (_, i) => {
+  //   const d = new Date();
+  //   d.setDate(d.getDate() + i);
+  //   const value = toLocalYMD(d);
+  //   const weekday = new Intl.DateTimeFormat('uk-UA', {
+  //     weekday: 'long',
+  //   }).format(d);
+  //   const label = new Intl.DateTimeFormat('uk-UA', {
+  //     day: 'numeric',
+  //     month: 'long',
+  //   }).format(d);
+  //   const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+  //   return { value, label: cap(label), weekday: cap(weekday) };
+  // });
+  // setDates(genDates);
 
   const generateUkrainianDates = (): DateOption[] =>
     Array.from({ length: 10 }, (_, i) => {
@@ -39,8 +63,6 @@ export default function DateFilter({ onChange }: DateFilterProps) {
       }).format(date);
 
       const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
-      console.log(capitalize);
 
       return {
         value,
@@ -64,7 +86,7 @@ export default function DateFilter({ onChange }: DateFilterProps) {
   }, []);
 
   useEffect(() => {
-    const date = new Date().toISOString().split('T')[0];
+    const date = toLocalYMD(new Date());
     const expectedMin = `${date}T08:00:00.923Z`;
     const expectedMax = `${date}T23:00:00.923Z`;
 
@@ -78,9 +100,20 @@ export default function DateFilter({ onChange }: DateFilterProps) {
 
   const handleButtonClick = (idx: number) => {
     setPickedIndex(idx);
+    const qp = new URLSearchParams(loc.search);
+
+    const existingMin = qp.get('MinStartTime')?.split('T')[1];
+    const existingMax = qp.get('MaxStartTime')?.split('T')[1];
+
+    const minDateTime = `${dates[idx].value}T${existingMin}`;
+    const maxDateTime = `${dates[idx].value}T${existingMax}`;
+
+    qp.set('MinStartTime', minDateTime);
+    qp.set('MaxStartTime', maxDateTime);
+
     navigate({
       pathname: '/session-search',
-      search: `?MinStartTime=${dates[idx].value}T08:00&MaxStartTime=${dates[idx].value}T23:00`,
+      search: `?${qp.toString()}`,
     });
   };
 

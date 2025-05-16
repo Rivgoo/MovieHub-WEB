@@ -85,6 +85,13 @@ export default function ModalFilters() {
     { value: 'false', label: 'Немає' },
   ];
 
+  const toLocalYMD = (d: Date): string => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     (async () => {
       setIsLoading((p) => ({ ...p, hallFilter: true }));
@@ -109,7 +116,8 @@ export default function ModalFilters() {
       const d = new Date();
       d.setDate(d.getDate() + i);
 
-      const value = d.toISOString().split('T')[0];
+      const value = toLocalYMD(d);
+
       const weekday = new Intl.DateTimeFormat('uk-UA', {
         weekday: 'long',
       }).format(d);
@@ -117,6 +125,7 @@ export default function ModalFilters() {
         day: 'numeric',
         month: 'long',
       }).format(d);
+
       const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
       return { value, label: cap(label), weekday: cap(weekday) };
     });
@@ -140,7 +149,7 @@ export default function ModalFilters() {
     }
 
     const [minDate, minTime] = minRaw.split('T');
-    const [maxDate, maxTime] = maxRaw.split('T');
+    const [_, maxTime] = maxRaw.split('T');
     setSelectedDate(minDate);
     const minIdx = timeOptions.findIndex((o) => o.label === minTime);
     const maxIdx = timeOptions.findIndex((o) => o.label === maxTime);
@@ -265,7 +274,8 @@ export default function ModalFilters() {
   };
 
   const handleReset = () => {
-    const today = new Date().toISOString().split('T')[0];
+    const todayDate = new Date();
+    const today = toLocalYMD(todayDate);
     setFilter(getDefaultQuery());
     setTimeInterval([0, 4]);
     setSelectedDate(today);

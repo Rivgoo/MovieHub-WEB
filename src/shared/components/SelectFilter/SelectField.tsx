@@ -16,10 +16,13 @@ type Option = IdNameOption | ValueLabelOption;
 interface SelectFieldProps {
   label: string;
   name: string;
-  value: string;
-  onChange: (e: SelectChangeEvent<string>) => void;
+  value: string | string[];
+  onChange: (
+    e: SelectChangeEvent<string> | SelectChangeEvent<string[]>
+  ) => void;
   options: Option[];
   isLoading?: boolean;
+  multiple?: boolean;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -29,12 +32,52 @@ const SelectField: React.FC<SelectFieldProps> = ({
   onChange,
   options,
   isLoading = false,
+  multiple = false,
 }) => {
   const theme = useTheme();
   const styles = getSelectorFieldStyles(theme);
 
-  const isIdNameOption = (opt: Option): opt is IdNameOption =>
-    (opt as IdNameOption).id !== undefined;
+  const commonProps = {
+    'aria-label': label,
+    name,
+    disabled: isLoading,
+    displayEmpty: true,
+    size: 'small' as const,
+    sx: styles.selectField,
+    MenuProps: { PaperProps: {} },
+  };
+
+  const renderMenuItems = () => [
+    <MenuItem
+      key="_all_"
+      value={multiple ? [] : ''}
+      sx={styles.selectorSelectorItem}>
+      Всі
+    </MenuItem>,
+    isLoading ? (
+      <MenuItem key="_loading_" disabled sx={styles.selectorSelectorItem}>
+        Завантаження...
+      </MenuItem>
+    ) : (
+      options.map((opt) =>
+        'id' in opt ? (
+          <MenuItem
+            key={opt.id}
+            value={opt.id.toString()}
+            sx={styles.selectorSelectorItem}>
+            {opt.name}
+          </MenuItem>
+        ) : (
+          <MenuItem
+            key={opt.value}
+            value={opt.value}
+            sx={styles.selectorSelectorItem}>
+            {opt.label}
+          </MenuItem>
+        )
+      )
+    ),
+  ];
 
   return (
     <Box sx={styles.selectorWrapper}>
@@ -42,45 +85,22 @@ const SelectField: React.FC<SelectFieldProps> = ({
         {label}
       </Typography>
 
-      <Select
-        aria-label={label}
-        name={name}
-        value={value}
-        onChange={onChange}
-        disabled={isLoading}
-        displayEmpty
-        size="small"
-        sx={styles.selectField}
-        MenuProps={{ PaperProps: {} }}>
-        <MenuItem value="" sx={styles.selectorSelectorItem}>
-          Всі
-        </MenuItem>
-
-        {isLoading && (
-          <MenuItem disabled sx={styles.selectorSelectorItem}>
-            Завантаження...
-          </MenuItem>
-        )}
-
-        {!isLoading &&
-          options.map((opt) =>
-            isIdNameOption(opt) ? (
-              <MenuItem
-                key={opt.id}
-                value={opt.id.toString()}
-                sx={styles.selectorSelectorItem}>
-                {opt.name}
-              </MenuItem>
-            ) : (
-              <MenuItem
-                key={opt.value}
-                value={opt.value}
-                sx={styles.selectorSelectorItem}>
-                {opt.label}
-              </MenuItem>
-            )
-          )}
-      </Select>
+      {multiple ? (
+        <Select<string[]>
+          {...commonProps}
+          multiple
+          value={value as string[]}
+          onChange={onChange as (e: SelectChangeEvent<string[]>) => void}>
+          {renderMenuItems()}
+        </Select>
+      ) : (
+        <Select<string>
+          {...commonProps}
+          value={value as string}
+          onChange={onChange as (e: SelectChangeEvent<string>) => void}>
+          {renderMenuItems()}
+        </Select>
+      )}
     </Box>
   );
 };

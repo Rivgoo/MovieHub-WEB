@@ -4,9 +4,8 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
   filmCardContainer: {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
-    rowGap: '1px',
+    rowGap: '10px',
     columnGap: '10px',
-    padding: '6px',
     justifyItems: 'center',
   },
   nothingFound: {
@@ -57,6 +56,7 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
   },
   filmTitle: {
     color: theme.palette.text.primary,
+    // whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     display: '-webkit-box',
@@ -64,9 +64,10 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     WebkitBoxOrient: 'vertical',
     fontWeight: 600,
     fontSize: '1rem',
-    // minHeight: '2.4em',
     marginBottom: theme.spacing(1),
     lineHeight: 1.2,
+    maxWidth: '228px',
+    '-webkit-line-clamp': '1',
   },
   filmInfoContainer: {
     display: 'flex',
