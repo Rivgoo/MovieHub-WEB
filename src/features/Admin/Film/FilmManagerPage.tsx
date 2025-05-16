@@ -405,9 +405,10 @@ const FilmManagerPage = () => {
                 ))}
               </Box>
 
-              <StandardPagination
+              <StandardPagination  
                 sx={{
-                  marginTop: '1em',
+                  marginTop: '2em',
+                  marginBottom: '1.5em',
                   display: 'flex',
                   justifyContent: 'center',
                 }}
