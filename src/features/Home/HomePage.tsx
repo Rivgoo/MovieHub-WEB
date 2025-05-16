@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Divider from '@mui/material/Divider';
 import { PrimaryButton } from '../../shared/components/Buttons';
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
 import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const HomePageContent: React.FC = () => {

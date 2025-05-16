@@ -28,7 +28,7 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 // --- End MUI Imports ---
 
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
 import { loginUser } from '../../core/api/loginApi.ts';
 import MetaTags from './../../shared/components/MetaTag/MetaTags';
 

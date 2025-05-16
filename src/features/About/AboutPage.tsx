@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
 import { useTheme } from '@mui/material/styles';
 import MovieFilterIcon from '@mui/icons-material/MovieFilter';
 import EventSeatIcon from '@mui/icons-material/EventSeat';

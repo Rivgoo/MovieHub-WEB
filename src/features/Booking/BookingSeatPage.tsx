@@ -34,7 +34,7 @@ import ChairIcon from '@mui/icons-material/Chair';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
 
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
 import { PrimaryButton, BorderButton } from '../../shared/components/Buttons';
 import { useAuth } from '../../core/auth/useAuth';
 

@@ -19,7 +19,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Для кнопк�
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../core/auth/useAuth';
 import { PrimaryButton } from '../../shared/components/Buttons';
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
 import { useTheme } from '@mui/material/styles';
 import MetaTags from './../../shared/components/MetaTag/MetaTags';
 

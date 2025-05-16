@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import Layout from '../../../shared/components/Layout.tsx';
+import Layout from '../../../shared/components/Layout/Layout.tsx';
 import SearchForm from './blocks/SearchForm/SearchForm.tsx';
 import FilmGrid from './blocks/FilmGrid/FilmGrid.tsx';
 import { useLocation, useNavigate } from 'react-router-dom';
