@@ -318,6 +318,7 @@ export default function FilterSessionSearch({}: Props) {
       }}>
       <Accordion expanded={expanded}>
         <AccordionSummary
+          component="div"
           onClick={(e) => e.stopPropagation()}
           expandIcon={null}
           sx={styles.boxSliderContainerWrapper}>

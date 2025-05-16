@@ -66,7 +66,6 @@ export default function DateFilter({ onChange }: DateFilterProps) {
         pathname: '/session-search',
         search: `?MinStartTime=${first}T08:00&MaxStartTime=${first}T23:00`,
       });
-      debugger;
     }
 
     if (onChange) {
