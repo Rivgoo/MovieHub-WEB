@@ -6,7 +6,6 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
     alignItems: 'center',
     flexWrap: 'nowrap',
     justifyContent: 'center',
-    // gap: '6px',
     width: '100%',
   },
   boxSliderContainerWrapper: {
@@ -31,11 +30,6 @@ const FilterSessionSearchStyles = (theme: Theme) => ({
     position: 'relative',
     px: 2,
   },
-  // selectorLabelText: {
-  //   fontSize: '0.85rem',
-  //   fontWeight: 500,
-  //   pl: theme.spacing(1),
-  // },
   sliderSelector: {
     width: '100%',
     maxWidth: '100%',
