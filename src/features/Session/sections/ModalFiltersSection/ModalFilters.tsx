@@ -64,7 +64,6 @@ export default function ModalFilters() {
   const [selectedHall, setSelectedHall] = useState<string>('any');
   const [selectedSeats, setSelectedSeats] = useState<string>('all');
   const [selectedPrice, setSelectedPrice] = useState<string>();
-  const [priceSelectAll, setPriceSelectAll] = useState(true);
   const [hallOptions, setHallOptions] = useState<
     { value: string; label: string }[]
   >([]);
@@ -177,10 +176,8 @@ export default function ModalFilters() {
 
     if (!maxPrice) {
       setSelectedPrice('');
-      setPriceSelectAll(true);
     } else {
       setSelectedPrice(maxPrice);
-      setPriceSelectAll(false);
     }
 
     setIsLoading((p) => ({ ...p, firstLoadingPage: false }));
@@ -260,7 +257,6 @@ export default function ModalFilters() {
     setSelectedHall('any');
     setSelectedSeats('all');
     setSelectedPrice('');
-    setPriceSelectAll(true);
 
     const qp = new URLSearchParams();
     qp.set('MinStartTime', `${today}T08:00`);
@@ -367,13 +363,13 @@ export default function ModalFilters() {
               Ціна, грн
             </Typography>
             <Box sx={styles.buttonGroup}>
-              {['all', ...priceOptions.map((p) => p.value)].map((value) => (
+              {['', ...priceOptions.map((p) => p.value)].map((value) => (
                 <ToggleButton
                   key={value}
                   value={value}
                   onClick={() => handlePriceToggle(value)}
                   sx={styles.toggleButton(isPriceActive(value))}>
-                  {value === 'all'
+                  {value === ''
                     ? 'Всі'
                     : priceOptions.find((p) => p.value === value)?.label}
                 </ToggleButton>
