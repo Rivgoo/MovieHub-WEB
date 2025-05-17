@@ -24,7 +24,7 @@ type FilterSessionFieldKeys = {
   MinStartTime: string;
   MaxStartTime: string;
   HasAvailableSeats: string;
-  MinTicketPrice: string;
+  MaxTicketPrice: string;
   Format: '2D' | '3D' | '';
   CinemaHallId: string;
   Status: 'Ongoing' | 'Ended' | 'Scheduled' | '';
@@ -40,7 +40,7 @@ const getDefaultQuery = (): FilterSessionFieldKeys => ({
   MinStartTime: '',
   MaxStartTime: '',
   HasAvailableSeats: '',
-  MinTicketPrice: '',
+  MaxTicketPrice: '',
   Format: '',
   CinemaHallId: '',
   Status: '',
@@ -63,7 +63,7 @@ export default function ModalFilters() {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedHall, setSelectedHall] = useState<string>('any');
   const [selectedSeats, setSelectedSeats] = useState<string>('all');
-  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<string>();
   const [priceSelectAll, setPriceSelectAll] = useState(true);
   const [hallOptions, setHallOptions] = useState<
     { value: string; label: string }[]
@@ -161,7 +161,7 @@ export default function ModalFilters() {
       MinStartTime: String(safeMin),
       MaxStartTime: String(safeMax),
       HasAvailableSeats: params.get('HasAvailableSeats') ?? '',
-      MinTicketPrice: params.get('MinTicketPrice') ?? '',
+      MaxTicketPrice: params.get('MaxTicketPrice') ?? '',
       Format: (params.get('Format') as '' | '2D' | '3D') ?? '',
       CinemaHallId: params.get('CinemaHallId') ?? '',
       Status:
@@ -173,17 +173,13 @@ export default function ModalFilters() {
     setSelectedSeats(
       seatParam === 'true' || seatParam === 'false' ? seatParam : 'all'
     );
-    const minPrice = params.get('MinTicketPrice');
     const maxPrice = params.get('MaxTicketPrice');
-    if (!minPrice && !maxPrice) {
-      setSelectedPrices([]);
+
+    if (!maxPrice) {
+      setSelectedPrice('');
       setPriceSelectAll(true);
-    } else if (minPrice && maxPrice && minPrice !== maxPrice) {
-      setSelectedPrices([minPrice, maxPrice]);
-      setPriceSelectAll(false);
     } else {
-      const p = minPrice || maxPrice!;
-      setSelectedPrices([p]);
+      setSelectedPrice(maxPrice);
       setPriceSelectAll(false);
     }
 
@@ -215,22 +211,15 @@ export default function ModalFilters() {
   };
 
   const handlePriceToggle = (value: string) => {
-    if (value === 'all') {
-      setPriceSelectAll(true);
-      setSelectedPrices([]);
-    } else {
-      setPriceSelectAll(false);
-      setSelectedPrices((prev) =>
-        prev.includes(value)
-          ? prev.filter((v) => v !== value)
-          : [...prev, value]
-      );
-    }
+    setSelectedPrice(value);
+    setFilter((prev) => ({
+      ...prev,
+      MaxTicketPrice: value === 'all' ? '' : value,
+    }));
   };
 
   const isFormatActive = (value: string) => selectedSeats === value;
-  const isPriceActive = (value: string) =>
-    priceSelectAll ? value === 'all' : selectedPrices.includes(value);
+  const isPriceActive = (value: string) => selectedPrice === value;
 
   const handleSliderChange = (_: Event, newVal: number[]) => {
     setTimeInterval(newVal as [number, number]);
@@ -255,17 +244,6 @@ export default function ModalFilters() {
       }
     });
 
-    if (!priceSelectAll) {
-      const ps = selectedPrices.map(Number).sort((a, b) => a - b);
-      if (ps.length === 1) {
-        qp.set('MinTicketPrice', String(ps[0]));
-        qp.set('MaxTicketPrice', String(ps[0]));
-      } else if (ps.length > 1) {
-        qp.set('MinTicketPrice', String(ps[0]));
-        qp.set('MaxTicketPrice', String(ps[ps.length - 1]));
-      }
-    }
-
     navigate({
       pathname: '/session-search',
       search: `?${qp.toString()}`,
@@ -281,7 +259,7 @@ export default function ModalFilters() {
     setSelectedDate(today);
     setSelectedHall('any');
     setSelectedSeats('all');
-    setSelectedPrices([]);
+    setSelectedPrice('');
     setPriceSelectAll(true);
 
     const qp = new URLSearchParams();

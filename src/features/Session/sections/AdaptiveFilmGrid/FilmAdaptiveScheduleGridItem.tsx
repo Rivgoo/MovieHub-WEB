@@ -39,6 +39,11 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
         let minStartTime = params.get('MinStartTime');
         let maxStartTime = params.get('MaxStartTime');
 
+        let HasAvailableSeats = params.get('HasAvailableSeats');
+        let MaxTicketPrice = params.get('MaxTicketPrice');
+        let CinemaHallId = params.get('CinemaHallId');
+        let Status = params.get('Status');
+
         if (!minStartTime || !maxStartTime) {
           const today = new Date().toISOString().split('T')[0];
           minStartTime = `${today}T08:00`;
@@ -52,12 +57,19 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
         queryParams.set('MinStartTime', minStartTime);
         queryParams.set('MaxStartTime', maxStartTime);
 
+        if (HasAvailableSeats)
+          queryParams.set('HasAvailableSeats', HasAvailableSeats);
+        if (MaxTicketPrice) queryParams.set('MaxTicketPrice', MaxTicketPrice);
+        if (CinemaHallId) queryParams.set('CinemaHallId', CinemaHallId);
+        if (Status) queryParams.set('Status', Status);
+
         const response = await searchSessionsWithContent(
           `?${queryParams.toString()}`
         );
+
         setFilmData(response.items);
       } catch (error) {
-        console.error('Fetch failed', error);
+        console.error('Fetch помилка', error);
       } finally {
         setIsLoading((prev) => ({ ...prev, moviesData: false }));
       }

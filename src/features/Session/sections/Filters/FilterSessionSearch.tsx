@@ -28,7 +28,6 @@ type FilterSessionFieldKeys = {
   MinStartTime: string;
   MaxStartTime: string;
   HasAvailableSeats: string;
-  MinTicketPrice: string;
   MaxTicketPrice?: string;
   Format: '2D' | '3D' | '';
   CinemaHallId: string;
@@ -39,7 +38,6 @@ const getDefaultQuery = (): FilterSessionFieldKeys => ({
   MinStartTime: '',
   MaxStartTime: '',
   HasAvailableSeats: '',
-  MinTicketPrice: '',
   MaxTicketPrice: '',
   Format: '',
   CinemaHallId: '',
@@ -60,8 +58,8 @@ export default function FilterSessionSearch({}: Props) {
 
   const [selectedHall, setSelectedHall] = useState<string>('');
   const [selectedSeats, setSelectedSeats] = useState<string>('');
-  const [selectedPrices, setSelectedPrices] = useState<string[]>([]);
-  const [selectedStatus, setSelectedStatus] = useState<string>('Ongoing');
+  const [selectedPrice, setSelectedPrice] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
 
   const [hallOptions, setHallOptions] = useState<
     { value: string; label: string }[]
@@ -84,7 +82,7 @@ export default function FilterSessionSearch({}: Props) {
   ];
 
   const statusOptions = [
-    { value: 'Ongoing', label: 'Поточний' },
+    { value: 'Ongoing', label: 'Триває' },
     { value: 'Ended', label: 'Закінчився' },
     { value: 'Scheduled', label: 'Заплановані' },
   ];
@@ -136,23 +134,12 @@ export default function FilterSessionSearch({}: Props) {
       (params.get('Status') as '' | 'Ongoing' | 'Ended' | 'Scheduled') || '';
     setSelectedStatus(statusParam);
 
-    const minPrice = params.get('MinTicketPrice');
     const maxPrice = params.get('MaxTicketPrice');
 
-    if (!minPrice && !maxPrice) {
-      setSelectedPrices([]);
-    } else if (minPrice && maxPrice && minPrice !== maxPrice) {
-      const pricesFromParams = priceOptions
-        .filter((p) => +p.value >= +minPrice && +p.value <= +maxPrice)
-        .map((p) => p.value);
-      setSelectedPrices(pricesFromParams);
+    if (!maxPrice) {
+      setSelectedPrice('');
     } else {
-      const p = minPrice || maxPrice!;
-      if (p) {
-        setSelectedPrices([p]);
-      } else {
-        setSelectedPrices([]);
-      }
+      setSelectedPrice(maxPrice);
     }
 
     setFilter((prev) => ({
@@ -161,7 +148,6 @@ export default function FilterSessionSearch({}: Props) {
       MaxStartTime: `${today}T${max}`,
       CinemaHallId: hallParam,
       HasAvailableSeats: seatParam,
-      MinTicketPrice: minPrice || '',
       MaxTicketPrice: maxPrice || '',
       Format: (params.get('Format') as '' | '2D' | '3D') || '',
       Status: statusParam,
@@ -197,41 +183,13 @@ export default function FilterSessionSearch({}: Props) {
     }));
   };
 
-  const handleMultiplePriceChange = (
-    e: SelectChangeEvent<typeof selectedPrices>
-  ) => {
-    const value = e.target.value as string[];
-
-    if (value.includes('')) {
-      setSelectedPrices([]);
-      setFilter((prev) => ({
-        ...prev,
-        MinTicketPrice: '',
-        MaxTicketPrice: '',
-      }));
-    } else {
-      const sorted = [...value].sort((a, b) => +a - +b);
-      setSelectedPrices(value);
-      if (sorted.length === 1) {
-        setFilter((prev) => ({
-          ...prev,
-          MinTicketPrice: sorted[0],
-          MaxTicketPrice: sorted[0],
-        }));
-      } else if (sorted.length > 1) {
-        setFilter((prev) => ({
-          ...prev,
-          MinTicketPrice: sorted[0],
-          MaxTicketPrice: sorted[sorted.length - 1],
-        }));
-      } else {
-        setFilter((prev) => ({
-          ...prev,
-          MinTicketPrice: '',
-          MaxTicketPrice: '',
-        }));
-      }
-    }
+  const handlePriceChange = (e: SelectChangeEvent<string>) => {
+    const value = e.target.value;
+    setSelectedPrice(value);
+    setFilter((prev) => ({
+      ...prev,
+      MaxTicketPrice: value,
+    }));
   };
 
   const handleSliderChange = (_: Event, newVal: number | number[]) => {
@@ -263,18 +221,7 @@ export default function FilterSessionSearch({}: Props) {
     if (filter.Status) qp.set('Status', filter.Status);
     if (filter.Format) qp.set('Format', filter.Format);
 
-    if (filter.MinTicketPrice) qp.set('MinTicketPrice', filter.MinTicketPrice);
-    if (
-      filter.MaxTicketPrice &&
-      filter.MaxTicketPrice !== filter.MinTicketPrice
-    ) {
-      qp.set('MaxTicketPrice', filter.MaxTicketPrice);
-    } else if (
-      filter.MinTicketPrice &&
-      filter.MaxTicketPrice === filter.MinTicketPrice
-    ) {
-      qp.set('MaxTicketPrice', filter.MinTicketPrice);
-    }
+    if (filter.MaxTicketPrice) qp.set('MaxTicketPrice', filter.MaxTicketPrice);
 
     setSearchParams(qp, { replace: true });
   };
@@ -292,7 +239,7 @@ export default function FilterSessionSearch({}: Props) {
     setSelectedHall('');
     setSelectedSeats('');
     setSelectedStatus('');
-    setSelectedPrices([]);
+    setSelectedPrice('');
 
     const qp = new URLSearchParams();
     qp.set('MinStartTime', `${today}T08:00`);
@@ -360,20 +307,13 @@ export default function FilterSessionSearch({}: Props) {
 
           <Box sx={styles.selectorWrapper}>
             <Typography variant="caption" sx={styles.selectorLabelText}>
-              Ціна
+              Ціна до, грн
             </Typography>
-            <Select<string[]>
+            <Select
               fullWidth
-              multiple
-              value={selectedPrices}
-              onChange={handleMultiplePriceChange}
-              displayEmpty={selectedPrices.length === 0}
-              renderValue={(selected) => {
-                if (selected.length === 0) {
-                  return <em>Всі</em>;
-                }
-                return selected.join(', ');
-              }}
+              value={selectedPrice}
+              onChange={handlePriceChange}
+              displayEmpty
               size="small"
               sx={styles.selectorSelector}>
               <MenuItem value="">
