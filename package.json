@@ -25,6 +25,7 @@
     "lucide-react": "^0.507.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-helmet-async": "^2.0.5",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.0",
     "styled-components": "^6.1.17"
@@ -48,5 +49,6 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"
-  }
+  },
+  "overrides": { "react-helmet-async": { "react": "^19.0.0", "react-dom": "^19.0.0" } }
 }

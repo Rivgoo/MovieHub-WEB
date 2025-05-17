@@ -21,6 +21,7 @@ import { ContentDto } from '../../core/api/types/types.content';
 import { useAuth } from '../../core/auth/useAuth';
 import { useTheme } from '@mui/material/styles';
 import StandardPagination from '../../shared/components/Pagination/StandardPagination';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const PLACEHOLDER_POSTER_URL = '/placeholder-poster.png';
 
@@ -242,6 +243,10 @@ const FavoritePage: React.FC = () => {
         minHeight: '400px',
       }}
     >
+      <MetaTags 
+        title="Вподобані фільми - Мій Кабінет | MovieHub" 
+        description="Список ваших вподобаних фільмів на MovieHub..." 
+      />
       <Typography
         variant="h4"
         component="h1"

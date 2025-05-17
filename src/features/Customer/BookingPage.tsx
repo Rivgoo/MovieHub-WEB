@@ -37,6 +37,7 @@ import { useTheme, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import StandardPagination from '../../shared/components/Pagination/StandardPagination';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 import { format, parseISO } from 'date-fns';
 import { uk } from 'date-fns/locale';
@@ -297,6 +298,10 @@ const BookingPage: React.FC = () => {
         minHeight: '400px',
       }}
     >
+      <MetaTags 
+        title="Мої Бронювання - Мій Кабінет | MovieHub"
+        description="Переглядайте історію ваших бронювань квитків на MovieHub..." 
+      />
       <Typography
         variant="h4"
         component="h1"

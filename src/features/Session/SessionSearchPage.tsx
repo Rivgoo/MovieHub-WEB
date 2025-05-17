@@ -2,11 +2,16 @@ import React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const SessionSearchPage: React.FC = () => {
   return (
     <Layout>
+      <MetaTags 
+        title="Пошук сеансів - Розклад кінотеатрів | MovieHub" 
+        description="Знайдіть актуальні сеанси у вашому місті..." 
+      />
       <Container
         maxWidth="sm"
         sx={{

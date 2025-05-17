@@ -34,7 +34,7 @@ import ChairIcon from '@mui/icons-material/Chair';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
 
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
 import { PrimaryButton, BorderButton } from '../../shared/components/Buttons';
 import { useAuth } from '../../core/auth/useAuth';
 
@@ -58,6 +58,7 @@ import {
   getSeatDynamicStyles,
   getLegendColorBoxStyles,
 } from './BookingSeatPage.styles';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 import { format, parseISO } from 'date-fns';
 import { uk } from 'date-fns/locale';
@@ -349,6 +350,13 @@ const BookingSeatPage: React.FC = () => {
 
   return (
     <Layout>
+       {session && content && cinemaHall && (
+          <MetaTags
+            title={`Бронювання: ${content.title} - ${formatDate(session.startTime)} | MovieHub`}
+            description={`Оберіть місця та забронюйте квитки на фільм "${content.title}", сеанс ${formatDate(session.startTime)} у кінотеатрі ${cinemaHall.name} на MovieHub.`}
+            ogType="video.episode"
+          />
+        )}
       <Container maxWidth="xl" sx={styles.pageContainer}>
         <Paper elevation={3} sx={styles.mainPaper}>
           <Typography
