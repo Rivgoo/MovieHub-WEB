@@ -360,7 +360,7 @@ export default function ModalFilters() {
 
           <Box sx={styles.selectorWrapper}>
             <Typography variant="caption" sx={styles.selectorLabelText}>
-              Ціна, грн
+              Ціна до, грн
             </Typography>
             <Box sx={styles.buttonGroup}>
               {['', ...priceOptions.map((p) => p.value)].map((value) => (

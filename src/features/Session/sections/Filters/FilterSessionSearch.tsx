@@ -321,7 +321,7 @@ export default function FilterSessionSearch({}: Props) {
               </MenuItem>
               {priceOptions.map((opt) => (
                 <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
+                  ≤ {opt.label}
                 </MenuItem>
               ))}
             </Select>
