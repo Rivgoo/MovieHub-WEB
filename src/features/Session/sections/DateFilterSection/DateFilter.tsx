@@ -35,7 +35,7 @@ export default function DateFilter({ onChange }: DateFilterProps) {
       const date = new Date();
       date.setDate(date.getDate() + i);
 
-      const value = date.toISOString().split('T')[0];
+      const value = toLocalYMD(date);
 
       const weekday = new Intl.DateTimeFormat('uk-UA', {
         weekday: 'long',
@@ -98,8 +98,11 @@ export default function DateFilter({ onChange }: DateFilterProps) {
     const existingMin = qp.get('MinStartTime')?.split('T')[1];
     const existingMax = qp.get('MaxStartTime')?.split('T')[1];
 
-    const minDateTime = `${dates[idx].value}T${existingMin}`;
-    const maxDateTime = `${dates[idx].value}T${existingMax}`;
+    const selectedDate = new Date(dates[idx].value);
+    const formattedDate = toLocalYMD(selectedDate);
+
+    const minDateTime = `${formattedDate}T${existingMin}`;
+    const maxDateTime = `${formattedDate}T${existingMax}`;
 
     qp.set('MinStartTime', minDateTime);
     qp.set('MaxStartTime', maxDateTime);
