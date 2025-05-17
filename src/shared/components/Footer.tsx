@@ -56,11 +56,11 @@ const Footer: React.FC = () => {
             </Typography>
             <Typography variant="body2" sx={{mb: 1, display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', sm: 'flex-start'} }}>
               <PhoneOutlinedIcon sx={iconStyles} />
-              Phone number: +380 99 999 99 99
+              Телефон: +380 12 34 56 78
             </Typography>
             <Typography variant="body2" sx={{display: 'flex', alignItems: 'center', justifyContent: {xs: 'center', sm: 'flex-start'} }}>
               <LocationOnOutlinedIcon sx={iconStyles} />
-              Address: Ukraine, Kyiv, 123456
+              Адерса: Україна, Рівне, 1234
             </Typography>
           </Box>
 
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
                 },
               }}
             >
-              Privacy Policy
+              Політика конфіденційності
             </Link>
             <Link
               href="#"
@@ -122,7 +122,7 @@ const Footer: React.FC = () => {
                 },
               }}
             >
-              Terms of Service
+              Умови використання
             </Link>
             <Link
               href="#"
@@ -138,7 +138,7 @@ const Footer: React.FC = () => {
                 },
               }}
             >
-              About Us
+              Про нас
             </Link>
           </Box>
         </Box>
@@ -153,7 +153,7 @@ const Footer: React.FC = () => {
           }}
         >
           <Typography variant="body2">
-            © {new Date().getFullYear()} MovieHub. All rights reserved.
+            © {new Date().getFullYear()} MovieHub. Всі права захищені.
           </Typography>
         </Box>
       </Box>
