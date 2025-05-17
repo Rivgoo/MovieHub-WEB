@@ -1,110 +1,80 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../core/auth/useAuth';
 
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Divider from '@mui/material/Divider';
-import { PrimaryButton } from '../../shared/components/Buttons';
-import Layout from '../../shared/components/Layout';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import Layout from '../../shared/components/Layout/Layout';
+import HomeHeroSlider from '../../shared/components/HomeHeroSlider/HomeHeroSlider'; 
+import MoviesCarousel from '../../shared/components/MoviesCarousel/MoviesCarousel';
 
-const HomePageContent: React.FC = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/', { replace: true });
-  };
-
-  const handleLogin = () => {
-    navigate('/login', { replace: true });
-  };
-
-  return (
-    <Container
-      maxWidth="sm"
-      sx={{
-        mt: 4,
-        mb: 4,
-        display: 'flex',
-        justifyContent: 'center',
-        background: 'background.default',
-      }}>
-      <Paper
-        elevation={3}
-        sx={{
-          p: 4,
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}>
-        <Typography
-          variant="h4"
-          component="h1"
-          gutterBottom
-          color="text.primary"
-          sx={{ fontWeight: 600 }}>
-          MovieHub
-        </Typography>
-
-        <Typography
-          variant="h6"
-          component="p"
-          color="text.primary"
-          sx={{ mb: 3 }}>
-          Welcome!
-        </Typography>
-
-        <Divider sx={{ width: '80%', mb: 1 }} />
-
-        {user ? (
-          <Box sx={{ textAlign: 'center', width: '100%' }}>
-            <Typography color="text.primary" variant="body1" sx={{ mb: 1 }}>
-              Logged in as:
-            </Typography>
-            <Typography
-              color="text.primary"
-              variant="body1"
-              sx={{ fontWeight: 'bold', mb: 1 }}>
-              ID: {user.id}
-            </Typography>
-            <Typography
-              color="text.primary"
-              variant="body1"
-              sx={{ fontStyle: 'italic', mb: 3 }}>
-              Role: {user.role}
-            </Typography>
-            <PrimaryButton
-              variant="outlined"
-              color="primary"
-              onClick={handleLogout}
-              sx={{ width: '50%' }}>
-              Logout
-            </PrimaryButton>
-          </Box>
-        ) : (
-          <Box sx={{ textAlign: 'center', width: '100%' }}>
-            <Typography color="text.primary" variant="body1" sx={{ mb: 2 }}>
-              Please login to continue.
-            </Typography>
-            <PrimaryButton onClick={handleLogin} sx={{ width: '50%' }}>
-              Login
-            </PrimaryButton>
-          </Box>
-        )}
-      </Paper>
-    </Container>
-  );
-};
+import { getFeaturedMoviesForHero, getPopularMoviesList, getNowPlayingMoviesList } from '../../core/api/homePageApi'; 
+import { HeroMovieDto, MovieCardDto } from '../../core/api/types/types.home'; 
 
 const HomePage: React.FC = () => {
+  const [heroMovies, setHeroMovies] = useState<HeroMovieDto[]>([]);
+  const [popularMovies, setPopularMovies] = useState<MovieCardDto[]>([]);
+  const [nowPlayingMovies, setNowPlayingMovies] = useState<MovieCardDto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHomePageData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+     
+        const [heroData, popularData, nowPlayingData] = await Promise.all([
+          getFeaturedMoviesForHero({ limit: 5 }), 
+          getPopularMoviesList({ pageSize: 10 }),   
+          getNowPlayingMoviesList({ pageSize: 10 }) 
+        ]);
+
+        setHeroMovies(heroData || []);
+        setPopularMovies(popularData || []);
+        setNowPlayingMovies(nowPlayingData || []);
+
+      } catch (err: any) {
+        console.error("Failed to fetch homepage data:", err);
+        setError(err.message || "Не вдалося завантажити дані для головної сторінки.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHomePageData();
+  }, []);
+
+  if (loading) {
+    return <Layout><Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 128px)' }}><CircularProgress /></Container></Layout>;
+  }
+  if (error) {
+    return <Layout><Container sx={{ py: 5 }}><Alert severity="error">{error}</Alert></Container></Layout>;
+  }
+
   return (
     <Layout>
-      <HomePageContent />
+    
+      {heroMovies.length > 0 && <HomeHeroSlider movies={heroMovies} />}
+
+    
+      {popularMovies.length > 0 && (
+        <Container maxWidth="xl" sx={{ py: { xs: 3, sm: 4 } }}>
+     
+         <MoviesCarousel title="Популярні фільми" movies={popularMovies} />
+      </Container>
+      )}
+
+     
+      {nowPlayingMovies.length > 0 && (
+       
+        <Box sx={{ bgcolor: 'secondary.main', py: { xs: 3, sm: 4 } }}>
+            <Container maxWidth="xl">
+              <MoviesCarousel title="Зараз у кіно" movies={nowPlayingMovies} />
+        </Container>
+        </Box>
+      )}
+
+   
     </Layout>
   );
 };
