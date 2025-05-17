@@ -107,7 +107,7 @@ const FilmPage: React.FC = () => {
   }, [id, user, token]); 
   const handleSelectSession = () => {
     console.log('Обрати сеанс для фільму ID:', id);
-    if (id) navigate(`/session-search?filmId=${id}`); 
+    if (id) navigate(`/session-search?contentId=${id}`); 
   };
 
 
