@@ -14,6 +14,7 @@ import { ProcessedFilmDetails } from '../../core/api/types/types.film';
 import { useAuth } from '../../core/auth/useAuth';
 import { addToFavoritesAPI, removeFromFavoritesAPI, checkIfFavoriteAPI } from '../../core/api/favoriteApi';
 import MetaTags from '../../shared/components/MetaTag/MetaTags';
+import SessionsSection from './sections/SessionsSection/SessionsSection';
 
 const FilmPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -204,6 +205,7 @@ const FilmPage: React.FC = () => {
           />
           <ContentSection filmData={filmDetails} />
           <ActorsSection actors={filmDetails.actors} />
+          <SessionsSection/>
         </Box>
       )}
     
