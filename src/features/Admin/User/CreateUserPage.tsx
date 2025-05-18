@@ -32,7 +32,7 @@ const CreateUserPage: React.FC = () => {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Створення користувача">
       <Paper className="user-form-container">
         <Typography variant="h5" component="h2">
           Створити користувача

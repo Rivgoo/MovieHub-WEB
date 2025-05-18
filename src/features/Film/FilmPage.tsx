@@ -8,12 +8,12 @@ import { useTheme } from '@mui/material/styles';
 import HeroSection from './sections/HeroSection/HeroSection';
 import ContentSection from './sections/ContentSection/ContentSection';
 import ActorsSection from './sections/ActorsSection/ActorsSection';
-import { Fade, Container, CircularProgress, Alert, Snackbar, IconButton as MuiIconButton } from '@mui/material'
+import { Fade, Container, CircularProgress, Alert, Snackbar, IconButton as MuiIconButton } from '@mui/material';
 import { getProcessedFilmDetailsById } from '../../core/api/filmApi';
 import { ProcessedFilmDetails } from '../../core/api/types/types.film';
 import { useAuth } from '../../core/auth/useAuth';
 import { addToFavoritesAPI, removeFromFavoritesAPI, checkIfFavoriteAPI } from '../../core/api/favoriteApi';
-
+import MetaTags from '../../shared/components/MetaTag/MetaTags';
 
 const FilmPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -158,31 +158,52 @@ const FilmPage: React.FC = () => {
       return ( <Layout><Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 128px)' }}><CircularProgress /></Container></Layout> );
   }
   if (error && !filmDetails) {
-      return ( <Layout><Container sx={{ py: 5 }}><Alert severity="error" sx={{ mt: 2 }}>{error}</Alert></Container></Layout> );
+      return ( 
+        <Layout>
+          <MetaTags title="Помилка завантаження фільму" description="Не вдалося завантажити інформацію про фільм."/>
+          <Container sx={{ py: 5 }}><Alert severity="error" sx={{ mt: 2 }}>{error}</Alert></Container>
+        </Layout> 
+      );
   }
   if (!filmDetails && !loading) {
-      return ( <Layout><Container sx={{ py: 5 }}><Alert severity="info" sx={{ mt: 2 }}>Деталі фільму не знайдено.</Alert></Container></Layout> );
+      return ( 
+        <Layout>
+           <MetaTags title="Фільм не знайдено" description="Деталі фільму не знайдено на MovieHub."/>
+          <Container sx={{ py: 5 }}><Alert severity="info" sx={{ mt: 2 }}>Деталі фільму не знайдено.</Alert></Container>
+        </Layout> 
+      );
   }
 
   return (
     <Layout>
-      {filmDetails && (
+      <MetaTags
+        title={filmDetails ? `${filmDetails.title} (${filmDetails.releaseDate}) | MovieHub` : "Завантаження фільму | MovieHub"}
+        description={filmDetails ? `Опис фільму "${filmDetails.title}": ${filmDetails.overview.substring(0, 160)}...` : "Завантажуємо деталі фільму на MovieHub."}
+        ogType="video.movie"
+      />
+      {loading && (
+        <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 128px)' }}>
+          <CircularProgress />
+        </Container>
+      )}
+      {error && !filmDetails && (
+        <Container sx={{ py: 5 }}>
+          <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>
+        </Container>
+      )}
+      {!loading && !error && filmDetails && (
         <Box>
           <HeroSection
             title={filmDetails.title}
             tagline={filmDetails.tagline}
             backdropUrl={filmDetails.backdropUrl}
             trailerUrl={filmDetails.trailerUrl}
-            isFavorite={isCurrentlyFavorite}    
-            onToggleFavorite={handleToggleFavorite} 
-            favoriteLoading={favoriteActionLoading} 
+            isFavorite={isCurrentlyFavorite}
+            onToggleFavorite={handleToggleFavorite}
+            favoriteLoading={favoriteActionLoading}
           />
-          <ContentSection
-            filmData={filmDetails}
-          />
-          <ActorsSection
-            actors={filmDetails.actors}
-          />
+          <ContentSection filmData={filmDetails} />
+          <ActorsSection actors={filmDetails.actors} />
         </Box>
       )}
     
@@ -215,23 +236,18 @@ const FilmPage: React.FC = () => {
 
 <Snackbar
   open={snackbarOpen}
-  autoHideDuration={3000} 
+  autoHideDuration={user ? 3000 : 6000} // Longer if login/register buttons are shown
   onClose={handleCloseSnackbar}
   message={snackbarMessage}
   anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
   sx={{
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    zIndex: 1300,
-    maxWidth: '90%',
-    width: '100%',
+    bottom: { xs: showFloatingButton ? '100px' : '20px', sm: '24px' }, // Adjust if floating button is visible
+    transition: 'bottom 0.3s ease-in-out',
   }}
   action={
     !user && snackbarMessage.includes("Будь ласка, увійдіть") ? (
       <React.Fragment>
-        <Button sx={{ color: theme.palette.secondary.light }} size="small" onClick={handleLoginRedirect}>Увійти</Button>
+        <Button sx={{ color: theme.palette.secondary.light, mr: 1 }} size="small" onClick={handleLoginRedirect}>Увійти</Button>
         <Button sx={{ color: theme.palette.secondary.light }} size="small" onClick={handleRegisterRedirect}>Реєстрація</Button>
         <MuiIconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
           X
@@ -244,7 +260,6 @@ const FilmPage: React.FC = () => {
     )
   }
 />
-
     </Layout>
   );
 };

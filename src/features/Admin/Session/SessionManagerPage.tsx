@@ -315,7 +315,7 @@ const SessionManagerPage: React.FC = () => {
   );
 
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Керування сеансами">
       <Box className="session-page">
         <div className="session-page-header">
           <h2>Сеанси</h2>

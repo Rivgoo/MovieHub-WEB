@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { getMyUserInfo, UserInfoResponse } from '../../core/api/userApi';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const CustomerAccountPage = () => {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ const CustomerAccountPage = () => {
           setLoading(false);
         }
       } else {
-        setLoading(false); // Should not happen if ProtectedRoute is working
+        setLoading(false);
       }
     };
     fetchInfo();
@@ -37,10 +38,14 @@ const CustomerAccountPage = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        minHeight: '400px', // Ensure paper has some height
+        minHeight: '400px',
         width: '100%',
       }}
     >
+      <MetaTags 
+        title="Профіль користувача - Мій Кабінет | MovieHub" 
+        description="Перегляд та редагування вашого профілю на MovieHub." 
+      />
       {loading ? (
         <Box sx={{display: 'flex', justifyContent:'center', alignItems: 'center', flexGrow: 1}}>
             <CircularProgress />

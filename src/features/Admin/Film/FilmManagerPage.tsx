@@ -337,7 +337,7 @@ const FilmManagerPage = () => {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Керування фільмами">
       <Box className="film-page-container">
         <div>
           {!isAddingFilm && (

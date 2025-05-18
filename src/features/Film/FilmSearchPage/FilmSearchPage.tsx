@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import Layout from '../../../shared/components/Layout.tsx';
+import Layout from '../../../shared/components/Layout/Layout.tsx';
 import SearchForm from './blocks/SearchForm/SearchForm.tsx';
 import FilmGrid from './blocks/FilmGrid/FilmGrid.tsx';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import {
   buildContentQuery,
   StateFilters as ApiStateFiltersType,
 } from './blocks/SearchForm/buildContentQuery.utli.ts';
+import MetaTags from '../../../shared/components/MetaTag/MetaTags';
 
 const normalizeFilterValueForStateAndUrl = (
   value: string | undefined
@@ -273,6 +274,10 @@ const FilmSearchPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags 
+        title="Пошук фільмів - Знайдіть ідеальний фільм | MovieHub" 
+        description="Шукайте фільми за назвою, жанром, роком випуску та іншими критеріями..." 
+      />
       <SearchForm
         onSearchTermChange={handleActualSearch}
         filters={mapApiFiltersToFilterBar(apiFilters)}

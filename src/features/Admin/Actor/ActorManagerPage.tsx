@@ -205,7 +205,7 @@ const tempActor: ActorDto = {
   };
  
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Керування акторами">
       <Box>
         <div className="actors-page">
           <div className="actors-page-header">

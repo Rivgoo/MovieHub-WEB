@@ -158,7 +158,7 @@ const UserManagerPage: React.FC = () => {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Керування користувачами">
       <Box className="user-manager-page">
         <Box className="user-manager-header">
           <Typography variant="h4" component="h2">Користувачі</Typography>

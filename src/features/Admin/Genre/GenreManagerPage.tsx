@@ -135,7 +135,7 @@ const GenreManagerPage: React.FC = () => {
   };
 
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Керування жанрами">
       <div className="genres-page">
         <div className="top-bar-wrapper">
           <h1 className="title">Жанри</h1>

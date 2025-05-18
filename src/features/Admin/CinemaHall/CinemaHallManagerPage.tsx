@@ -130,7 +130,7 @@ const CinemaHallManagerPage = () => {
     };
 
     return (
-        <AdminLayout>
+        <AdminLayout pageTitle="Керування кінозалами">
             <Box>
                 <div className="cinema-container">
                     <div className="cinema-header">
