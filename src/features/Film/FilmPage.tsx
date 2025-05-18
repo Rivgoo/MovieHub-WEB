@@ -1,30 +1,26 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
+import Button from '@mui/material/Button'; 
 import Layout from '../../shared/components/Layout/Layout';
 import { useTheme } from '@mui/material/styles';
 import HeroSection from './sections/HeroSection/HeroSection';
 import ContentSection from './sections/ContentSection/ContentSection';
 import ActorsSection from './sections/ActorsSection/ActorsSection';
-import { Fade, Container, CircularProgress, Alert, Snackbar, IconButton as MuiIconButton } from '@mui/material';
+import { Container, CircularProgress, Alert, Snackbar, IconButton as MuiIconButton } from '@mui/material';
 import { getProcessedFilmDetailsById } from '../../core/api/filmApi';
 import { ProcessedFilmDetails } from '../../core/api/types/types.film';
 import { useAuth } from '../../core/auth/useAuth';
 import { addToFavoritesAPI, removeFromFavoritesAPI, checkIfFavoriteAPI } from '../../core/api/favoriteApi';
 import MetaTags from '../../shared/components/MetaTag/MetaTags';
+import SessionsSection from './sections/SessionsSection/SessionsSection';
 
 const FilmPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
   const theme = useTheme();
-  const { user, token } = useAuth(); 
-
-  const footerRef = useRef<HTMLElement | null>(null);
-  const [showFloatingButton, setShowFloatingButton] = useState(true);
-
+  const { user, token } = useAuth();
   const [filmDetails, setFilmDetails] = useState<ProcessedFilmDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,21 +34,6 @@ const FilmPage: React.FC = () => {
   }, [id]);
 
 
-  useEffect(() => {
-      const footerElement = document.querySelector('footer');
-      if (footerElement) footerRef.current = footerElement;
-      else console.warn("Footer element not found for Intersection Observer.");
-  }, []);
-  useEffect(() => {
-    const currentFooterRef = footerRef.current;
-    if (!currentFooterRef || typeof IntersectionObserver === 'undefined' || window.innerHeight < 300) return;
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-        entries.forEach(entry => setShowFloatingButton(!entry.isIntersecting));
-    };
-    const observer = new IntersectionObserver(observerCallback, { root: null, rootMargin: '0px', threshold: 0.01 });
-    observer.observe(currentFooterRef);
-    return () => { if (currentFooterRef) observer.unobserve(currentFooterRef); };
-  }, []);
 
   useEffect(() => {
     if (!id) {
@@ -61,34 +42,30 @@ const FilmPage: React.FC = () => {
       return;
     }
 
-    let isMounted = true; 
+    let isMounted = true;
 
     const fetchFilmDataAndFavoriteStatus = async () => {
       setLoading(true);
       setError(null);
       setFilmDetails(null);
-      setIsCurrentlyFavorite(false); 
+      setIsCurrentlyFavorite(false);
 
       try {
-     
         const filmData = await getProcessedFilmDetailsById(id);
         if (!isMounted) return;
         setFilmDetails(filmData);
 
-      
-        if (user && token && filmData && filmData.id) { 
+        if (user && token && filmData && filmData.id) {
           try {
-            const favoriteStatus = await checkIfFavoriteAPI(filmData.id); 
+            const favoriteStatus = await checkIfFavoriteAPI(filmData.id);
             if (isMounted) {
               setIsCurrentlyFavorite(favoriteStatus);
             }
           } catch (favStatusError) {
             console.error("Помилка отримання статусу обраного:", favStatusError);
-           
             if (isMounted) setIsCurrentlyFavorite(false);
           }
         } else if (isMounted) {
-        
           setIsCurrentlyFavorite(false);
         }
 
@@ -101,14 +78,10 @@ const FilmPage: React.FC = () => {
 
     fetchFilmDataAndFavoriteStatus();
 
-    return () => { 
+    return () => {
       isMounted = false;
     };
-  }, [id, user, token]); 
-  const handleSelectSession = () => {
-    console.log('Обрати сеанс для фільму ID:', id);
-    if (id) navigate(`/session-search?contentId=${id}`); 
-  };
+  }, [id, user, token]);
 
 
   const handleToggleFavorite = async () => {
@@ -122,19 +95,18 @@ const FilmPage: React.FC = () => {
     setFavoriteActionLoading(true);
     try {
       if (isCurrentlyFavorite) {
-        await removeFromFavoritesAPI(id); 
+        await removeFromFavoritesAPI(id);
         setSnackbarMessage(`"${filmDetails.title}" видалено з обраних.`);
       } else {
-        await addToFavoritesAPI(id); 
+        await addToFavoritesAPI(id);
         setSnackbarMessage(`"${filmDetails.title}" додано в обрані!`);
       }
-      setIsCurrentlyFavorite(!isCurrentlyFavorite); 
+      setIsCurrentlyFavorite(!isCurrentlyFavorite);
       setSnackbarOpen(true);
     } catch (err: any) {
       console.error("Помилка зміни статусу обраного:", err);
       setSnackbarMessage(err.message || "Не вдалося оновити статус обраного. Спробуйте пізніше.");
       setSnackbarOpen(true);
-      
     } finally {
       setFavoriteActionLoading(false);
     }
@@ -158,19 +130,19 @@ const FilmPage: React.FC = () => {
       return ( <Layout><Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 128px)' }}><CircularProgress /></Container></Layout> );
   }
   if (error && !filmDetails) {
-      return ( 
+      return (
         <Layout>
           <MetaTags title="Помилка завантаження фільму" description="Не вдалося завантажити інформацію про фільм."/>
           <Container sx={{ py: 5 }}><Alert severity="error" sx={{ mt: 2 }}>{error}</Alert></Container>
-        </Layout> 
+        </Layout>
       );
   }
   if (!filmDetails && !loading) {
-      return ( 
+      return (
         <Layout>
            <MetaTags title="Фільм не знайдено" description="Деталі фільму не знайдено на MovieHub."/>
           <Container sx={{ py: 5 }}><Alert severity="info" sx={{ mt: 2 }}>Деталі фільму не знайдено.</Alert></Container>
-        </Layout> 
+        </Layout>
       );
   }
 
@@ -181,6 +153,7 @@ const FilmPage: React.FC = () => {
         description={filmDetails ? `Опис фільму "${filmDetails.title}": ${filmDetails.overview.substring(0, 160)}...` : "Завантажуємо деталі фільму на MovieHub."}
         ogType="video.movie"
       />
+  
       {loading && (
         <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 128px)' }}>
           <CircularProgress />
@@ -204,45 +177,22 @@ const FilmPage: React.FC = () => {
           />
           <ContentSection filmData={filmDetails} />
           <ActorsSection actors={filmDetails.actors} />
+          <SessionsSection/>
         </Box>
       )}
-    
 
-      <Fade in={showFloatingButton} timeout={300}>
-           <Button
-              variant="contained"
-              onClick={handleSelectSession}
-              startIcon={<ConfirmationNumberOutlinedIcon />}
-              sx={{ 
-                 position: 'fixed', zIndex: theme.zIndex.fab, width: 'auto', minWidth: 'auto',
-                 bgcolor: 'primary.main', color: 'primary.contrastText', borderRadius: '50px',
-                 fontWeight: 600, letterSpacing: '0.5px', textTransform: 'none',
-                 whiteSpace: 'nowrap', boxShadow: '0px 8px 18px rgba(218, 98, 28, 0.35)',
-                 '&:hover': { bgcolor: 'primary.dark', boxShadow: '0px 10px 22px rgba(218, 98, 28, 0.45)'},
-                 fontSize: '1.15rem', py: 1.7, px: 3.5,
-                 bottom: theme.spacing(15), left: '50%', right: 'auto', transform: 'translateX(-50%)',
-                  [theme.breakpoints.up('sm')]: {
-                     right: theme.spacing(4), left: 'auto', transform: 'none', bottom: theme.spacing(4),
-                     fontSize: '1.2rem', py: 2, px: 5,
-                  },
-                  '& .MuiButton-startIcon': {
-                      fontSize: { xs: '1.5rem', sm: '1.7rem' }, mr: { xs: 1, sm: 1.2 }, verticalAlign: 'middle'
-                  }
-              }}
-            >
-              Обрати сеанс
-          </Button>
-      </Fade>
+    
 
 <Snackbar
   open={snackbarOpen}
-  autoHideDuration={user ? 3000 : 6000} // Longer if login/register buttons are shown
+  autoHideDuration={user ? 3000 : 6000}
   onClose={handleCloseSnackbar}
   message={snackbarMessage}
   anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
   sx={{
-    bottom: { xs: showFloatingButton ? '100px' : '20px', sm: '24px' }, // Adjust if floating button is visible
-    transition: 'bottom 0.3s ease-in-out',
+
+    bottom: { xs: '20px', sm: '24px' }, 
+    transition: 'bottom 0.3s ease-in-out', 
   }}
   action={
     !user && snackbarMessage.includes("Будь ласка, увійдіть") ? (

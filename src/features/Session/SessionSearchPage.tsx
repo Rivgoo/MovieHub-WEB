@@ -1,48 +1,42 @@
 import React from 'react';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Layout from '../../shared/components/Layout/Layout';
+import Hero from './sections/HeroSection/Hero';
+import FilterSessionSearch from './sections/Filters/FilterSessionSearch';
+import DateFilter from './sections/DateFilterSection/DateFilter';
+import { Box, useMediaQuery } from '@mui/material';
+import FilmScheduleGrid from './sections/FilmScheduleGrid/FilmScheduleGrid';
+import theme from '../../theme/theme';
+import ModalFilters from './sections/ModalFiltersSection/ModalFilters';
+import FilmAdaptiveScheduleGridItem from './sections/AdaptiveFilmGrid/FilmAdaptiveScheduleGridItem';
+
 import MetaTags from './../../shared/components/MetaTag/MetaTags';
+import Layout from '../../shared/components/Layout/Layout';
 
 const SessionSearchPage: React.FC = () => {
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <Layout>
-      <MetaTags 
-        title="Пошук сеансів - Розклад кінотеатрів | MovieHub" 
-        description="Знайдіть актуальні сеанси у вашому місті..." 
+      <MetaTags
+        title="Пошук сеансів - Розклад кінотеатрів | MovieHub"
+        description="Знайдіть актуальні сеанси у вашому місті..."
       />
-      <Container
-        maxWidth="sm"
-        sx={{
-          mt: 4,
-          mb: 4,
-          display: 'flex',
-          justifyContent: 'center',
-          background: 'background.default',
-        }}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}>
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            color="text.secondary"
-            sx={{ fontWeight: 600 }}>
-            Session Search
-          </Typography>
-
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            This is the Session Search page. You can search for Sessions here.
-          </Typography>
-        </Paper>
+      <Container>
+        <Hero />
+        {!isSmallScreen ? (
+          <>
+            <FilterSessionSearch />
+            <Box sx={{ display: 'flex', pt: '15px', gap: '15px' }}>
+              <DateFilter />
+              <FilmScheduleGrid />
+            </Box>
+          </>
+        ) : (
+          <>
+            <FilmAdaptiveScheduleGridItem />
+            <ModalFilters />
+          </>
+        )}
       </Container>
     </Layout>
   );
