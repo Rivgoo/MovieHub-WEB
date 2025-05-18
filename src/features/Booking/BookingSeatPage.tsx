@@ -80,6 +80,10 @@ const BookingSeatPage: React.FC = () => {
   const styles = getBookingSeatPageStaticStyles(theme);
   const { user, token } = useAuth();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [sessionId]);
+
   const [session, setSession] = useState<SessionDto | null>(null);
   const [content, setContent] = useState<ContentDto | null>(null);
   const [cinemaHall, setCinemaHall] = useState<CinemaHallDto | null>(null);
