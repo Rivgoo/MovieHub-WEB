@@ -16,6 +16,8 @@ import {
 
 import getSessionSectionStyles from './SessionSection.styles';
 import { FillBorderButton } from '../../../../shared/components/Buttons';
+import { format, parseISO } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
 const SessionsSection = () => {
   const theme = useTheme();
@@ -52,12 +54,11 @@ const SessionsSection = () => {
     }).format(date);
   };
 
-  const formatTime = (iso: string): string => {
-    const date = new Date(iso);
-    return date.toLocaleTimeString('uk-UA', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  const toLocalHM = (dateStr: string): string => {
+    const hasTimeZoneInfo = /Z|[+-]\d{2}:\d{2}$/.test(dateStr);
+    const stringToParse = hasTimeZoneInfo ? dateStr : `${dateStr}Z`;
+    const dateObject = parseISO(stringToParse);
+    return format(dateObject, 'HH:mm', { locale: uk });
   };
 
   const groupByDate = (sessions: SessionDto[]) => {
@@ -111,7 +112,7 @@ const SessionsSection = () => {
                       sx={styles.sessionTimeBtn}
                       onClick={() => navigate(`/booking/session/${el.id}`)}>
                       <Typography variant="body1">
-                        {formatTime(el.startTime)}
+                        {toLocalHM(el.startTime)}
                       </Typography>
                     </FillBorderButton>
                   ))}
