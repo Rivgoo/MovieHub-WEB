@@ -34,7 +34,8 @@ const SessionsSection = () => {
     const fetchSessions = async () => {
       setIsLoading(true);
       try {
-        const response = await searchSessions(`ContentId=${id}`);
+        const response = await searchSessions(`PageSize=100&ContentId=${id}`);
+        console.log('Отримані сеанси:', response.items);
         setSessions(response);
       } catch (err) {
         console.log(err);

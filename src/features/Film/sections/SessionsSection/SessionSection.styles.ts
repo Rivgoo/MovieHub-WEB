@@ -41,7 +41,7 @@ const getSessionSectionStyles = (theme: Theme) => ({
     },
   },
   divider: {
-    my: 2, // vertical margin
+    my: 2,
     borderColor: theme.palette.primary.light,
   },
 });
