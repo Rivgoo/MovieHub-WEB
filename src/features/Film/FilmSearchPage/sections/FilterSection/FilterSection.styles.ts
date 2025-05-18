@@ -1,6 +1,14 @@
 import { Theme } from '@mui/material';
 
 const FilterSectionStyles = (theme: Theme) => ({
+  filterSessionWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    justifyContent: 'center',
+    width: '100%',
+    gap: '6px',
+  },
   selectorWrapper: {
     display: 'flex',
     flexDirection: 'column',
@@ -31,6 +39,18 @@ const FilterSectionStyles = (theme: Theme) => ({
     '& .MuiOutlinedInput-notchedOutline': {
       border: 'none',
     },
+  },
+
+  formControlButtonBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    gap: '6px',
+  },
+  formControlButton: {
+    display: 'flex',
+    height: '40px',
+    gap: '6px',
   },
 });
 
