@@ -52,14 +52,6 @@
 
 .homehero-slideTextBlock {
   max-width: 60%;
-  margin-bottom: 1rem; 
-}
-
-.homehero-slideActionBlock {
-  position: absolute;
-  left: 20px;
-  bottom: 50px; 
-  z-index: 3;
 }
 
 .homehero-slideTitle {
@@ -69,8 +61,6 @@
   margin-bottom: 0.5rem !important; 
   line-height: 1.2;
 }
-
-
 
 .homehero-slideTitleLink:hover .homehero-slideTitle {
    color: var(--primary-main); 
@@ -136,7 +126,7 @@
   .homehero-slideItem { height: 70vh; padding-bottom: 50px; }
   .homehero-slideTextBlock { max-width: 60%; }
   .homehero-slideTitle { font-size: 2.6rem !important; margin-bottom: 0.8rem !important; }
-  .homehero-slideMeta { font-size: 1rem; margin-bottom: 1.5rem; }
+  .homehero-slideMeta { font-size: 1rem; }
   .homehero-selectSessionButtonSlide { padding: 0.75rem 2rem !important; font-size: 1rem !important; }
   .homehero-mobileStepperControls { bottom: 25px; }
   .homehero-mobileStepperControls .MuiMobileStepper-dot {
@@ -150,7 +140,7 @@
   .homehero-slideItem { height: 75vh; } 
   .homehero-slideTextBlock { max-width: 55%; }
   .homehero-slideTitle { font-size: 3.2rem !important; }
-  .homehero-slideMeta { font-size: 1.1rem; margin-bottom: 2rem; }
+  .homehero-slideMeta { font-size: 1.1rem; }
 }
 
 @media (min-width: 1200px) { 

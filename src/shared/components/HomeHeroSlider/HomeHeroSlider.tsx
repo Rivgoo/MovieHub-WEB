@@ -66,7 +66,7 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
 
   const handleGoToSession = (e: React.MouseEvent, Id: string | number) => {
     e.stopPropagation();
-    navigate(`/session-search?contentId=${Id}`);
+    navigate(`/film/${Id}`);
   };
 
   const formatDuration = (totalMinutes: number | undefined): string => {
@@ -109,7 +109,7 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
               justifyContent: 'flex-end',
               alignItems: 'flex-start',
               width: '100%',
-              gap: { xs: 1.5, sm: 2 },
+              gap: 0.5,
             }}
           >
             <Box className={styles['homehero-slideTextBlock']}>
@@ -137,7 +137,7 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
               </Box>
             </Box>
 
-          <Box className={styles['homehero-slideActionBlock']}>
+          <Box>
             <Button
                 variant="contained" 
                 startIcon={<ConfirmationNumberOutlinedIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.2rem' } }} />}
@@ -148,14 +148,13 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
                   fontSize: { xs: '0.9rem', sm: '1rem' }, 
                   fontWeight: 'bold',
                   textTransform: 'none',
-                  backgroundColor: 'var(--primary-main)',
+                  backgroundColor: theme.palette.primary.main,
                   color: 'var(--text-light)',
                   boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
                   minWidth: 'auto',
                   '&:hover': {
-                    backgroundColor: 'var(--primary-dark)',
+                    backgroundColor: theme.palette.primary.dark,
                   },
-             
                 }}
             
               >
