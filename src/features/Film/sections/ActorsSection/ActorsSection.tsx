@@ -39,7 +39,7 @@ const ActorsSection: React.FC<ActorsSectionProps> = ({ actors }) => {
             <HorizontalScroller
               sx={{
                 '& .horizontal-scroller-content': {
-                  justifyContent: actors.length < 4 ? 'center' : 'flex-start',
+                  justifyContent: actors.length < 8 ? 'center' : 'flex-start',
                   gap: {
                     xs: theme.spacing(1.5),
                     sm: theme.spacing(2),

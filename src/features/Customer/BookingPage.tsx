@@ -37,6 +37,10 @@ import { useTheme, Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
 import StandardPagination from '../../shared/components/Pagination/StandardPagination';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
+
+import { format, parseISO } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
 interface EnrichedBooking {
   booking: BookingDto;
@@ -127,7 +131,7 @@ const BookingPage: React.FC = () => {
     setError(null);
 
     try {
-      let queryParams = `PageIndex=${page}&PageSize=${PAGE_SIZE}`; 
+      let queryParams = `PageIndex=${page}&PageSize=${PAGE_SIZE}&OrderField=CreatedAt&OrderType=OrderByDescending`;
       if (filter !== 'all') {
         queryParams += `&Status=${filter}`;
       }
@@ -190,22 +194,22 @@ const BookingPage: React.FC = () => {
       setAllBookings(prevBookings => 
         prevBookings.map(eb => 
           eb.booking.id === bookingId 
-            ? { ...eb, booking: { ...eb.booking, status: 'Canceled' as BookingStatus } }
+            ? { ...eb, booking: { ...eb.booking, status: 'Canceled' as BookingStatus, updatedAt: new Date().toISOString() } } // Оновлюємо updatedAt
             : eb
         )
       );
     } catch (err) {
       console.error(`Error cancelling booking ${bookingId}:`, err);
-      setError(`Не вдалося скасувати бронювання ID: ${bookingId}. Можливо, час для скасування вичерпано.`);
-      setTimeout(() => setError(null), 5000);
+      setError(`Не вдалося скасувати бронювання ID: ${bookingId}. Можливо, час для скасування вичерпано або сеанс вже розпочався/завершився.`);
+      setTimeout(() => setError(null), 7000);
     } finally {
       setIsCancelling(null);
     }
   };
 
-  const canCancelBooking = (sessionStartTime?: string): boolean => {
-    if (!sessionStartTime) return false;
-    const sessionTime = new Date(sessionStartTime).getTime();
+  const canCancelBooking = (sessionStartTime?: string, bookingStatus?: BookingStatus): boolean => {
+    if (!sessionStartTime || bookingStatus === 'Canceled') return false;
+    const sessionTime = parseISO(sessionStartTime).getTime();
     const now = new Date().getTime();
     const oneHourInMs = 60 * 60 * 1000;
     return (sessionTime - now) > oneHourInMs;
@@ -214,29 +218,36 @@ const BookingPage: React.FC = () => {
   const filteredBookingsToDisplay = useMemo(() => {
     let bookingsToProcess = [...allBookings];
     bookingsToProcess.sort((a, b) => {
-        const dateA = a.session?.startTime ? new Date(a.session.startTime).getTime() : new Date(a.booking.createdAt).getTime();
-        const dateB = b.session?.startTime ? new Date(b.session.startTime).getTime() : new Date(b.booking.createdAt).getTime();
+        const sessionAStartTime = a.session?.startTime ? parseISO(a.session.startTime).getTime() : 0;
+        const sessionBStartTime = b.session?.startTime ? parseISO(b.session.startTime).getTime() : 0;
+        const now = new Date().getTime();
+
+        const isASessionPast = sessionAStartTime < now;
+        const isBSessionPast = sessionBStartTime < now;
+
+        if (isASessionPast && !isBSessionPast) return 1;
+        if (!isASessionPast && isBSessionPast) return -1;
+
+        if (sessionAStartTime !== sessionBStartTime)
+            return sessionBStartTime - sessionAStartTime;
+        
+        const dateA = parseISO(a.booking.createdAt).getTime();
+        const dateB = parseISO(b.booking.createdAt).getTime();
         return dateB - dateA;
     });
     return bookingsToProcess;
   }, [allBookings]);
 
-  const formatDate = (dateString?: string): string => {
+  const formatDate = (dateString?: string | null): string => {
     if (!dateString) return 'N/A';
     try {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-            return dateString;
-        }
-        return date.toLocaleString('uk-UA', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+      const hasTimeZoneInfo = /Z|[+-]\d{2}:\d{2}$/.test(dateString);
+      const stringToParse = hasTimeZoneInfo ? dateString : `${dateString}Z`;
+      const dateObject = parseISO(stringToParse);
+      return format(dateObject, 'dd.MM.yyyy, HH:mm', { locale: uk });
     } catch (e) {
-        return dateString;
+      console.error("Error formatting date:", e, "Original string:", dateString);
+      return dateString;
     }
   };
 
@@ -266,9 +277,9 @@ const BookingPage: React.FC = () => {
             sx: {
                 ...baseSx,
                 backgroundColor: colorString,
-                color: theme.palette.text.primary,
+                color: theme.palette.getContrastText(colorString),
                 '& .MuiChip-icon': {
-                    color: theme.palette.text.primary,
+                    color: theme.palette.getContrastText(colorString),
                 },
             },
         };
@@ -287,6 +298,10 @@ const BookingPage: React.FC = () => {
         minHeight: '400px',
       }}
     >
+      <MetaTags 
+        title="Мої Бронювання - Мій Кабінет | MovieHub"
+        description="Переглядайте історію ваших бронювань квитків на MovieHub..." 
+      />
       <Typography
         variant="h4"
         component="h1"
@@ -349,8 +364,7 @@ const BookingPage: React.FC = () => {
           <List sx={{ width: '100%' }}>
             {filteredBookingsToDisplay.map(({ booking, session, content, cinemaHall, loadError }) => {
               const showCancelButton = 
-                (booking.status === 'Confirmed' || booking.status === 'Pending') &&
-                canCancelBooking(session?.startTime);
+                canCancelBooking(session?.startTime, booking.status);
               
               const chipStyling = getChipStyling(booking.status);
 
@@ -477,7 +491,6 @@ const BookingPage: React.FC = () => {
                             color: theme.palette.error.contrastText,  
                             borderColor: theme.palette.error.dark,
                           },
-
                         }}
                       >
                         {isCancelling === booking.id ? <CircularProgress size={18} color="inherit" /> : 'Скасувати'}

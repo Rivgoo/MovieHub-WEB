@@ -7,6 +7,7 @@ import {
   CreateSessionRequest,
   CreateSessionResponse,
   UpdateSessionRequest,
+  SessionContentDtoPaginatedList,
 } from '../types/types.session.ts';
 
 // GET /api/v1/sessions
@@ -42,6 +43,17 @@ export const searchSessions = async (
   );
   return data;
 };
+
+// GET /api/v1/sessions/filter-with-content?query
+export const searchSessionsWithContent = async (
+  query: string
+): Promise<SessionContentDtoPaginatedList> => {
+  const { data } = await apiClient.get<SessionContentDtoPaginatedList>(
+    `/sessions/filter-with-content${query.startsWith('?') ? query : `?${query}`}` 
+  );
+  return data;
+};
+
 
 // POST /api/v1/sessions
 export const createSession = async (

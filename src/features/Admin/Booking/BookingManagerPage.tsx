@@ -429,7 +429,7 @@ const BookingManagerPage: React.FC = () => {
 
 
   return (
-    <AdminLayout>
+    <AdminLayout pageTitle="Керування бронюваннями">
       <Box className="booking-manager-page" sx={{ color: theme.palette.text.primary }}>
         <Box sx={{ 
             display: 'flex', 

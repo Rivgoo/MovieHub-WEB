@@ -2,8 +2,9 @@ import React from 'react';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
 import { useTheme } from '@mui/material/styles';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 
 const privacyPolicyHtml = `
@@ -195,6 +196,10 @@ const PrivacyPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags 
+        title="Політика Конфіденційності | MovieHub" 
+        description="Ознайомтеся з політикою конфіденційності MovieHub..." 
+      />
       <Container
 
         maxWidth="md"

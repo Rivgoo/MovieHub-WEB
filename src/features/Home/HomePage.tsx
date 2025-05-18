@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import Layout from '../../shared/components/Layout/Layout';
 import HomeHeroSlider from '../../shared/components/HomeHeroSlider/HomeHeroSlider'; 
 import MoviesCarousel from '../../shared/components/MoviesCarousel/MoviesCarousel';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 import { getFeaturedMoviesForHero, getPopularMoviesList, getNowPlayingMoviesList } from '../../core/api/homePageApi'; 
 import { HeroMovieDto, MovieCardDto } from '../../core/api/types/types.home'; 
@@ -53,7 +54,11 @@ const HomePage: React.FC = () => {
 
   return (
     <Layout>
-    
+      <MetaTags
+        title="MovieHub - Головна | Ваш гід у світі кіно"
+        description="MovieHub: Знаходьте фільми, дивіться трейлери, бронюйте квитки та будьте в курсі останніх новинок кіно. Ваш персональний кіногід."
+        robots="index, follow"
+      />
       {heroMovies.length > 0 && <HomeHeroSlider movies={heroMovies} />}
 
     
@@ -73,8 +78,6 @@ const HomePage: React.FC = () => {
         </Container>
         </Box>
       )}
-
-   
     </Layout>
   );
 };

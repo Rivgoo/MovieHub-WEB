@@ -28,7 +28,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 
-import Layout from '../../shared/components/Layout';
+import Layout from '../../shared/components/Layout/Layout';
+import MetaTags from './../../shared/components/MetaTag/MetaTags';
 
 const RegistrationPage: React.FC = () => {
   const theme = useTheme();
@@ -209,6 +210,10 @@ const RegistrationPage: React.FC = () => {
 
   return (
     <Layout>
+      <MetaTags  
+        title="Реєстрація - MovieHub | Створити обліковий запис" 
+        description="Зареєструйтеся на MovieHub, щоб зберігати улюблені фільми..." 
+      />
       <Box sx={styles.wrapper}>
         <Container component={Paper} maxWidth="xs" sx={styles.container}>
           <Typography component="h1" variant="h5" sx={styles.title}>
