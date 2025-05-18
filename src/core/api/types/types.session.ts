@@ -9,9 +9,23 @@ export interface SessionDto {
   ticketPrice: number;
 }
 
-// 📘 GET /api/v1/sessions/filter
+// GET /api/v1/sessions/filter-with-content
+export interface SessionWithContentDto extends SessionDto {
+  title: string;
+  description: string;
+  rating: number;
+  releaseYear: number;
+  trailerUrl: string;
+  bannerUrl: string;
+  posterUrl: string;
+  durationMinutes: number;
+  genreIds: number[];
+}
+//-----------------------------------------------------------
+
+// GET /api/v1/sessions/filter
 export interface SessionFilterResponse {
-  items: SessionDto[];
+  items: SessionWithContentDto[];
   pageIndex: number;
   pageSize: number;
   totalCount: number;
@@ -21,21 +35,21 @@ export interface SessionFilterResponse {
 }
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/sessions
+// GET /api/v1/sessions
 export type GetAllSessionsResponse = SessionDto[];
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/sessions/{id}
+// GET /api/v1/sessions/{id}
 export type GetSessionByIdResponse = SessionDto;
 //-----------------------------------------------------------
 
-// 📘 GET /api/v1/sessions/{id}/exists
+// GET /api/v1/sessions/{id}/exists
 export interface SessionExistenceResponse {
   exists: boolean;
 }
 //-----------------------------------------------------------
 
-// 📘 POST /api/v1/sessions
+// POST /api/v1/sessions
 export interface CreateSessionRequest {
   startTime: string; // ISO string
   contentId: number;
@@ -47,7 +61,7 @@ export interface CreateSessionResponse {
 }
 //-----------------------------------------------------------
 
-// 📘 PUT /api/v1/sessions/{id}
+// PUT /api/v1/sessions/{id}
 export interface UpdateSessionRequest {
   startTime: string; // ISO string
   contentId: number;
@@ -57,7 +71,7 @@ export interface UpdateSessionRequest {
 export type UpdateSessionResponse = void;
 //-----------------------------------------------------------
 
-// 📘 DELETE /api/v1/sessions/{id}
+// DELETE /api/v1/sessions/{id}
 export type DeleteSessionResponse = void;
 
 
