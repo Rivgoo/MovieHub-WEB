@@ -137,19 +137,32 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
               </Box>
             </Box>
 
-            <Box className={styles['homehero-slideActionBlock']}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                startIcon={<ConfirmationNumberOutlinedIcon />}
+          <Box className={styles['homehero-slideActionBlock']}>
+            <Button
+                variant="contained" 
+                startIcon={<ConfirmationNumberOutlinedIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.2rem' } }} />}
                 onClick={(e) => handleGoToSession(e, currentMovie.id)}
-                className={styles['homehero-selectSessionButtonSlide']}
+                sx={{
+                  borderRadius: '25px',
+                  padding: { xs: '0.6rem 1.5rem', sm: '0.75rem 2rem' },
+                  fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  backgroundColor: 'var(--primary-main)',
+                  color: 'var(--text-light)',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                  minWidth: 'auto',
+                  '&:hover': {
+                    backgroundColor: 'var(--primary-dark)',
+                  },
+             
+                }}
+            
               >
                 Обрати сеанс
               </Button>
-            </Box>
-          </Box>
+        </Box>
+      </Box>
         </Container>
       </Box>
 
