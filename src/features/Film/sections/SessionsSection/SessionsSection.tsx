@@ -126,8 +126,11 @@ const SessionsSection = () => {
                       key={el.id}
                       sx={styles.sessionTimeBtn}
                       onClick={() => navigate(`/booking/session/${el.id}`)}>
-                      <Typography variant="body1">
+                      <Typography variant="body1" sx={styles.timeText}>
                         {toLocalHM(el.startTime)}
+                      </Typography>
+                      <Typography variant="body1" sx={styles.priceText}>
+                        {el.ticketPrice} грн
                       </Typography>
                     </FillBorderButton>
                   ))}

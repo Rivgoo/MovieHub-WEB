@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material';
+import { display } from '@mui/system';
 
 const getSessionSectionStyles = (theme: Theme) => ({
   sectionTitle: {
@@ -17,6 +18,8 @@ const getSessionSectionStyles = (theme: Theme) => ({
   sessionDateItem: {},
   sessionDate: {},
   sessionTimeBtn: {
+    display: 'flex',
+    flexDirection: 'column',
     px: 2,
     py: 1,
     border: `1px solid ${theme.palette.primary.light}`,
@@ -43,6 +46,14 @@ const getSessionSectionStyles = (theme: Theme) => ({
   divider: {
     my: 2,
     borderColor: theme.palette.primary.light,
+  },
+  timeText: {
+    fontSize: '1.1rem', // трохи більший час
+    fontWeight: 500,
+  },
+  priceText: {
+    fontSize: '0.85rem', // менша ціна
+    opacity: 0.6, // сіріша
   },
 });
 export default getSessionSectionStyles;
