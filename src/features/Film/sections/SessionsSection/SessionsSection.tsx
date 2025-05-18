@@ -57,7 +57,7 @@ const SessionsSection = () => {
   };
 
   const getCurrentUtcDateOnly = (): string => {
-    return formatDate(new Date().toISOString().split('T')[0]);
+    return new Date().toISOString().split('T')[0];
   };
 
   const toLocalHM = (dateStr: string): string => {
