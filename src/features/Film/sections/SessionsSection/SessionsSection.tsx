@@ -35,7 +35,7 @@ const SessionsSection = () => {
       setIsLoading(true);
       try {
         const response = await searchSessions(
-          `PageSize=100&MinStartTime=${getCurrentUtcDateOnly()}T08:00&ContentId=${id}`
+          `PageSize=100&MinStartTime=${getMinStartTime()}&MaxStartTime=${getMaxStartTime()}&ContentId=${id}`
         );
         setSessions(response);
       } catch (err) {
@@ -56,8 +56,17 @@ const SessionsSection = () => {
     }).format(date);
   };
 
-  const getCurrentUtcDateOnly = (): string => {
-    return new Date().toISOString().split('T')[0];
+  const getMinStartTime = (): string => {
+    const now = new Date();
+    now.setUTCHours(8, 0, 0, 0);
+    return now.toISOString();
+  };
+
+  const getMaxStartTime = (): string => {
+    const max = new Date();
+    max.setUTCDate(max.getUTCDate() + 10);
+    max.setUTCHours(23, 0, 0, 0);
+    return max.toISOString();
   };
 
   const toLocalHM = (dateStr: string): string => {
