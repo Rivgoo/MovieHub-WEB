@@ -34,8 +34,9 @@ const SessionsSection = () => {
     const fetchSessions = async () => {
       setIsLoading(true);
       try {
-        const response = await searchSessions(`PageSize=100&ContentId=${id}`);
-        console.log('Отримані сеанси:', response.items);
+        const response = await searchSessions(
+          `PageSize=100&MinStartTime=${getCurrentUtcDateOnly()}T08:00&ContentId=${id}`
+        );
         setSessions(response);
       } catch (err) {
         console.log(err);
@@ -53,6 +54,10 @@ const SessionsSection = () => {
       day: 'numeric',
       month: 'long',
     }).format(date);
+  };
+
+  const getCurrentUtcDateOnly = (): string => {
+    return formatDate(new Date().toISOString().split('T')[0]);
   };
 
   const toLocalHM = (dateStr: string): string => {
