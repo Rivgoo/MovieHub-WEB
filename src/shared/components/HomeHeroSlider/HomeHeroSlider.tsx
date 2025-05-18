@@ -7,7 +7,6 @@ import {
   Container,
   Paper,
   MobileStepper,
-  Link as MuiLink,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -15,8 +14,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 import { HeroMovieDto } from '../../../core/api/types/types.home';
 import styles from './HomeHeroSlider.module.css';
 
@@ -25,18 +23,18 @@ interface HomeHeroSliderProps {
   autoplayInterval?: number;
 }
 
-const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterval = 5000 }) => {
+const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterval = 7000 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const maxSteps = movies.length;
 
   const handleNext = useCallback(() => {
-    setActiveStep((prevActiveStep) => (prevActiveStep + 1) % maxSteps);
+    setActiveStep((prev) => (prev + 1) % maxSteps);
   }, [maxSteps]);
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => (prevActiveStep - 1 + maxSteps) % maxSteps);
+    setActiveStep((prev) => (prev - 1 + maxSteps) % maxSteps);
   };
 
   useEffect(() => {
@@ -44,7 +42,7 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
       const timer = setInterval(handleNext, autoplayInterval);
       return () => clearInterval(timer);
     }
-  }, [activeStep, handleNext, autoplayInterval, maxSteps]);
+  }, [handleNext, autoplayInterval, maxSteps]);
 
   if (!movies || maxSteps === 0) {
     return (
@@ -72,26 +70,38 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
   };
 
   const formatDuration = (totalMinutes: number | undefined): string => {
-    if (totalMinutes === undefined || totalMinutes <= 0) return 'N/A';
+    if (!totalMinutes || totalMinutes <= 0) return 'N/A';
     return `${totalMinutes} хв`;
+  };
+
+  const handleBannerClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    navigate(`/film/${currentMovie.id}`);
   };
 
   return (
     <Paper elevation={0} square className={styles['homehero-sliderWrapper']}>
       <Box
         className={styles['homehero-slideItem']}
+        onClick={handleBannerClick}
         sx={{
           backgroundImage: currentMovie.backdropUrl
             ? `url(${currentMovie.backdropUrl})`
             : `url('https://dummyimage.com/1280x720/303030/fff.png&text=Фон+Фільму')`,
-          transition: 'background-image 0.7s ease-in-out',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
           cursor: 'pointer',
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
         <div className={styles['homehero-slideItem_before']} />
 
-        <Container maxWidth="lg" className={styles['homehero-slideContentContainer']}>
+        <Container
+          maxWidth="lg"
+          className={styles['homehero-slideContentContainer']}
+          sx={{ zIndex: 2 }}
+        >
           <Box
             sx={{
               display: 'flex',
@@ -103,16 +113,9 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
             }}
           >
             <Box className={styles['homehero-slideTextBlock']}>
-              <MuiLink
-                component={RouterLink}
-                to={`/film/${currentMovie.id}`}
-                underline="none"
-                sx={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <Typography variant="h2" component="h1" className={styles['homehero-slideTitle']}>
-                  {currentMovie.title}
-                </Typography>
-              </MuiLink>
+              <Typography variant="h2" component="h1" className={styles['homehero-slideTitle']}>
+                {currentMovie.title}
+              </Typography>
 
               <Box className={styles['homehero-slideMeta']}>
                 {currentMovie.rating !== undefined && currentMovie.rating > 0 && (
@@ -134,19 +137,32 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
               </Box>
             </Box>
 
-            <Box className={styles['homehero-slideActionBlock']}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                startIcon={<ConfirmationNumberOutlinedIcon />}
+          <Box className={styles['homehero-slideActionBlock']}>
+            <Button
+                variant="contained" 
+                startIcon={<ConfirmationNumberOutlinedIcon sx={{ fontSize: { xs: '1.2rem', sm: '1.2rem' } }} />}
                 onClick={(e) => handleGoToSession(e, currentMovie.id)}
-                className={styles['homehero-selectSessionButtonSlide']}
+                sx={{
+                  borderRadius: '25px',
+                  padding: { xs: '0.6rem 1.5rem', sm: '0.75rem 2rem' },
+                  fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  backgroundColor: 'var(--primary-main)',
+                  color: 'var(--text-light)',
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                  minWidth: 'auto',
+                  '&:hover': {
+                    backgroundColor: 'var(--primary-dark)',
+                  },
+             
+                }}
+            
               >
                 Обрати сеанс
               </Button>
-            </Box>
-          </Box>
+        </Box>
+      </Box>
         </Container>
       </Box>
 
@@ -161,7 +177,6 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
             <IconButton
               size="small"
               onClick={handleNext}
-              disabled={maxSteps <= 1}
               className={styles['homehero-stepperNavButton']}
             >
               {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
@@ -171,7 +186,6 @@ const HomeHeroSlider: React.FC<HomeHeroSliderProps> = ({ movies, autoplayInterva
             <IconButton
               size="small"
               onClick={handleBack}
-              disabled={maxSteps <= 1}
               className={styles['homehero-stepperNavButton']}
             >
               {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
