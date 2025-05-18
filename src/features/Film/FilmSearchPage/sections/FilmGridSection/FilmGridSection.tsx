@@ -7,6 +7,7 @@ import {
   CircularProgress,
   Container,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -18,24 +19,27 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchContent } from '../../../../../core/api/requests/request.content';
+import StandardPagination from '../../../../../shared/components/Pagination/StandardPagination';
 
 const FilmGridSection = () => {
   const theme = useTheme();
   const styles = FilmGridSectionStyles(theme);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [films, setFilms] = useState<ContentDto[]>([]);
   const [pageNum, setPageNum] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   useEffect(() => {
     const fetchFilteredFilms = async () => {
       setIsLoading(true);
 
       const queryParams = new URLSearchParams();
-      queryParams.set('PageSize', '10');
+      queryParams.set('PageSize', '8');
 
       searchParams.forEach((value, key) => {
         if (value !== '') {
@@ -45,11 +49,10 @@ const FilmGridSection = () => {
 
       queryParams.set('PageIndex', pageNum.toString());
 
-      console.log('QUERY:', queryParams.toString());
-
       try {
         const response = await searchContent(queryParams.toString());
         setFilms(response.items);
+        setTotalPages(response.totalPages);
       } catch (error) {
         console.error('Fetch error:', error);
       } finally {
@@ -62,6 +65,14 @@ const FilmGridSection = () => {
 
   const handleFilmChoosing = (id: number) => {
     navigate(`/film/${id}`);
+  };
+
+  const handlePageChangeInternal = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPageNum(value);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (isLoading) {
@@ -156,6 +167,14 @@ const FilmGridSection = () => {
           </Card>
         ))}
       </Box>
+      <StandardPagination
+        count={totalPages}
+        page={pageNum}
+        onChange={handlePageChangeInternal}
+        disabled={totalPages <= 1 ? true : false}
+        sx={{ mt: 4 }}
+        size={!isSmallScreen ? 'large' : 'medium'}
+      />
     </Container>
   );
 };
