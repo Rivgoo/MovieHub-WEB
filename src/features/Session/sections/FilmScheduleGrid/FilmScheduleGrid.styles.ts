@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material';
-import { maxHeight, maxWidth } from '@mui/system';
 
 const getFilmScheduleGridStyles = (theme: Theme) => ({
   filmCardContainer: {
