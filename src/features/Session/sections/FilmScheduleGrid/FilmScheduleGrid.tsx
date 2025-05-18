@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
 import { SessionWithContentDto } from '../../../../core/api/types/types.session';
+import { format, parseISO } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
 export default function FilmScheduleGrid() {
   const theme = useTheme();
@@ -49,7 +51,7 @@ export default function FilmScheduleGrid() {
         }
 
         const queryParams = new URLSearchParams();
-        queryParams.set('PageSize', '300');
+        queryParams.set('PageSize', '700');
         queryParams.set('orderField', 'StartTime');
         queryParams.set('orderType', 'OrderBy');
         queryParams.set('MinStartTime', minStartTime);
@@ -90,6 +92,13 @@ export default function FilmScheduleGrid() {
 
   const groupedFilms = groupByContentId(filmData);
 
+  const toLocalHM = (dateStr: string): string => {
+    const hasTimeZoneInfo = /Z|[+-]\d{2}:\d{2}$/.test(dateStr);
+    const stringToParse = hasTimeZoneInfo ? dateStr : `${dateStr}Z`;
+    const dateObject = parseISO(stringToParse);
+    return format(dateObject, 'HH:mm', { locale: uk });
+  };
+
   return (
     <Box
       sx={{
@@ -127,33 +136,37 @@ export default function FilmScheduleGrid() {
 
                 <Box sx={styles.filmInfoContainer}>
                   <Box sx={styles.sessionTimeBox}>
-                    <Tooltip
-                      title={`Від ${film.ticketPrice} грн`}
-                      placement="bottom"
-                      arrow
-                      enterDelay={50}
-                      leaveDelay={100}
-                      PopperProps={{
-                        modifiers: [
-                          {
-                            name: 'offset',
-                            options: {
-                              offset: [0, -25],
-                            },
-                          },
-                        ],
-                      }}>
-                      <Typography
-                        onClick={() => navigate(`/booking/session/${film.id}`)}
-                        variant="body2"
-                        sx={styles.filmTimeText}>
-                        {new Date(film.startTime).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </Typography>
-                    </Tooltip>
+                    {sessions.map((s) => (
+                      <>
+                        <Tooltip
+                          title={`Від ${film.ticketPrice} грн`}
+                          placement="bottom"
+                          arrow
+                          enterDelay={50}
+                          leaveDelay={100}
+                          PopperProps={{
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, -5],
+                                },
+                              },
+                            ],
+                          }}>
+                          <Typography
+                            onClick={() =>
+                              navigate(`/booking/session/${film.id}`)
+                            }
+                            variant="body2"
+                            sx={styles.filmTimeText}>
+                            {toLocalHM(s.startTime)}
+                          </Typography>
+                        </Tooltip>
+                      </>
+                    ))}
                   </Box>
+
                   <Box sx={styles.sessionPriceBox}>
                     <Typography
                       variant="h6"

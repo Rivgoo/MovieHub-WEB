@@ -1,4 +1,5 @@
 import { Theme } from '@mui/material';
+import { maxHeight, maxWidth } from '@mui/system';
 
 const getFilmScheduleGridStyles = (theme: Theme) => ({
   filmCardContainer: {
@@ -86,7 +87,7 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     gap: '2px',
-    py: '6px',
+    p: '6px',
   },
 
   filmTimeText: {
@@ -95,6 +96,8 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     textAlign: 'center',
     transiton: 'color 0.4s ease',
     cursor: 'pointer',
+    maxHeight: '16px',
+    maxWidth: 'fit-content',
     '&:hover': {
       color: theme.palette.primary.dark,
       transition: 'color 0.4s ease',

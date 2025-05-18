@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
 import { searchSessionsWithContent } from '../../../../core/api/requests/request.session';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SessionWithContentDto } from '../../../../core/api/types/types.session';
+import { format, parseISO } from 'date-fns';
+import { uk } from 'date-fns/locale';
 
 type Props = {};
 
@@ -92,6 +94,13 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
 
   const groupedFilms = groupByContentId(filmData);
 
+  const toLocalHM = (dateStr: string): string => {
+    const hasTimeZoneInfo = /Z|[+-]\d{2}:\d{2}$/.test(dateStr);
+    const stringToParse = hasTimeZoneInfo ? dateStr : `${dateStr}Z`;
+    const dateObject = parseISO(stringToParse);
+    return format(dateObject, 'HH:mm', { locale: uk });
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
       {isLoading.moviesData ? (
@@ -155,10 +164,7 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
                         onClick={() => navigate(`/booking/session/${film.id}`)}
                         variant="body2"
                         sx={styles.filmTimeText}>
-                        {new Date(s.startTime).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
+                        {toLocalHM(s.startTime)}
                       </Typography>
                     </Tooltip>
                   ))}
