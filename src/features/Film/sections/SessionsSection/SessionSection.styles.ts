@@ -1,5 +1,4 @@
 import { Theme } from '@mui/material';
-import { display } from '@mui/system';
 
 const getSessionSectionStyles = (theme: Theme) => ({
   sectionTitle: {
