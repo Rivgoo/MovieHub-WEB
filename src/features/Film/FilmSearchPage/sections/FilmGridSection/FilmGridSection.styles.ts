@@ -102,11 +102,13 @@ const FilmGridSectionStyles = (theme: Theme) => ({
   },
   filmInfoIcon: {
     fontSize: '0.9rem',
+    maxHeight: '15px',
     color: theme.palette.primary.main,
   },
   filmInfoText: {
-    fontSize: '0.75rem',
+    fontSize: '0.9rem',
     color: theme.palette.text.primary,
+    maxHeight: '15px',
     opacity: 0.85,
     whiteSpace: 'nowrap',
   },

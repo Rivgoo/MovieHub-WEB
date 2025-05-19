@@ -1,5 +1,6 @@
 import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
 import HeroSectionStyles from './HeroSection';
+import SearchFieldSection from '../SearchFieldSection/SearchFieldSection';
 
 const HeroSection = () => {
   const theme = useTheme();
@@ -21,6 +22,7 @@ const HeroSection = () => {
           Введіть назву для пошуку.
         </Typography>
       )}
+      <SearchFieldSection />
     </Box>
   );
 };

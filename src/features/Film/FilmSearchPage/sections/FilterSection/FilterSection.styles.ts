@@ -5,9 +5,8 @@ const FilterSectionStyles = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'nowrap',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: '100%',
-    gap: '6px',
   },
   selectorWrapper: {
     display: 'flex',

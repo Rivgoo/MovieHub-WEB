@@ -16,10 +16,21 @@ const FilmSearchPage: React.FC = () => {
         title="Пошук фільмів - Знайдіть ідеальний фільм | MovieHub"
         description="Шукайте фільми за назвою, жанром, роком випуску та іншими критеріями..."
       />
-      <Container>
+      <Container
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+        }}>
         <HeroSection />
-        <FilterSection />
-        <FilmGridSection />
+        {isSmallScreen ? (
+          <Container>Малий екран</Container>
+        ) : (
+          <>
+            <FilterSection />
+            <FilmGridSection />
+          </>
+        )}
       </Container>
     </Layout>
   );

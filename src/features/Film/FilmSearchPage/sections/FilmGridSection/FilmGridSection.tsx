@@ -107,7 +107,7 @@ const FilmGridSection = () => {
   }
 
   return (
-    <Container sx={styles.filmGridWrapper}>
+    <Box sx={styles.filmGridWrapper}>
       <Box sx={styles.filmCardContainer}>
         {films.map((film) => (
           <Card key={film.id} sx={styles.filmCardItem}>
@@ -175,7 +175,7 @@ const FilmGridSection = () => {
         sx={{ mt: 4 }}
         size={!isSmallScreen ? 'large' : 'medium'}
       />
-    </Container>
+    </Box>
   );
 };
 
