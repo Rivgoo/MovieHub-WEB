@@ -135,36 +135,122 @@ export default function FilmScheduleGrid() {
                 </Typography>
 
                 <Box sx={styles.filmInfoContainer}>
-                  <Box sx={styles.sessionTimeBox}>
-                    {sessions.map((s) => (
-                      <>
-                        <Tooltip
-                          title={`Від ${film.ticketPrice} грн`}
-                          placement="bottom"
-                          arrow
-                          enterDelay={50}
-                          leaveDelay={100}
-                          PopperProps={{
-                            modifiers: [
-                              {
-                                name: 'offset',
-                                options: {
-                                  offset: [0, -5],
+                  <Box
+                    sx={{
+                      m: 'auto',
+                      width: '145px',
+                      height: '50px',
+                    }}>
+                    <Box sx={styles.sessionTimeBox}>
+                      {sessions.map((s) => (
+                        <>
+                          <Tooltip
+                            key={s.id}
+                            title={`Від ${film.ticketPrice} грн`}
+                            placement="bottom"
+                            arrow
+                            enterDelay={50}
+                            leaveDelay={100}
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: 'offset',
+                                  options: {
+                                    offset: [0, -5],
+                                  },
                                 },
-                              },
-                            ],
-                          }}>
-                          <Typography
-                            onClick={() =>
-                              navigate(`/booking/session/${film.id}`)
-                            }
-                            variant="body2"
-                            sx={styles.filmTimeText}>
-                            {toLocalHM(s.startTime)}
-                          </Typography>
-                        </Tooltip>
-                      </>
-                    ))}
+                              ],
+                            }}>
+                            <Typography
+                              onClick={() =>
+                                navigate(`/booking/session/${film.id}`)
+                              }
+                              variant="body2"
+                              sx={styles.filmTimeText}>
+                              {toLocalHM(s.startTime)}
+                            </Typography>
+                          </Tooltip>
+                          <Tooltip
+                            key={s.id}
+                            title={`Від ${film.ticketPrice} грн`}
+                            placement="bottom"
+                            arrow
+                            enterDelay={50}
+                            leaveDelay={100}
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: 'offset',
+                                  options: {
+                                    offset: [0, -5],
+                                  },
+                                },
+                              ],
+                            }}>
+                            <Typography
+                              onClick={() =>
+                                navigate(`/booking/session/${film.id}`)
+                              }
+                              variant="body2"
+                              sx={styles.filmTimeText}>
+                              {toLocalHM(s.startTime)}
+                            </Typography>
+                          </Tooltip>
+                          <Tooltip
+                            key={s.id}
+                            title={`Від ${film.ticketPrice} грн`}
+                            placement="bottom"
+                            arrow
+                            enterDelay={50}
+                            leaveDelay={100}
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: 'offset',
+                                  options: {
+                                    offset: [0, -5],
+                                  },
+                                },
+                              ],
+                            }}>
+                            <Typography
+                              onClick={() =>
+                                navigate(`/booking/session/${film.id}`)
+                              }
+                              variant="body2"
+                              sx={styles.filmTimeText}>
+                              {toLocalHM(s.startTime)}
+                            </Typography>
+                          </Tooltip>
+                          <Tooltip
+                            key={s.id}
+                            title={`Від ${film.ticketPrice} грн`}
+                            placement="bottom"
+                            arrow
+                            enterDelay={50}
+                            leaveDelay={100}
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: 'offset',
+                                  options: {
+                                    offset: [0, -5],
+                                  },
+                                },
+                              ],
+                            }}>
+                            <Typography
+                              onClick={() =>
+                                navigate(`/booking/session/${film.id}`)
+                              }
+                              variant="body2"
+                              sx={styles.filmTimeText}>
+                              {toLocalHM(s.startTime)}
+                            </Typography>
+                          </Tooltip>
+                        </>
+                      ))}
+                    </Box>
                   </Box>
 
                   <Box sx={styles.sessionPriceBox}>

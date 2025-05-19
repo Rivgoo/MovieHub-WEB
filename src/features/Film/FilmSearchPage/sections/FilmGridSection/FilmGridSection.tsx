@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -6,74 +5,62 @@ import {
   CardContent,
   CardMedia,
   CircularProgress,
-  Container,
   Typography,
-  useTheme,
-  Pagination,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { searchContent } from '../../../../../core/api/requests/request.content';
-import getFilmGridStyles from './FilmGrid.styles';
+import { useEffect, useState } from 'react';
+import FilmGridSectionStyles from './FilmGridSection.styles';
 import { ContentDto } from '../../../../../core/api/types/types.content';
-import { GlowButton } from '../../../../../shared/components/Buttons';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
-// import StandardPagination from '../../../../../shared/components/Pagination/StandardPagination';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { searchContent } from '../../../../../core/api/requests/request.content';
+import StandardPagination from '../../../../../shared/components/Pagination/StandardPagination';
 
-const PLACEHOLDER_POSTER_URL = '/placeholder-poster.png';
-
-interface Props {
-  searchQuery: string | undefined;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}
-
-const FilmGrid: React.FC<Props> = ({
-  searchQuery,
-  currentPage,
-  onPageChange,
-}) => {
+const FilmGridSection = () => {
   const theme = useTheme();
-  const styles = getFilmGridStyles(theme);
+  const styles = FilmGridSectionStyles(theme);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [films, setFilms] = useState<ContentDto[]>([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const [pageNum, setPageNum] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   useEffect(() => {
-    const fetchFilms = async () => {
-      if (searchQuery === undefined) {
-        setFilms([]);
-        setTotalPages(0);
-        setLoading(false);
-        setError(null);
-        return;
-      }
-      setLoading(true);
-      setError(null);
+    const fetchFilteredFilms = async () => {
+      setIsLoading(true);
+
+      const queryParams = new URLSearchParams();
+      queryParams.set('PageSize', '8');
+
+      searchParams.forEach((value, key) => {
+        if (value !== '') {
+          queryParams.set(key, value);
+        }
+      });
+
+      queryParams.set('PageIndex', pageNum.toString());
+
       try {
-        const response = await searchContent(searchQuery);
+        const response = await searchContent(queryParams.toString());
         setFilms(response.items);
         setTotalPages(response.totalPages);
-      } catch (err: any) {
-        setError(
-          err.response?.data?.detail ||
-            err.message ||
-            'Помилка отримання фільмів'
-        );
-        setFilms([]);
-        setTotalPages(0);
+      } catch (error) {
+        console.error('Fetch error:', error);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
-    fetchFilms();
-  }, [searchQuery]);
+
+    fetchFilteredFilms();
+  }, [searchParams, pageNum]);
 
   const handleFilmChoosing = (id: number) => {
     navigate(`/film/${id}`);
@@ -83,11 +70,11 @@ const FilmGrid: React.FC<Props> = ({
     _event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    onPageChange(value);
+    setPageNum(value);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -99,27 +86,6 @@ const FilmGrid: React.FC<Props> = ({
         }}>
         <CircularProgress />
         <Typography sx={{ mt: 1 }}>Завантаження фільмів...</Typography>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          py: 5,
-        }}>
-        <Typography color="error">{error}</Typography>
-        <GlowButton
-          variant="contained"
-          onClick={() => onPageChange(1)}
-          sx={{ mt: 2 }}>
-          Retry
-        </GlowButton>
       </Box>
     );
   }
@@ -140,7 +106,7 @@ const FilmGrid: React.FC<Props> = ({
   }
 
   return (
-    <Container sx={styles.filmGridWrapper}>
+    <Box sx={styles.filmGridWrapper}>
       <Box sx={styles.filmCardContainer}>
         {films.map((film) => (
           <Card key={film.id} sx={styles.filmCardItem}>
@@ -148,12 +114,8 @@ const FilmGrid: React.FC<Props> = ({
               <CardMedia
                 component="img"
                 sx={styles.filmPoster}
-                image={film.posterUrl || PLACEHOLDER_POSTER_URL}
+                image={film.posterUrl}
                 alt={film.title}
-                onError={(e: any) => {
-                  e.target.onerror = null;
-                  e.target.src = PLACEHOLDER_POSTER_URL;
-                }}
               />
               <CardContent sx={styles.filmCardContent}>
                 <Typography variant="h6" component="div" sx={styles.filmTitle}>
@@ -204,26 +166,16 @@ const FilmGrid: React.FC<Props> = ({
           </Card>
         ))}
       </Box>
-      {totalPages > 1 && (
-        <Box sx={styles.filmPagesList}>
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChangeInternal}
-            color="primary"
-            shape="rounded"
-            boundaryCount={1}
-            siblingCount={1}
-            size={isSmallScreen ? 'small' : 'large'}
-          />
-          {/* <StandardPagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChangeInternal}
-          /> */}
-        </Box>
-      )}
-    </Container>
+      <StandardPagination
+        count={totalPages}
+        page={pageNum}
+        onChange={handlePageChangeInternal}
+        disabled={totalPages <= 1 ? true : false}
+        sx={{ mt: 4 }}
+        size={!isSmallScreen ? 'large' : 'medium'}
+      />
+    </Box>
   );
 };
-export default FilmGrid;
+
+export default FilmGridSection;
