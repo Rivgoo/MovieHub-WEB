@@ -1,16 +1,16 @@
 import { Theme } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { border, display } from '@mui/system';
 
 const SearchFieldSectionStyles = (theme: Theme) => ({
   searchFormWrapper: {
     display: 'flex',
     justifyContent: 'center',
     width: '100%',
+    px: 5,
   },
   searchFormAutoComplete: {
     width: '100%',
-    minWidth: '275px',
+    minWidth: '250px',
     maxWidth: '500px',
     maxHeight: '40px',
     borderRadius: '8px',
@@ -91,8 +91,8 @@ const SearchFieldSectionStyles = (theme: Theme) => ({
     boxShadow: 'none',
     marginTop: '-2px',
 
-    display: 'flex',
-    justifyContent: 'left',
+    display: 'flex !important',
+    justifyContent: 'left !important',
   },
 });
 

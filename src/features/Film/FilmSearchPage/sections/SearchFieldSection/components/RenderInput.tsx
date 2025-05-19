@@ -1,12 +1,10 @@
 import {
   AutocompleteRenderInputParams,
-  CircularProgress,
   IconButton,
   InputAdornment,
   TextField,
   useTheme,
 } from '@mui/material';
-import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import SearchFieldSectionStyles from '../SearchFieldSection.styles';
 

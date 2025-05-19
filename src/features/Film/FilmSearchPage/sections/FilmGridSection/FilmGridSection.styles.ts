@@ -33,7 +33,7 @@ const FilmGridSectionStyles = (theme: Theme) => ({
       flexBasis: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
       maxWidth: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
     },
-    minWidth: '125  px',
+    minWidth: '125px',
   },
   filmPoster: {
     width: '100%',
@@ -78,7 +78,7 @@ const FilmGridSectionStyles = (theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing(1.25),
+    gap: '6px',
     marginTop: 'auto',
     alignItems: 'center',
     paddingTop: theme.spacing(0.5),
@@ -106,7 +106,7 @@ const FilmGridSectionStyles = (theme: Theme) => ({
     color: theme.palette.primary.main,
   },
   filmInfoText: {
-    fontSize: '0.9rem',
+    fontSize: { sm: '0.75rem', md: '0.9rem' },
     color: theme.palette.text.primary,
     maxHeight: '15px',
     opacity: 0.85,

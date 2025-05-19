@@ -6,6 +6,7 @@ import theme from '../../../theme/theme.tsx';
 import HeroSection from './sections/HeroSection/HeroSection.tsx';
 import FilterSection from './sections/FilterSection/FilterSection.tsx';
 import FilmGridSection from './sections/FilmGridSection/FilmGridSection.tsx';
+import FilmModalFiltersSection from './sections/FilmModalFiltersSection/FilmModalFiltersSection.tsx';
 
 const FilmSearchPage: React.FC = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -24,13 +25,13 @@ const FilmSearchPage: React.FC = () => {
         }}>
         <HeroSection />
         {isSmallScreen ? (
-          <Container>Малий екран</Container>
+          <FilmModalFiltersSection />
         ) : (
           <>
             <FilterSection />
-            <FilmGridSection />
           </>
         )}
+        <FilmGridSection />
       </Container>
     </Layout>
   );
