@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import RenderInput from './components/RenderInput';
 import { ContentDto } from '../../../../../core/api/types/types.content';
 import { searchContent } from '../../../../../core/api/requests/request.content';
-import RenderOptions from './components/renderOptions';
+import RenderOptions from './components/RenderOptions';
 
 function debounce<F extends (...args: any[]) => void>(fn: F, ms: number): F {
   let timeoutId: ReturnType<typeof setTimeout>;

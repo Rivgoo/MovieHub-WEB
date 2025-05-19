@@ -85,19 +85,18 @@ const FilmGridSectionStyles = (theme: Theme) => ({
   },
   filmInfoContainerRows: {
     display: 'flex',
-    flexDirection: {
-      xs: 'column',
-      md: 'row',
-    },
+
+    // flexDirection: {
+    //   xs: 'column',
+    //   md: 'row',
+    // },
     gap: theme.spacing(1.25),
   },
   filmInfoItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: {
-      xs: theme.spacing(0.1),
-      md: theme.spacing(0.5),
-    },
+    gap: '1px',
+    width: '58px',
     color: theme.palette.text.secondary,
   },
   filmInfoIcon: {
@@ -108,7 +107,7 @@ const FilmGridSectionStyles = (theme: Theme) => ({
   filmInfoText: {
     fontSize: { sm: '0.75rem', md: '0.9rem' },
     color: theme.palette.text.primary,
-    maxHeight: '15px',
+    maxHeight: 'fit-content',
     opacity: 0.85,
     whiteSpace: 'nowrap',
   },

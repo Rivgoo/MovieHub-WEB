@@ -5,7 +5,6 @@ import {
   CardContent,
   CardMedia,
   CircularProgress,
-  Container,
   Typography,
   useMediaQuery,
   useTheme,

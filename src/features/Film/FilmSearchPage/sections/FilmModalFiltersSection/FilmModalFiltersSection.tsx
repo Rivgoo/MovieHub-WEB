@@ -136,7 +136,7 @@ const FilmModalFiltersSection = () => {
   const handleClose = () => setOpen(false);
 
   const handleSubmit = () => {
-    const qp = new URLSearchParams();
+    const qp = new URLSearchParams(searchParams.toString());
 
     Object.entries(filter).forEach(([key, value]) => {
       if (value !== '') {
@@ -145,11 +145,12 @@ const FilmModalFiltersSection = () => {
           return;
         }
         qp.set(key, value);
+      } else {
+        qp.delete(key);
       }
     });
 
     setSearchParams(qp, { replace: true });
-    handleClose();
   };
 
   const handleReset = () => {

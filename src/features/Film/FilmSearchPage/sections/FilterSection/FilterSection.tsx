@@ -55,13 +55,19 @@ export default function FilterSessionSearch({}: Props) {
     if (!isFirstLoading) return;
     const params = new URLSearchParams(searchParams.toString());
 
-    const genreParam = params.get('GenreIds');
-    const newFilter: FilterSessionFieldKeys = {
-      GenreIds: genreParam ?? '',
-    };
+    const newFilter: FilterSessionFieldKeys = {};
 
-    const otherKeys = ['MinDurationMinutes', 'MaxDurationMinutes'];
-    otherKeys.forEach((key) => {
+    const Keys = [
+      'GenreIds',
+      'MaxReleaseYear',
+      'MinRating',
+      'MinDurationMinutes',
+      'MaxDurationMinutes',
+      'HasSessions',
+      'MaxAgeRating',
+    ];
+
+    Keys.forEach((key) => {
       const value = params.get(key);
       if (value) {
         newFilter[key] = value;
@@ -132,7 +138,7 @@ export default function FilterSessionSearch({}: Props) {
     };
 
   const handleSubmit = () => {
-    const qp = new URLSearchParams();
+    const qp = new URLSearchParams(searchParams.toString());
 
     Object.entries(filter).forEach(([key, value]) => {
       if (value !== '') {
@@ -141,6 +147,8 @@ export default function FilterSessionSearch({}: Props) {
           return;
         }
         qp.set(key, value);
+      } else {
+        qp.delete(key);
       }
     });
 

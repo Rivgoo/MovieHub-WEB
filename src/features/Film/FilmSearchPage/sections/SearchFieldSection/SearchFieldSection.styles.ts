@@ -79,9 +79,12 @@ const SearchFieldSectionStyles = (theme: Theme) => ({
   renderOption: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'left',
+    alignItems: 'flex-start',
     padding: '8px 12px',
+    textAlign: 'left',
     backgroundColor: 'transparent',
+    width: '100%',
+
     '&:hover': {
       backgroundColor: alpha(theme.palette.action.hover, 0.5),
     },
@@ -91,8 +94,7 @@ const SearchFieldSectionStyles = (theme: Theme) => ({
     boxShadow: 'none',
     marginTop: '-2px',
 
-    display: 'flex !important',
-    justifyContent: 'left !important',
+    display: 'block',
   },
 });
 

@@ -102,7 +102,7 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+    <Box sx={styles.sectionWrapper}>
       {isLoading.moviesData ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <CircularProgress />
@@ -131,7 +131,11 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
                 />
               </CardActionArea>
               <CardContent sx={styles.filmCardContent}>
-                <Typography variant="h6" component="div" sx={styles.filmTitle}>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  onClick={() => navigate(`/film/${contentId}`)}
+                  sx={styles.filmTitle}>
                   {film.title}
                 </Typography>
 
@@ -142,32 +146,44 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
                 </Box>
 
                 <Box sx={styles.filmInfoContainer}>
-                  {sessions.map((s) => (
-                    <Tooltip
-                      key={s.id}
-                      title={`Від ${s.ticketPrice} грн`}
-                      placement="bottom"
-                      arrow
-                      enterDelay={50}
-                      leaveDelay={100}
-                      PopperProps={{
-                        modifiers: [
-                          {
-                            name: 'offset',
-                            options: {
-                              offset: [0, -10],
-                            },
-                          },
-                        ],
-                      }}>
-                      <Typography
-                        onClick={() => navigate(`/booking/session/${film.id}`)}
-                        variant="body2"
-                        sx={styles.filmTimeText}>
-                        {toLocalHM(s.startTime)}
-                      </Typography>
-                    </Tooltip>
-                  ))}
+                  <Box
+                    sx={{
+                      m: '0px auto',
+                      width: '145px',
+                    }}>
+                    <Box sx={styles.filmInfoContainerHelper}>
+                      {sessions.map((s) => (
+                        <>
+                          <Tooltip
+                            key={s.id}
+                            title={`Від ${s.ticketPrice} грн`}
+                            placement="bottom"
+                            arrow
+                            enterDelay={50}
+                            leaveDelay={100}
+                            PopperProps={{
+                              modifiers: [
+                                {
+                                  name: 'offset',
+                                  options: {
+                                    offset: [0, -10],
+                                  },
+                                },
+                              ],
+                            }}>
+                            <Typography
+                              onClick={() =>
+                                navigate(`/booking/session/${film.id}`)
+                              }
+                              variant="body2"
+                              sx={styles.filmTimeText}>
+                              {toLocalHM(s.startTime)}
+                            </Typography>
+                          </Tooltip>
+                        </>
+                      ))}
+                    </Box>
+                  </Box>
                 </Box>
               </CardContent>
             </Card>
