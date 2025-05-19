@@ -1,0 +1,136 @@
+.user-manager-page {
+  color: var(--admin-orange-button-text-color);
+  padding: 10px;
+}
+
+.user-manager-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.user-manager-header h2 {
+  font-size: 1.5625em;
+  font-weight: 600;
+}
+
+.user-table th, .user-table td {
+  border-bottom: 1px solid var(--admin-list-item-hover-color);
+  color: var(--admin-orange-button-text-color);
+  padding: 12px 15px;
+}
+
+.user-table th {
+  background-color: var(--admin-list-item-color);
+  font-weight: bold;
+  text-align: left;
+}
+
+.user-table tr:hover {
+  background-color: var(--admin-list-item-hover-color);
+}
+
+.user-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.user-actions .MuiIconButton-root {
+  padding: 6px;
+  color: var(--admin-orange-button-text-color);
+}
+.user-actions .MuiIconButton-root:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-status-blocked {
+  color: var(--admin-error-red);
+  font-weight: bold;
+}
+
+.user-status-active {
+  color: #437044;
+  font-weight: bold;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.user-form-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+  background-color: var(--admin-dark);
+  color: var(--admin-orange-button-text-color);
+}
+
+.user-form-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 1.5em;
+}
+
+.user-form .MuiFormControl-root {
+  margin-bottom: 20px;
+}
+
+.user-form .MuiFormLabel-root {
+  color: var(--admin-orange-button-text-color);
+}
+
+.user-form .MuiSelect-icon {
+  color: var(--admin-orange-button-text-color);
+}
+
+.user-form .MuiSwitch-track {
+  background-color: var(--admin-list-item-color);
+}
+.user-form .MuiSwitch-thumb {
+  color: var(--admin-orange-button-text-color);
+}
+.user-form .MuiSwitch-switchBase.Mui-checked {
+  color: var(--primary-light);
+}
+.user-form .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  background-color: var(--primary-light);
+}
+
+.user-form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.user-form .MuiInputAdornment-root .MuiIconButton-root {
+  color: var(--admin-orange-button-text-color);
+  transition: color 0.2s ease-in-out;
+}
+
+.user-form .MuiInputAdornment-root .MuiIconButton-root:hover {
+  color: var(--primary-light);
+  background-color: transparent !important;
+}
+
+@media (max-width: 600px) {
+  .user-manager-header h2 {
+    font-size: 1.25em;
+  }
+  .user-table th, .user-table td {
+    padding: 10px;
+  }
+  .user-form-container {
+    padding: 15px;
+  }
+
+  .create-user-button { 
+    margin-top: 0.75rem;
+    width: 100%;
+  }
+}

@@ -1,0 +1,17 @@
+.movieCarousel__carouselWrapper {
+  margin-bottom: 0.2rem;
+}
+
+.movieCarousel__carouselTitle {
+  font-weight: 600;
+  color: var(--primary-light, #F8FCF8);
+  margin-bottom: 1rem;
+  padding-left: 8px;
+}
+
+@media (max-width: 600px) {
+  .movieCarousel__carouselTitle {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+}
