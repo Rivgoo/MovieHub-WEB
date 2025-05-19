@@ -21,7 +21,7 @@ const RenderOptions: React.FC<Props> = ({ htmlLiProps, option }) => {
   return (
     <Box component={'li'} {...restProps} sx={styles.renderOption}>
       {typeof option !== 'string' && (
-        <Typography variant="subtitle1" noWrap>
+        <Typography noWrap sx={{ fontSize: { sm: '10px', md: '14px' } }}>
           {option.title}
         </Typography>
       )}
