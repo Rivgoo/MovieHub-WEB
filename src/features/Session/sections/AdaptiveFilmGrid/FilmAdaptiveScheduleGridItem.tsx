@@ -153,34 +153,32 @@ export default function FilmAdaptiveScheduleGridItem({}: Props) {
                     }}>
                     <Box sx={styles.filmInfoContainerHelper}>
                       {sessions.map((s) => (
-                        <>
-                          <Tooltip
-                            key={s.id}
-                            title={`Від ${s.ticketPrice} грн`}
-                            placement="bottom"
-                            arrow
-                            enterDelay={50}
-                            leaveDelay={100}
-                            PopperProps={{
-                              modifiers: [
-                                {
-                                  name: 'offset',
-                                  options: {
-                                    offset: [0, -10],
-                                  },
+                        <Tooltip
+                          key={s.id}
+                          title={`Від ${s.ticketPrice} грн`}
+                          placement="bottom"
+                          arrow
+                          enterDelay={50}
+                          leaveDelay={100}
+                          PopperProps={{
+                            modifiers: [
+                              {
+                                name: 'offset',
+                                options: {
+                                  offset: [0, -10],
                                 },
-                              ],
-                            }}>
-                            <Typography
-                              onClick={() =>
-                                navigate(`/booking/session/${film.id}`)
-                              }
-                              variant="body2"
-                              sx={styles.filmTimeText}>
-                              {toLocalHM(s.startTime)}
-                            </Typography>
-                          </Tooltip>
-                        </>
+                              },
+                            ],
+                          }}>
+                          <Typography
+                            onClick={() =>
+                              navigate(`/booking/session/${s.id}`)
+                            }
+                            variant="body2"
+                            sx={styles.filmTimeText}>
+                            {toLocalHM(s.startTime)}
+                          </Typography>
+                        </Tooltip>
                       ))}
                     </Box>
                   </Box>
