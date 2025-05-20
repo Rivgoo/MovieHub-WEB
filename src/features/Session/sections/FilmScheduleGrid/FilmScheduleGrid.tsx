@@ -135,11 +135,17 @@ export default function FilmScheduleGrid() {
                 </Typography>
 
                 <Box sx={styles.filmInfoContainer}>
-                  <Box sx={styles.sessionTimeBox}>
-                    {sessions.map((s) => (
-                      <>
+                  <Box
+                    sx={{
+                      m: 'auto',
+                      width: '145px',
+                      height: '50px',
+                    }}>
+                    <Box sx={styles.sessionTimeBox}>
+                      {sessions.map((s) => (
                         <Tooltip
-                          title={`Від ${film.ticketPrice} грн`}
+                          key={s.id}
+                          title={`Від ${s.ticketPrice} грн`}
                           placement="bottom"
                           arrow
                           enterDelay={50}
@@ -156,15 +162,15 @@ export default function FilmScheduleGrid() {
                           }}>
                           <Typography
                             onClick={() =>
-                              navigate(`/booking/session/${film.id}`)
+                              navigate(`/booking/session/${s.id}`)
                             }
                             variant="body2"
                             sx={styles.filmTimeText}>
                             {toLocalHM(s.startTime)}
                           </Typography>
                         </Tooltip>
-                      </>
-                    ))}
+                      ))}
+                    </Box>
                   </Box>
 
                   <Box sx={styles.sessionPriceBox}>

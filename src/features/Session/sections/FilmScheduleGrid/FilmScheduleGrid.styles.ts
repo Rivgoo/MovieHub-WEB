@@ -47,9 +47,9 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
   filmCardContent: {
     p: '6px',
     flexGrow: 1,
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'space-between',
     '&:last-child': {
       pb: '6px',
     },
@@ -67,26 +67,48 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     lineHeight: 1.2,
     cursor: 'pointer',
     width: 'fit-content',
-    maxWidth: '228px',
+    maxWidth: '100%',
     transiton: 'color 0.4s ease',
     '&:hover': {
       color: theme.palette.primary.dark,
       transition: 'color 0.4s ease',
     },
   },
+  // filmInfoContainer: {
+  //   display: 'flex',
+  //   border: `1px solid ${theme.palette.primary.dark}`,
+  //   borderRadius: '10px',
+  //   overflow: 'hidden',
+  // },
   filmInfoContainer: {
     display: 'flex',
-    border: `1px solid ${theme.palette.primary.dark}`,
-    borderRadius: '10px',
+    flexWrap: 'wrap',
     overflow: 'hidden',
+    borderRadius: '10px',
+    border: `1px solid ${theme.palette.primary.dark}`,
+    // justifyContent: 'center',
+
+    gap: '6px',
+    width: '100%',
+    height: '65px',
+    maxHeight: '65px',
   },
 
   sessionTimeBox: {
-    flex: 1,
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-    gap: '2px',
-    p: '6px',
+    // flex: 1,
+    // display: 'grid',
+    // gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+    // gap: '2px',
+    // p: '6px',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: '',
+    alignItems: 'center',
+    columnGap: '6px',
+    rowGap: '8px',
+    width: '100%',
+    maxWidth: '145px',
+    height: 'fit-content',
   },
 
   filmTimeText: {
@@ -110,6 +132,8 @@ const getFilmScheduleGridStyles = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    mt: '-2px',
+    mr: '-1px',
   },
 
   sessionPriceText: {

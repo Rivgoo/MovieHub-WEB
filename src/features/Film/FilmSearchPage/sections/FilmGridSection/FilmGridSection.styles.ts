@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material';
 
-const getFilmGridStyles = (theme: Theme) => ({
+const FilmGridSectionStyles = (theme: Theme) => ({
   filmGridWrapper: {
     mb: 4,
     display: 'flex',
@@ -33,7 +33,7 @@ const getFilmGridStyles = (theme: Theme) => ({
       flexBasis: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
       maxWidth: `calc(25% - ${theme.spacing((2 * 3) / 4)})`,
     },
-    minWidth: '125  px',
+    minWidth: '125px',
   },
   filmPoster: {
     width: '100%',
@@ -62,14 +62,15 @@ const getFilmGridStyles = (theme: Theme) => ({
   },
   filmTitle: {
     color: theme.palette.text.primary,
+    whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     display: '-webkit-box',
-    WebkitLineClamp: 2,
+    WebkitLineClamp: 1,
     WebkitBoxOrient: 'vertical',
     fontWeight: 600,
     fontSize: '1rem',
-    minHeight: '2.4em',
+    minHeight: '1em',
     marginBottom: theme.spacing(1),
     lineHeight: 1.2,
   },
@@ -77,69 +78,39 @@ const getFilmGridStyles = (theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing(1.25),
+    gap: '6px',
     marginTop: 'auto',
     alignItems: 'center',
     paddingTop: theme.spacing(0.5),
   },
   filmInfoContainerRows: {
     display: 'flex',
-    flexDirection: {
-      xs: 'column',
-      md: 'row',
-    },
+
+    // flexDirection: {
+    //   xs: 'column',
+    //   md: 'row',
+    // },
     gap: theme.spacing(1.25),
   },
   filmInfoItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: {
-      xs: theme.spacing(0.1),
-      md: theme.spacing(0.5),
-    },
+    gap: '1px',
+    width: '58px',
     color: theme.palette.text.secondary,
   },
   filmInfoIcon: {
     fontSize: '0.9rem',
+    maxHeight: '15px',
     color: theme.palette.primary.main,
   },
   filmInfoText: {
-    fontSize: '0.75rem',
+    fontSize: { sm: '0.75rem', md: '0.9rem' },
     color: theme.palette.text.primary,
+    maxHeight: 'fit-content',
     opacity: 0.85,
     whiteSpace: 'nowrap',
   },
-  filmPagesList: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: {
-      xs: 1,
-      sm: 1.5,
-      md: 2,
-    },
-    mt: 4,
-    p: 1,
-    ml: 'auto',
-    mr: 'auto',
-    boxSizing: 'border-box',
-  },
-  filmPageNavigationButton: {
-    height: 'auto',
-    p: 0,
-    minWidth: {
-      xs: '26px',
-      sm: '36px',
-      md: '48px',
-    },
-  },
-  filmPageNavigationButtonActive: {
-    color: theme.palette.secondary.contrastText,
-  },
-  filmPageNavigationButtonDisable: {
-    color: theme.palette.primary.light,
-    opacity: '0.3',
-  },
 });
 
-export default getFilmGridStyles;
+export default FilmGridSectionStyles;
